@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
-export class ThingsService {
+export class TopicService {
   hallo() {
-    return "Hallo ini Things Services"
+    return "Hallo ini Topic Services"
   }
 }

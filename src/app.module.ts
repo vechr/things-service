@@ -1,7 +1,14 @@
 import { Module } from '@nestjs/common';
-import { ThingsModule } from './things/things.module';
+import { LoggerModule } from 'nestjs-pino';
+import { DashboardModule } from './modules/dashboards/dashboards.module';
+import { logger } from './shared/utils/log.util';
 
 @Module({
-  imports: [ThingsModule],
+  imports: [
+    LoggerModule.forRoot({
+      pinoHttp: { logger },
+    }), 
+    DashboardModule
+  ],
 })
 export class AppModule {}
