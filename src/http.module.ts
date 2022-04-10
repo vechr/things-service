@@ -11,4 +11,4 @@ import { logger } from './shared/utils/log.util';
     DashboardModule
   ],
 })
-export class AppModule {}
+export class HttpModule {}
