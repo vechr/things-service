@@ -1,4 +1,4 @@
-import BaseResponse from "./base.response";
+import BaseResponse from './base.response';
 
 interface IListSuccessResponse<T> {
   total: number;
@@ -7,7 +7,10 @@ interface IListSuccessResponse<T> {
   limit?: number;
 }
 
-export default class SuccessResponse<T = any> extends BaseResponse<T | IListSuccessResponse<T>, null> {
+export default class SuccessResponse<T = any> extends BaseResponse<
+  T | IListSuccessResponse<T>,
+  null
+> {
   constructor(public message: string, result: T | IListSuccessResponse<T>) {
     super(message, result, null);
   }

@@ -7,8 +7,8 @@ import { logger } from './shared/utils/log.util';
   imports: [
     LoggerModule.forRoot({
       pinoHttp: { logger },
-    }), 
-    DashboardModule
+    }),
+    DashboardModule,
   ],
 })
 export class HttpModule {}

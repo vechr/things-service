@@ -1,5 +1,5 @@
-import { HttpException, HttpStatus } from "@nestjs/common";
-import { IErrorResponse } from "../responses/error.response";
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { IErrorResponse } from '../responses/error.response';
 
 export default class BaseException extends HttpException {
   constructor(
@@ -19,7 +19,7 @@ export default class BaseException extends HttpException {
     return {
       code: this.code,
       message: this.message,
-      params: this.params
-    }
+      params: this.params,
+    };
   }
 }

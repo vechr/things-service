@@ -1,7 +1,13 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from "@nestjs/common";
-import { UnknownException } from "../exceptions/common.exception";
-import ErrorResponse from "../responses/error.response";
-import log from "../utils/log.util";
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+import { UnknownException } from '../exceptions/common.exception';
+import ErrorResponse from '../responses/error.response';
+import log from '../utils/log.util';
 
 @Catch()
 export default class UnknownExceptionsFilter implements ExceptionFilter {
