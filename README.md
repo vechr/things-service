@@ -5,5 +5,8 @@
 # Running Thing Service
 ```bash
 yarn install
-yarn run start:dev
+yarn prisma:sync
+yarn db:migrate
+yarn db:studio
+yarn watch
 ```

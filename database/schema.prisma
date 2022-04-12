@@ -1,11 +1,84 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
+}
+
+model Dashboard {
+  id                          String @id @default(uuid()) @db.VarChar(36)
+  name                        String @unique @db.VarChar(50)
+  description                 String? @db.Text()
+  createdAt                   DateTime @default(now())
+  updateAt                    DateTime @updatedAt()
+  devices                     DashboardsDevices[]
+
+  @@map("dashboards")
+}
+
+model DashboardsDevices {
+  device                      Device @relation(fields: [deviceId], references: [id])
+  deviceId                    String @db.VarChar(36)
+  dashboard                   Dashboard @relation(fields: [dashboardId], references: [id])
+  dashboardId                 String @db.VarChar(36)
+  createdAt                   DateTime @default(now())
+  updateAt                    DateTime @updatedAt()
+
+  @@id([deviceId, dashboardId])
+  @@map("dashboards_devices")
+}
+
+model Device {
+  id                          String @id @default(uuid()) @db.VarChar(36)
+  deviceType                  DeviceType @relation(fields: [deviceTypeId], references: [id])
+  deviceTypeId                String @db.VarChar(36)
+  name                        String @db.VarChar(50)
+  description                 String? @db.Text()
+  isActive                    Boolean
+  createdAt                   DateTime @default(now())
+  updateAt                    DateTime @updatedAt()
+  dashboards                  DashboardsDevices[]
+  topics                      Topic[]
+
+  @@map("devices")
+}
+
+model DeviceType {
+  id                          String @id @default(uuid()) @db.VarChar(36)
+  name                        String @unique @db.VarChar(50)
+  description                 String? @db.Text()
+  createdAt                   DateTime @default(now())
+  updateAt                    DateTime @updatedAt()
+  devices                     Device[]
+
+  @@map("device_types")
+}
+
+model Topic {
+  id                          String @id @default(uuid()) @db.VarChar(36)
+  device                      Device @relation(fields: [deviceId], references: [id])
+  deviceId                    String @db.VarChar(36)
+  name                        String @unique @db.VarChar(50)
+  description                 String? @db.Text()
+  createdAt                   DateTime @default(now())
+  updateAt                    DateTime @updatedAt()
+  topicEvents                 TopicEvent[]
+
+  @@map("topics")
+}
+
+model TopicEvent {
+  id                          String @id @default(uuid()) @db.VarChar(36)
+  topic                       Topic @relation(fields: [topicId], references: [id])
+  topicId                     String @db.VarChar(36)
+  name                        String @unique @db.VarChar(50)
+  description                 String? @db.Text()
+  eventExpression             Json?
+  createdAt                   DateTime @default(now())
+  updateAt                    DateTime @updatedAt()
+
+  @@map("topic_events")
 }
