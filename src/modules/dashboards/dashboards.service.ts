@@ -21,7 +21,10 @@ export class DashboardService {
     });
 
     if (!dashboard) {
-      throw new NotFoundException({code: '404', message: 'Dashboard is not found!'});
+      throw new NotFoundException({
+        code: '404',
+        message: 'Dashboard is not found!',
+      });
     }
 
     return dashboard;
@@ -45,7 +48,10 @@ export class DashboardService {
     });
 
     if (!dashboard) {
-      throw new NotFoundException({code: '404', message: 'Dashboard is not found!'});
+      throw new NotFoundException({
+        code: '404',
+        message: 'Dashboard is not found!',
+      });
     }
 
     return this.prisma.dashboard.update({
@@ -66,7 +72,10 @@ export class DashboardService {
     });
 
     if (!dashboard) {
-      throw new NotFoundException({code: '404', message: 'Dashboard is not found!'});
+      throw new NotFoundException({
+        code: '404',
+        message: 'Dashboard is not found!',
+      });
     }
 
     const result = await this.prisma.dashboard.delete({
@@ -75,6 +84,9 @@ export class DashboardService {
       },
     });
 
-    return new SuccessResponse(`Dashboard: ${dashboardId} success deleted!`, result);
+    return new SuccessResponse(
+      `Dashboard: ${dashboardId} success deleted!`,
+      result,
+    );
   }
 }

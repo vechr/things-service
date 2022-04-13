@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class CreateDashboardDto {
+export class CreateDeviceTypeDto {
   @IsString()
   @IsNotEmpty()
   name: string;
