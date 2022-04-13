@@ -2,22 +2,43 @@ import PrismaService from '@/prisma/prisma.service';
 import { NotFoundException } from '@/shared/exceptions/common.exception';
 import SuccessResponse from '@/shared/responses/success.response';
 import { Injectable } from '@nestjs/common';
-import { CreateDashboardDto } from './dto/create-dashboard.dto';
-import { EditDashboardDto } from './dto/edit-dashboard.dto';
+import { CreateDashboardDto, EditDashboardDto } from './dto';
 
 @Injectable()
 export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getDashboard() {
-    return await this.prisma.dashboard.findMany();
+    const result = await this.prisma.dashboard.findMany({
+      include: {
+        devices: {
+          include: {
+            device: true
+          }
+        }
+      }
+    });
+
+
+    const filter = result.map((dashboard) => {
+      return {...dashboard, devices: dashboard.devices.map((device) => device.device)}
+    })
+
+    return filter;
   }
 
   async getDashboardById(dashboardId: string) {
-    const dashboard = await this.prisma.dashboard.findFirst({
+    const dashboard = await this.prisma.dashboard.findUnique({
       where: {
         id: dashboardId,
       },
+      include: {
+        devices: {
+          include: {
+            device: true
+          }
+        }
+      }
     });
 
     if (!dashboard) {
@@ -34,13 +55,14 @@ export class DashboardService {
     const dashboard = await this.prisma.dashboard.create({
       data: {
         ...dto,
-      },
+      }
     });
 
     return dashboard;
   }
+  
 
-  async editDashboardById(dashboardId: string, dto: EditDashboardDto) {
+  async editDashboardById(dashboardId: string, {name, devices, description}: EditDashboardDto) {
     const dashboard = await this.prisma.dashboard.findUnique({
       where: {
         id: dashboardId,
@@ -54,14 +76,23 @@ export class DashboardService {
       });
     }
 
-    return this.prisma.dashboard.update({
+    const result = await this.prisma.dashboard.update({
       where: {
         id: dashboardId,
       },
       data: {
-        ...dto,
-      },
+        name,
+        description,
+        devices: {
+          deleteMany: {},
+          create: devices.map((device) => ({
+            device: {connect: {id: device.id}}
+          }))
+        }
+      }
     });
+
+    return result;
   }
 
   async deleteDashboardById(dashboardId: string) {

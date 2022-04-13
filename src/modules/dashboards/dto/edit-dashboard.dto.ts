@@ -1,4 +1,5 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IDashboardConnectDevice } from './dashboard-connect-device.interface';
 
 export class EditDashboardDto {
   @IsString()
@@ -8,4 +9,7 @@ export class EditDashboardDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  @IsArray()
+  devices: IDashboardConnectDevice[];
 }

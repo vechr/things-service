@@ -8,8 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { DashboardService } from './dashboards.service';
-import { CreateDashboardDto } from './dto/create-dashboard.dto';
-import { EditDashboardDto } from './dto/edit-dashboard.dto';
+import { CreateDashboardDto, EditDashboardDto } from './dto';
 
 @Controller('dashboard')
 export class DashboardController {
@@ -24,7 +23,7 @@ export class DashboardController {
   getDashboardById(@Param('id') dashboardId: string) {
     return this.dashboardService.getDashboardById(dashboardId);
   }
-
+  
   @Post()
   createDashboard(@Body() dto: CreateDashboardDto) {
     return this.dashboardService.createDashboard(dto);
