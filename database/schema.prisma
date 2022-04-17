@@ -13,7 +13,7 @@ model Dashboard {
   name                        String @unique @db.VarChar(50)
   description                 String? @db.Text()
   createdAt                   DateTime @default(now())
-  updateAt                    DateTime @updatedAt()
+  updatedAt                    DateTime @updatedAt()
   devices                     DashboardsDevices[]
 
   @@map("dashboards")
@@ -25,7 +25,7 @@ model DashboardsDevices {
   dashboard                   Dashboard @relation(fields: [dashboardId], references: [id])
   dashboardId                 String @db.VarChar(36)
   createdAt                   DateTime @default(now())
-  updateAt                    DateTime @updatedAt()
+  updatedAt                    DateTime @updatedAt()
 
   @@id([deviceId, dashboardId])
   @@map("dashboards_devices")
@@ -39,7 +39,7 @@ model Device {
   description                 String? @db.Text()
   isActive                    Boolean
   createdAt                   DateTime @default(now())
-  updateAt                    DateTime @updatedAt()
+  updatedAt                    DateTime @updatedAt()
   dashboards                  DashboardsDevices[]
   topics                      Topic[]
 
@@ -51,7 +51,7 @@ model DeviceType {
   name                        String @unique @db.VarChar(50)
   description                 String? @db.Text()
   createdAt                   DateTime @default(now())
-  updateAt                    DateTime @updatedAt()
+  updatedAt                    DateTime @updatedAt()
   devices                     Device[]
 
   @@map("device_types")
@@ -64,7 +64,7 @@ model Topic {
   name                        String @unique @db.VarChar(50)
   description                 String? @db.Text()
   createdAt                   DateTime @default(now())
-  updateAt                    DateTime @updatedAt()
+  updatedAt                    DateTime @updatedAt()
   topicEvents                 TopicEvent[]
 
   @@map("topics")
@@ -78,7 +78,7 @@ model TopicEvent {
   description                 String? @db.Text()
   eventExpression             Json?
   createdAt                   DateTime @default(now())
-  updateAt                    DateTime @updatedAt()
+  updatedAt                    DateTime @updatedAt()
 
   @@map("topic_events")
 }
