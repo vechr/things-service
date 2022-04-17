@@ -1,7 +1,7 @@
 import PrismaService from '@/prisma/prisma.service';
-import { NotFoundException } from '@/shared/exceptions/common.exception';
+import { ForbiddenException, NotFoundException } from '@/shared/exceptions/common.exception';
 import SuccessResponse from '@/shared/responses/success.response';
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { EditTopicDto } from './dto/edit-topic.dto';
 
@@ -39,7 +39,7 @@ export class TopicService {
 
     if (!topic) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Topic is not found!',
       });
     }
@@ -56,7 +56,7 @@ export class TopicService {
 
     if (!device) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Device is not found!',
       });
     }
@@ -82,7 +82,7 @@ export class TopicService {
 
     if (!topic) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Topic is not found!',
       });
     }
@@ -95,7 +95,7 @@ export class TopicService {
 
     if (!device) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Device is not found!',
       });
     }
@@ -117,13 +117,23 @@ export class TopicService {
       where: {
         id: topicId,
       },
+      include: {
+        topicEvents: true
+      }
     });
 
     if (!topic) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Dashboard is not found!',
       });
+    }
+
+    if (topic.topicEvents.length > 0) {
+      throw new ForbiddenException({
+        code: HttpStatus.FORBIDDEN.toString(),
+        message: "Topic contain some topic event, you cannot delete this Topic!"
+      })
     }
 
     const result = await this.prisma.topic.delete({

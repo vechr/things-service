@@ -1,7 +1,7 @@
 import PrismaService from '@/prisma/prisma.service';
-import { NotFoundException } from '@/shared/exceptions/common.exception';
+import { ForbiddenException, NotFoundException } from '@/shared/exceptions/common.exception';
 import SuccessResponse from '@/shared/responses/success.response';
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateDashboardDto, EditDashboardDto } from './dto';
 
 @Injectable()
@@ -43,7 +43,7 @@ export class DashboardService {
 
     if (!dashboard) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Dashboard is not found!',
       });
     }
@@ -71,7 +71,7 @@ export class DashboardService {
 
     if (!dashboard) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Dashboard is not found!',
       });
     }
@@ -100,13 +100,23 @@ export class DashboardService {
       where: {
         id: dashboardId,
       },
+      include: {
+        devices: true
+      }
     });
 
     if (!dashboard) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Dashboard is not found!',
       });
+    }
+
+    if (dashboard.devices.length > 0) {
+      throw new ForbiddenException({
+        code: HttpStatus.FORBIDDEN.toString(),
+        message: "Dashboard contain some devices, you cannot delete this dashboard!"
+      })
     }
 
     const result = await this.prisma.dashboard.delete({

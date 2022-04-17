@@ -1,6 +1,6 @@
 import PrismaService from "@/prisma/prisma.service";
 import SuccessResponse from "@/shared/responses/success.response";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { CreateTopicEventDto } from "./dto/create-topic-event.dto";
 import { EditTopicEventDto } from "./dto/edit-topic-event.dto";
 
@@ -27,7 +27,7 @@ export class TopicEventService {
 
     if (!topicEvent) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Topic Event is not found!',
       });
     }
@@ -44,7 +44,7 @@ export class TopicEventService {
 
     if (!topics) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Topic is not found!',
       });
     }
@@ -71,7 +71,7 @@ export class TopicEventService {
 
     if (!topicEvent) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Topic Event is not found!',
       });
     }
@@ -84,7 +84,7 @@ export class TopicEventService {
 
     if (!topic) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Topic is not found!',
       });
     }
@@ -111,7 +111,7 @@ export class TopicEventService {
 
     if (!topicEvent) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Topic Event is not found!',
       });
     }

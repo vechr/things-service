@@ -1,7 +1,7 @@
 import PrismaService from '@/prisma/prisma.service';
-import { NotFoundException } from '@/shared/exceptions/common.exception';
+import { ForbiddenException, NotFoundException } from '@/shared/exceptions/common.exception';
 import SuccessResponse from '@/shared/responses/success.response';
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateDeviceTypeDto } from './dto/create-device-type.dto';
 import { EditDeviceTypeDto } from './dto/edit-device-type.dto';
 
@@ -22,7 +22,7 @@ export class DeviceTypeService {
 
     if (!deviceType) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Device Type is not found!',
       });
     }
@@ -49,7 +49,7 @@ export class DeviceTypeService {
 
     if (!deviceType) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Device Type is not found!',
       });
     }
@@ -69,14 +69,25 @@ export class DeviceTypeService {
       where: {
         id: deviceTypeId,
       },
+      include: {
+        devices: true
+      }
     });
 
     if (!deviceType) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Device Type is not found!',
       });
     }
+
+    if (deviceType.devices.length > 0) {
+      throw new ForbiddenException({
+        code: HttpStatus.FORBIDDEN.toString(),
+        message: "Device Type contain some devices, you cannot delete this Device Type!"
+      })
+    }
+
 
     const result = await this.prisma.deviceType.delete({
       where: {

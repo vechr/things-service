@@ -1,7 +1,7 @@
 import PrismaService from '@/prisma/prisma.service';
-import { NotFoundException } from '@/shared/exceptions/common.exception';
+import { ForbiddenException, NotFoundException } from '@/shared/exceptions/common.exception';
 import SuccessResponse from '@/shared/responses/success.response';
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { EditDeviceDto } from './dto/edit-device.dto';
 
@@ -32,7 +32,7 @@ export class DeviceService {
 
     if (!device) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Device is not found!',
       });
     }
@@ -49,7 +49,7 @@ export class DeviceService {
 
     if (!deviceType) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Device Type is not found!',
       });
     }
@@ -72,7 +72,7 @@ export class DeviceService {
 
     if (!device) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Device is not found!',
       });
     }
@@ -85,7 +85,7 @@ export class DeviceService {
 
     if (!deviceType) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Device Type is not found!',
       });
     }
@@ -105,13 +105,23 @@ export class DeviceService {
       where: {
         id: deviceId,
       },
+      include: {
+        topics: true
+      }
     });
 
     if (!device) {
       throw new NotFoundException({
-        code: '404',
+        code: HttpStatus.NOT_FOUND.toString(),
         message: 'Device is not found!',
       });
+    }
+
+    if (device.topics.length > 0) {
+      throw new ForbiddenException({
+        code: HttpStatus.FORBIDDEN.toString(),
+        message: "Device contain some topic, you cannot delete this device!"
+      })
     }
 
     const result = await this.prisma.device.delete({
