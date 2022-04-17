@@ -7,6 +7,7 @@ import ContextInterceptor from './shared/interceptors/context.interceptor';
 import log from './shared/utils/log.util';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import NatsModule from './nats.module';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 const httpServer = new Promise(async (resolve, reject) => {
   try {
@@ -16,6 +17,22 @@ const httpServer = new Promise(async (resolve, reject) => {
       new UnknownExceptionsFilter(),
       new HttpExceptionFilter(),
     );
+    const option = {
+      customCss: `
+      .topbar-wrapper img {content:url(\'https://svgshare.com/i/fmL.svg'); width:200px; height:auto;}
+      .swagger-ui .topbar { background-color: #000000; }`,
+      customfavIcon: 'https://svgshare.com/i/fmL.svg',
+      customSiteTitle: 'kreMES API'
+    }
+    const config = new DocumentBuilder()
+      .setTitle('Things Service API Documentation')
+      .setDescription('This is a Things Service for creating Metadata IoT system')
+      .setVersion('1.0.0')
+      .build()
+  
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('/api/things', app, document, option);
+
     app.useGlobalInterceptors(new ContextInterceptor());
 
     await app

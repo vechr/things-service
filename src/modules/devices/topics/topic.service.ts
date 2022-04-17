@@ -47,10 +47,10 @@ export class TopicService {
     return topic;
   }
 
-  async createTopic(dto: CreateTopicDto) {
+  async createTopic(deviceId: string, {name, description}: CreateTopicDto) {
     const device = await this.prisma.device.findUnique({
       where: {
-        id: dto.deviceId,
+        id: deviceId,
       },
     });
 
@@ -63,7 +63,9 @@ export class TopicService {
 
     const topic = await this.prisma.topic.create({
       data: {
-        ...dto,
+        name,
+        description,
+        deviceId
       }
     });
 
@@ -71,7 +73,7 @@ export class TopicService {
   }
   
 
-  async editTopicById(topicId: string, {name, description, deviceId}: EditTopicDto) {
+  async editTopicById(deviceId: string, topicId: string, {name, description}: EditTopicDto) {
     const topic = await this.prisma.topic.findUnique({
       where: {
         id: topicId,

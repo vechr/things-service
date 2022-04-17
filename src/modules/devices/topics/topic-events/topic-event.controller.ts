@@ -1,16 +1,17 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { CreateTopicEventDto } from "./dto/create-topic-event.dto";
 import { EditTopicEventDto } from "./dto/edit-topic-event.dto";
-import { GetTopicEventsDto } from "./dto/get-topic-events.dto";
 import { TopicEventService } from "./topic-event.service";
 
-@Controller('topic-events')
+@ApiTags('Topic Event')
+@Controller('topic/:topicId/topic-events')
 export class TopicEventController {
   constructor(private readonly topicEventService: TopicEventService){}
 
   @Get()
-  getTopicEvents(@Body() dto: GetTopicEventsDto) {
-    return this.topicEventService.getTopicEvents(dto.topicId);
+  getTopicEvents(@Param('topicId') topicId: string) {
+    return this.topicEventService.getTopicEvents(topicId);
   }
 
   @Get(':id')
@@ -19,13 +20,13 @@ export class TopicEventController {
   }
 
   @Post()
-  createTopicEvent(@Body() dto: CreateTopicEventDto) {
-    return this.topicEventService.createTopicEvent(dto);
+  createTopicEvent(@Param('topicId') topicId: string, @Body() dto: CreateTopicEventDto) {
+    return this.topicEventService.createTopicEvent(topicId, dto);
   }
 
   @Patch(':id')
-  editTopicEventById(@Param('id') topicEventId: string, @Body() dto: EditTopicEventDto) {
-    return this.topicEventService.editTopicEventById(topicEventId, dto);
+  editTopicEventById(@Param('topicId') topicId: string, @Param('id') topicEventId: string, @Body() dto: EditTopicEventDto) {
+    return this.topicEventService.editTopicEventById(topicId, topicEventId, dto);
   }
 
   @Delete(':id')

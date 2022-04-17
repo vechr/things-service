@@ -7,9 +7,12 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { DashboardService } from './dashboards.service';
 import { CreateDashboardDto, EditDashboardDto } from './dto';
 
+
+@ApiTags('Dashboard')
 @Controller('dashboard')
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}

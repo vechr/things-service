@@ -7,10 +7,12 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { DeviceTypeService } from './device-type.service';
 import { CreateDeviceTypeDto } from './dto/create-device-type.dto';
 import { EditDeviceTypeDto } from './dto/edit-device-type.dto';
 
+@ApiTags('Device Type')
 @Controller('device-type')
 export class DeviceTypeController {
   constructor(private readonly deviceTypeService: DeviceTypeService) {}

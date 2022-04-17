@@ -35,10 +35,10 @@ export class TopicEventService {
     return topicEvent;
   }
 
-  async createTopicEvent(dto: CreateTopicEventDto) {
+  async createTopicEvent(topicId, {name, description, eventExpression}: CreateTopicEventDto) {
     const topics = await this.prisma.topic.findUnique({
       where: {
-        id: dto.topicId,
+        id: topicId,
       },
     });
 
@@ -51,7 +51,10 @@ export class TopicEventService {
 
     const topicEvent = await this.prisma.topicEvent.create({
       data: {
-        ...dto
+        name,
+        description,
+        eventExpression,
+        topicId
       }
     });
 
@@ -59,7 +62,7 @@ export class TopicEventService {
   }
   
 
-  async editTopicEventById(topicEventId: string, {name, description, eventExpression, topicId}: EditTopicEventDto) {
+  async editTopicEventById(topicId: string, topicEventId: string, {name, description, eventExpression}: EditTopicEventDto) {
     const topicEvent = await this.prisma.topicEvent.findUnique({
       where: {
         id: topicEventId,
