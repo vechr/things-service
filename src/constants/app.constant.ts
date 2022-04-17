@@ -5,5 +5,5 @@ dotenv.config();
 
 export default Object.freeze({
   APP_PORT: env.get('APP_PORT').default(3000).asInt(),
-  NATS_URL: env.get('NATS_URL').required().asString()
-})
+  NATS_URL: env.get('NATS_URL').required().asString(),
+});

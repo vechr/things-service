@@ -1,28 +1,47 @@
-import { Controller, Get } from "@nestjs/common";
-import { DeviceService } from "../devices/device.service";
-import { TopicService } from "../topics/topic.service";
-import { DashboardService } from "./dashboards.service";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { DashboardService } from './dashboards.service';
+import { CreateDashboardDto, EditDashboardDto } from './dto';
 
-@Controller()
+
+@ApiTags('Dashboard')
+@Controller('dashboard')
 export class DashboardController {
-  constructor(
-    private readonly deviceService: DeviceService,
-    private readonly dashboardService: DashboardService,
-    private readonly topicService: TopicService
-  ){}
+  constructor(private readonly dashboardService: DashboardService) {}
+
+  @Get()
+  getDashboard() {
+    return this.dashboardService.getDashboard();
+  }
+
+  @Get(':id')
+  getDashboardById(@Param('id') dashboardId: string) {
+    return this.dashboardService.getDashboardById(dashboardId);
+  }
   
-  @Get('dashboard')
-  halloDashboard() {
-    return this.dashboardService.hallo();
+  @Post()
+  createDashboard(@Body() dto: CreateDashboardDto) {
+    return this.dashboardService.createDashboard(dto);
   }
 
-  @Get('device')
-  halloDevice() {
-    return this.deviceService.hallo();
+  @Patch(':id')
+  editDashboardById(
+    @Param('id') dashboardId: string,
+    @Body() dto: EditDashboardDto,
+  ) {
+    return this.dashboardService.editDashboardById(dashboardId, dto);
   }
 
-  @Get('topic')
-  halloTopic() {
-    return this.topicService.hallo();
+  @Delete(':id')
+  deleteDashboardById(@Param('id') dashboardId: string) {
+    return this.dashboardService.deleteDashboardById(dashboardId);
   }
 }
