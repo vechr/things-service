@@ -1,7 +1,7 @@
-import PrismaService from "@/prisma/prisma.service";
-import { HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
-import { CreateTopicEventDto } from "./dto/create-topic-event.dto";
-import { EditTopicEventDto } from "./dto/edit-topic-event.dto";
+import PrismaService from '@/prisma/prisma.service';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { CreateTopicEventDto } from './dto/create-topic-event.dto';
+import { EditTopicEventDto } from './dto/edit-topic-event.dto';
 
 @Injectable()
 export class TopicEventService {
@@ -10,8 +10,8 @@ export class TopicEventService {
   async getTopicEvents(topicId: string) {
     const result = await this.prisma.topicEvent.findMany({
       where: {
-        topicId
-      }
+        topicId,
+      },
     });
 
     return result;
@@ -21,7 +21,7 @@ export class TopicEventService {
     const topicEvent = await this.prisma.topicEvent.findUnique({
       where: {
         id: topicEventId,
-      }
+      },
     });
 
     if (!topicEvent) {
@@ -34,7 +34,10 @@ export class TopicEventService {
     return topicEvent;
   }
 
-  async createTopicEvent(topicId, {name, description, eventExpression}: CreateTopicEventDto) {
+  async createTopicEvent(
+    topicId,
+    { name, description, eventExpression }: CreateTopicEventDto,
+  ) {
     const topics = await this.prisma.topic.findUnique({
       where: {
         id: topicId,
@@ -53,15 +56,18 @@ export class TopicEventService {
         name,
         description,
         eventExpression,
-        topicId
-      }
+        topicId,
+      },
     });
 
     return topicEvent;
   }
-  
 
-  async editTopicEventById(topicId: string, topicEventId: string, {name, description, eventExpression}: EditTopicEventDto) {
+  async editTopicEventById(
+    topicId: string,
+    topicEventId: string,
+    { name, description, eventExpression }: EditTopicEventDto,
+  ) {
     const topicEvent = await this.prisma.topicEvent.findUnique({
       where: {
         id: topicEventId,
@@ -96,7 +102,7 @@ export class TopicEventService {
         name,
         description,
         eventExpression,
-        topicId
+        topicId,
       },
     });
   }

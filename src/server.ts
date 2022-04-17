@@ -22,14 +22,16 @@ const httpServer = new Promise(async (resolve, reject) => {
       .topbar-wrapper img {content:url(\'https://svgshare.com/i/fmL.svg'); width:200px; height:auto;}
       .swagger-ui .topbar { background-color: #000000; }`,
       customfavIcon: 'https://svgshare.com/i/fmL.svg',
-      customSiteTitle: 'kreMES API'
-    }
+      customSiteTitle: 'kreMES API Things Services',
+    };
     const config = new DocumentBuilder()
       .setTitle('Things Service API Documentation')
-      .setDescription('This is a Things Service for creating Metadata IoT system')
+      .setDescription(
+        'This is a Things Service for creating Metadata IoT system',
+      )
       .setVersion('1.0.0')
-      .build()
-  
+      .build();
+
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('/api/things', app, document, option);
 

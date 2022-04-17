@@ -21,7 +21,7 @@ export class DeviceController {
   @Get()
   public async getDevices(): Promise<SuccessResponse> {
     const result = await this.deviceService.getDevices();
-    return new SuccessResponse('Success get all records!', result); 
+    return new SuccessResponse('Success get all records!', result);
   }
 
   @Get(':id')
@@ -31,20 +31,27 @@ export class DeviceController {
   }
 
   @Post()
-  public async createDevice(@Body() dto: CreateDeviceDto): Promise<SuccessResponse> {
+  public async createDevice(
+    @Body() dto: CreateDeviceDto,
+  ): Promise<SuccessResponse> {
     const result = await this.deviceService.createDevice(dto);
     return new SuccessResponse(`Success Create Device!`, result);
   }
 
   @Patch(':id')
-  public async editDeviceById(@Param('id') deviceId: string, @Body() dto: EditDeviceDto): Promise<SuccessResponse> {
+  public async editDeviceById(
+    @Param('id') deviceId: string,
+    @Body() dto: EditDeviceDto,
+  ): Promise<SuccessResponse> {
     const result = await this.deviceService.editDeviceById(deviceId, dto);
     return new SuccessResponse(`Success update Device ${deviceId}!`, result);
   }
 
   @Delete(':id')
-  public async deleteDeviceById(@Param('id') deviceId: string): Promise<SuccessResponse> {
-    const result = await this.deviceService.deleteDeviceById(deviceId); 
+  public async deleteDeviceById(
+    @Param('id') deviceId: string,
+  ): Promise<SuccessResponse> {
+    const result = await this.deviceService.deleteDeviceById(deviceId);
     return new SuccessResponse(`Device: ${deviceId} success deleted!`, result);
   }
 }

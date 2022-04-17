@@ -1,5 +1,8 @@
 import PrismaService from '@/prisma/prisma.service';
-import { ForbiddenException, NotFoundException } from '@/shared/exceptions/common.exception';
+import {
+  ForbiddenException,
+  NotFoundException,
+} from '@/shared/exceptions/common.exception';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateDeviceTypeDto } from './dto/create-device-type.dto';
 import { EditDeviceTypeDto } from './dto/edit-device-type.dto';
@@ -69,8 +72,8 @@ export class DeviceTypeService {
         id: deviceTypeId,
       },
       include: {
-        devices: true
-      }
+        devices: true,
+      },
     });
 
     if (!deviceType) {
@@ -83,10 +86,10 @@ export class DeviceTypeService {
     if (deviceType.devices.length > 0) {
       throw new ForbiddenException({
         code: HttpStatus.FORBIDDEN.toString(),
-        message: "Device Type contain some devices, you cannot delete this Device Type!"
-      })
+        message:
+          'Device Type contain some devices, you cannot delete this Device Type!',
+      });
     }
-
 
     const result = await this.prisma.deviceType.delete({
       where: {

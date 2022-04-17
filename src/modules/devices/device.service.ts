@@ -1,5 +1,8 @@
 import PrismaService from '@/prisma/prisma.service';
-import { ForbiddenException, NotFoundException } from '@/shared/exceptions/common.exception';
+import {
+  ForbiddenException,
+  NotFoundException,
+} from '@/shared/exceptions/common.exception';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { EditDeviceDto } from './dto/edit-device.dto';
@@ -11,13 +14,20 @@ export class DeviceService {
   async getDevices() {
     const result = await this.prisma.device.findMany({
       include: {
-        topics: true
-      }
-    })
+        topics: true,
+      },
+    });
 
     const filter = result.map((device) => {
-      return {...device, topics: device.topics.map((topic) => ({id: topic.id, name: topic.name, description: topic.description}))};
-    })
+      return {
+        ...device,
+        topics: device.topics.map((topic) => ({
+          id: topic.id,
+          name: topic.name,
+          description: topic.description,
+        })),
+      };
+    });
 
     return filter;
   }
@@ -29,8 +39,8 @@ export class DeviceService {
       },
       include: {
         topics: true,
-        deviceType: true
-      }
+        deviceType: true,
+      },
     });
 
     if (!device) {
@@ -40,7 +50,7 @@ export class DeviceService {
       });
     }
 
-    const filter = device.topics.map((topic) => topic)
+    const filter = device.topics.map((topic) => topic);
 
     const response = {
       id: device.id,
@@ -49,8 +59,8 @@ export class DeviceService {
       createdAt: device.createdAt,
       updatedAt: device.updatedAt,
       deviceType: device.deviceType,
-      topics: filter
-    }
+      topics: filter,
+    };
 
     return response;
   }
@@ -121,8 +131,8 @@ export class DeviceService {
         id: deviceId,
       },
       include: {
-        topics: true
-      }
+        topics: true,
+      },
     });
 
     if (!device) {
@@ -135,8 +145,8 @@ export class DeviceService {
     if (device.topics.length > 0) {
       throw new ForbiddenException({
         code: HttpStatus.FORBIDDEN.toString(),
-        message: "Device contain some topic, you cannot delete this device!"
-      })
+        message: 'Device contain some topic, you cannot delete this device!',
+      });
     }
 
     const result = await this.prisma.device.delete({

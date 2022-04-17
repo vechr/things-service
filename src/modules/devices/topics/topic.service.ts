@@ -1,5 +1,8 @@
 import PrismaService from '@/prisma/prisma.service';
-import { ForbiddenException, NotFoundException } from '@/shared/exceptions/common.exception';
+import {
+  ForbiddenException,
+  NotFoundException,
+} from '@/shared/exceptions/common.exception';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { EditTopicDto } from './dto/edit-topic.dto';
@@ -11,17 +14,19 @@ export class TopicService {
   async getTopics(deviceId: string) {
     const result = await this.prisma.topic.findMany({
       where: {
-        deviceId
+        deviceId,
       },
       include: {
-        topicEvents: true
-      }
+        topicEvents: true,
+      },
     });
 
-
     const filter = result.map((topic) => {
-      return {...topic, topicEvents: topic.topicEvents.map((topicEvents) => topicEvents)}
-    })
+      return {
+        ...topic,
+        topicEvents: topic.topicEvents.map((topicEvents) => topicEvents),
+      };
+    });
 
     return filter;
   }
@@ -32,8 +37,8 @@ export class TopicService {
         id: topicId,
       },
       include: {
-        topicEvents: true
-      }
+        topicEvents: true,
+      },
     });
 
     if (!topic) {
@@ -46,7 +51,7 @@ export class TopicService {
     return topic;
   }
 
-  async createTopic(deviceId: string, {name, description}: CreateTopicDto) {
+  async createTopic(deviceId: string, { name, description }: CreateTopicDto) {
     const device = await this.prisma.device.findUnique({
       where: {
         id: deviceId,
@@ -64,15 +69,18 @@ export class TopicService {
       data: {
         name,
         description,
-        deviceId
-      }
+        deviceId,
+      },
     });
 
     return topic;
   }
-  
 
-  async editTopicById(deviceId: string, topicId: string, {name, description}: EditTopicDto) {
+  async editTopicById(
+    deviceId: string,
+    topicId: string,
+    { name, description }: EditTopicDto,
+  ) {
     const topic = await this.prisma.topic.findUnique({
       where: {
         id: topicId,
@@ -106,7 +114,7 @@ export class TopicService {
       data: {
         name,
         description,
-        deviceId
+        deviceId,
       },
     });
   }
@@ -117,8 +125,8 @@ export class TopicService {
         id: topicId,
       },
       include: {
-        topicEvents: true
-      }
+        topicEvents: true,
+      },
     });
 
     if (!topic) {
@@ -131,8 +139,9 @@ export class TopicService {
     if (topic.topicEvents.length > 0) {
       throw new ForbiddenException({
         code: HttpStatus.FORBIDDEN.toString(),
-        message: "Topic contain some topic event, you cannot delete this Topic!"
-      })
+        message:
+          'Topic contain some topic event, you cannot delete this Topic!',
+      });
     }
 
     const result = await this.prisma.topic.delete({

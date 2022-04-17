@@ -1,5 +1,8 @@
 import PrismaService from '@/prisma/prisma.service';
-import { ForbiddenException, NotFoundException } from '@/shared/exceptions/common.exception';
+import {
+  ForbiddenException,
+  NotFoundException,
+} from '@/shared/exceptions/common.exception';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateDashboardDto, EditDashboardDto } from './dto';
 
@@ -12,16 +15,18 @@ export class DashboardService {
       include: {
         devices: {
           include: {
-            device: true
-          }
-        }
-      }
+            device: true,
+          },
+        },
+      },
     });
 
-
     const filter = result.map((dashboard) => {
-      return {...dashboard, devices: dashboard.devices.map((device) => device.device)}
-    })
+      return {
+        ...dashboard,
+        devices: dashboard.devices.map((device) => device.device),
+      };
+    });
 
     return filter;
   }
@@ -34,10 +39,10 @@ export class DashboardService {
       include: {
         devices: {
           include: {
-            device: true
-          }
-        }
-      }
+            device: true,
+          },
+        },
+      },
     });
 
     if (!dashboard) {
@@ -57,8 +62,8 @@ export class DashboardService {
       description: dashboard.description,
       createdAt: dashboard.createdAt,
       updatedAt: dashboard.updatedAt,
-      devices: filter
-    }
+      devices: filter,
+    };
 
     return response;
   }
@@ -67,14 +72,16 @@ export class DashboardService {
     const dashboard = await this.prisma.dashboard.create({
       data: {
         ...dto,
-      }
+      },
     });
 
     return dashboard;
   }
-  
 
-  async editDashboardById(dashboardId: string, {name, devices, description}: EditDashboardDto) {
+  async editDashboardById(
+    dashboardId: string,
+    { name, devices, description }: EditDashboardDto,
+  ) {
     const dashboard = await this.prisma.dashboard.findUnique({
       where: {
         id: dashboardId,
@@ -98,10 +105,10 @@ export class DashboardService {
         devices: {
           deleteMany: {},
           create: devices.map((device) => ({
-            device: {connect: {id: device.id}}
-          }))
-        }
-      }
+            device: { connect: { id: device.id } },
+          })),
+        },
+      },
     });
 
     return result;
@@ -113,8 +120,8 @@ export class DashboardService {
         id: dashboardId,
       },
       include: {
-        devices: true
-      }
+        devices: true,
+      },
     });
 
     if (!dashboard) {
@@ -127,8 +134,9 @@ export class DashboardService {
     if (dashboard.devices.length > 0) {
       throw new ForbiddenException({
         code: HttpStatus.FORBIDDEN.toString(),
-        message: "Dashboard contain some devices, you cannot delete this dashboard!"
-      })
+        message:
+          'Dashboard contain some devices, you cannot delete this dashboard!',
+      });
     }
 
     const result = await this.prisma.dashboard.delete({

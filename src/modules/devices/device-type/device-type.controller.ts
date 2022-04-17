@@ -21,19 +21,24 @@ export class DeviceTypeController {
   @Get()
   public async getDeviceTypes(): Promise<SuccessResponse> {
     const result = await this.deviceTypeService.getDeviceTypes();
-    return new SuccessResponse('Success get all records!', result);  
+    return new SuccessResponse('Success get all records!', result);
   }
 
   @Get(':id')
-  public async getDeviceTypeById(@Param('id') deviceTypeId: string): Promise<SuccessResponse> {
+  public async getDeviceTypeById(
+    @Param('id') deviceTypeId: string,
+  ): Promise<SuccessResponse> {
     const result = await this.deviceTypeService.getDeviceTypeById(deviceTypeId);
-    return new SuccessResponse(`Success get device type ${deviceTypeId}!`, result);
+    return new SuccessResponse(
+      `Success get device type ${deviceTypeId}!`,
+      result,
+    );
   }
 
   @Post()
   public async createDeviceType(@Body() dto: CreateDeviceTypeDto) {
     const result = await this.deviceTypeService.createDeviceType(dto);
-    return new SuccessResponse(`Success Create device type!`, result); 
+    return new SuccessResponse(`Success Create device type!`, result);
   }
 
   @Patch(':id')
@@ -41,13 +46,24 @@ export class DeviceTypeController {
     @Param('id') deviceTypeId: string,
     @Body() dto: EditDeviceTypeDto,
   ): Promise<SuccessResponse> {
-    const result = await this.deviceTypeService.editDeviceTypeById(deviceTypeId, dto);
-    return new SuccessResponse(`Success update device type ${deviceTypeId}!`, result); 
+    const result = await this.deviceTypeService.editDeviceTypeById(
+      deviceTypeId,
+      dto,
+    );
+    return new SuccessResponse(
+      `Success update device type ${deviceTypeId}!`,
+      result,
+    );
   }
 
   @Delete(':id')
   public async deleteDeviceTypeById(@Param('id') deviceTypeId: string) {
-    const result = await this.deviceTypeService.deleteDeviceTypeById(deviceTypeId);
-    return new SuccessResponse(`Device Type: ${deviceTypeId} success deleted!`, result);
+    const result = await this.deviceTypeService.deleteDeviceTypeById(
+      deviceTypeId,
+    );
+    return new SuccessResponse(
+      `Device Type: ${deviceTypeId} success deleted!`,
+      result,
+    );
   }
 }
