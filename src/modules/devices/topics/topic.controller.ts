@@ -1,3 +1,4 @@
+import SuccessResponse from "@/shared/responses/success.response";
 import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { CreateTopicDto } from "./dto/create-topic.dto";
@@ -10,27 +11,32 @@ export class TopicController {
   constructor(private readonly topicService: TopicService) {}
   
   @Get()
-  getTopics(@Param('deviceId') deviceId: string) {
-    return this.topicService.getTopics(deviceId);
+  public async getTopics(@Param('deviceId') deviceId: string): Promise<SuccessResponse> {
+    const result = await this.topicService.getTopics(deviceId);
+    return new SuccessResponse('Success get all records!', result); 
   }
 
   @Get(':id')
-  getTopicById(@Param('id') topicId: string) {
-    return this.topicService.getTopicById(topicId);
+  public async getTopicById(@Param('id') topicId: string): Promise<SuccessResponse> {
+    const result = await this.topicService.getTopicById(topicId);
+    return new SuccessResponse(`Success get Topic ${topicId}!`, result);
   }
 
   @Post()
-  createTopic(@Param('deviceId') deviceId: string, @Body() dto: CreateTopicDto) {
-    return this.topicService.createTopic(deviceId, dto);
+  public async createTopic(@Param('deviceId') deviceId: string, @Body() dto: CreateTopicDto) {
+    const result = await this.topicService.createTopic(deviceId, dto);
+    return new SuccessResponse(`Success Create Topic!`, result);
   }
 
   @Patch(':id')
-  editTopicById(@Param('deviceId') deviceId: string, @Param('id') topicId: string, @Body() dto: EditTopicDto) {
-    return this.topicService.editTopicById(deviceId, topicId, dto);
+  public async editTopicById(@Param('deviceId') deviceId: string, @Param('id') topicId: string, @Body() dto: EditTopicDto): Promise<SuccessResponse> {
+    const result = await this.topicService.editTopicById(deviceId, topicId, dto);
+    return new SuccessResponse(`Success update Topic ${topicId}!`, result);
   }
 
   @Delete(':id')
-  deleteTopicById(@Param('id') topicId: string) {
-    return this.topicService.deleteTopicById(topicId);
+  public async deleteTopicById(@Param('id') topicId: string): Promise<SuccessResponse> {
+    const result = await this.topicService.deleteTopicById(topicId);
+    return new SuccessResponse(`Topic: ${topicId} success deleted!`, result);
   }
 }

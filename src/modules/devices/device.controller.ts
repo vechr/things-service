@@ -1,3 +1,4 @@
+import SuccessResponse from '@/shared/responses/success.response';
 import {
   Body,
   Controller,
@@ -18,27 +19,32 @@ export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
 
   @Get()
-  getDevices() {
-    return this.deviceService.getDevices();
+  public async getDevices(): Promise<SuccessResponse> {
+    const result = await this.deviceService.getDevices();
+    return new SuccessResponse('Success get all records!', result); 
   }
 
   @Get(':id')
-  getDeviceById(@Param('id') deviceId: string) {
-    return this.deviceService.getDeviceById(deviceId);
+  public async getDeviceById(@Param('id') deviceId: string) {
+    const result = await this.deviceService.getDeviceById(deviceId);
+    return new SuccessResponse(`Success get Device ${deviceId}!`, result);
   }
 
   @Post()
-  createDevice(@Body() dto: CreateDeviceDto) {
-    return this.deviceService.createDevice(dto);
+  public async createDevice(@Body() dto: CreateDeviceDto): Promise<SuccessResponse> {
+    const result = await this.deviceService.createDevice(dto);
+    return new SuccessResponse(`Success Create Device!`, result);
   }
 
   @Patch(':id')
-  editDeviceById(@Param('id') deviceId: string, @Body() dto: EditDeviceDto) {
-    return this.deviceService.editDeviceById(deviceId, dto);
+  public async editDeviceById(@Param('id') deviceId: string, @Body() dto: EditDeviceDto): Promise<SuccessResponse> {
+    const result = await this.deviceService.editDeviceById(deviceId, dto);
+    return new SuccessResponse(`Success update Device ${deviceId}!`, result);
   }
 
   @Delete(':id')
-  deleteDeviceById(@Param('id') deviceId: string) {
-    return this.deviceService.deleteDeviceById(deviceId);
+  public async deleteDeviceById(@Param('id') deviceId: string): Promise<SuccessResponse> {
+    const result = await this.deviceService.deleteDeviceById(deviceId); 
+    return new SuccessResponse(`Device: ${deviceId} success deleted!`, result);
   }
 }

@@ -1,6 +1,5 @@
 import PrismaService from '@/prisma/prisma.service';
 import { ForbiddenException, NotFoundException } from '@/shared/exceptions/common.exception';
-import SuccessResponse from '@/shared/responses/success.response';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateDashboardDto, EditDashboardDto } from './dto';
 
@@ -138,9 +137,6 @@ export class DashboardService {
       },
     });
 
-    return new SuccessResponse(
-      `Dashboard: ${dashboardId} success deleted!`,
-      result,
-    );
+    return result;
   }
 }

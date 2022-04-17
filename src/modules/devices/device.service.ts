@@ -1,6 +1,5 @@
 import PrismaService from '@/prisma/prisma.service';
 import { ForbiddenException, NotFoundException } from '@/shared/exceptions/common.exception';
-import SuccessResponse from '@/shared/responses/success.response';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { EditDeviceDto } from './dto/edit-device.dto';
@@ -146,6 +145,6 @@ export class DeviceService {
       },
     });
 
-    return new SuccessResponse(`Device: ${deviceId} success deleted!`, result);
+    return result;
   }
 }

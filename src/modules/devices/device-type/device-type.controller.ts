@@ -1,3 +1,4 @@
+import SuccessResponse from '@/shared/responses/success.response';
 import {
   Body,
   Controller,
@@ -18,30 +19,35 @@ export class DeviceTypeController {
   constructor(private readonly deviceTypeService: DeviceTypeService) {}
 
   @Get()
-  getDeviceTypes() {
-    return this.deviceTypeService.getDeviceTypes();
+  public async getDeviceTypes(): Promise<SuccessResponse> {
+    const result = await this.deviceTypeService.getDeviceTypes();
+    return new SuccessResponse('Success get all records!', result);  
   }
 
   @Get(':id')
-  getDeviceTypeById(@Param('id') deviceTypeId: string) {
-    return this.deviceTypeService.getDeviceTypeById(deviceTypeId);
+  public async getDeviceTypeById(@Param('id') deviceTypeId: string): Promise<SuccessResponse> {
+    const result = await this.deviceTypeService.getDeviceTypeById(deviceTypeId);
+    return new SuccessResponse(`Success get device type ${deviceTypeId}!`, result);
   }
 
   @Post()
-  createDeviceType(@Body() dto: CreateDeviceTypeDto) {
-    return this.deviceTypeService.createDeviceType(dto);
+  public async createDeviceType(@Body() dto: CreateDeviceTypeDto) {
+    const result = await this.deviceTypeService.createDeviceType(dto);
+    return new SuccessResponse(`Success Create device type!`, result); 
   }
 
   @Patch(':id')
-  editDeviceTypeById(
+  public async editDeviceTypeById(
     @Param('id') deviceTypeId: string,
     @Body() dto: EditDeviceTypeDto,
-  ) {
-    return this.deviceTypeService.editDeviceTypeById(deviceTypeId, dto);
+  ): Promise<SuccessResponse> {
+    const result = await this.deviceTypeService.editDeviceTypeById(deviceTypeId, dto);
+    return new SuccessResponse(`Success update device type ${deviceTypeId}!`, result); 
   }
 
   @Delete(':id')
-  deleteDeviceTypeById(@Param('id') deviceTypeId: string) {
-    return this.deviceTypeService.deleteDeviceTypeById(deviceTypeId);
+  public async deleteDeviceTypeById(@Param('id') deviceTypeId: string) {
+    const result = await this.deviceTypeService.deleteDeviceTypeById(deviceTypeId);
+    return new SuccessResponse(`Device Type: ${deviceTypeId} success deleted!`, result);
   }
 }

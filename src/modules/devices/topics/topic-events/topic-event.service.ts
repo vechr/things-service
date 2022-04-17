@@ -1,5 +1,4 @@
 import PrismaService from "@/prisma/prisma.service";
-import SuccessResponse from "@/shared/responses/success.response";
 import { HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { CreateTopicEventDto } from "./dto/create-topic-event.dto";
 import { EditTopicEventDto } from "./dto/edit-topic-event.dto";
@@ -122,9 +121,6 @@ export class TopicEventService {
       },
     });
 
-    return new SuccessResponse(
-      `Topic: ${topicEventId} success deleted!`,
-      result,
-    );
+    return result;
   }
 }

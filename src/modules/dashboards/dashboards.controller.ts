@@ -1,3 +1,4 @@
+import SuccessResponse from '@/shared/responses/success.response';
 import {
   Body,
   Controller,
@@ -18,30 +19,35 @@ export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
   @Get()
-  getDashboard() {
-    return this.dashboardService.getDashboard();
+  public async getDashboard(): Promise<SuccessResponse> {
+    const result = await this.dashboardService.getDashboard();
+    return new SuccessResponse('Success get all records!', result); 
   }
 
   @Get(':id')
-  getDashboardById(@Param('id') dashboardId: string) {
-    return this.dashboardService.getDashboardById(dashboardId);
+  public async getDashboardById(@Param('id') dashboardId: string): Promise<SuccessResponse> {
+    const result = await this.dashboardService.getDashboardById(dashboardId);
+    return new SuccessResponse(`Success get Dashboard ${dashboardId}!`, result);
   }
   
   @Post()
-  createDashboard(@Body() dto: CreateDashboardDto) {
-    return this.dashboardService.createDashboard(dto);
+  public async createDashboard(@Body() dto: CreateDashboardDto): Promise<SuccessResponse> {
+    const result = await this.dashboardService.createDashboard(dto);
+    return new SuccessResponse(`Success Create Dashboard!`, result);
   }
 
   @Patch(':id')
-  editDashboardById(
+  public async editDashboardById(
     @Param('id') dashboardId: string,
     @Body() dto: EditDashboardDto,
-  ) {
-    return this.dashboardService.editDashboardById(dashboardId, dto);
+  ): Promise<SuccessResponse> {
+    const result = await this.dashboardService.editDashboardById(dashboardId, dto);
+    return new SuccessResponse(`Success update Dashboard ${dashboardId}!`, result);
   }
 
   @Delete(':id')
-  deleteDashboardById(@Param('id') dashboardId: string) {
-    return this.dashboardService.deleteDashboardById(dashboardId);
+  public async deleteDashboardById(@Param('id') dashboardId: string) {
+    const result = await this.dashboardService.deleteDashboardById(dashboardId);
+    return new SuccessResponse(`Dashboard: ${dashboardId} success deleted!`, result);
   }
 }

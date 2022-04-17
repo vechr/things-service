@@ -1,3 +1,4 @@
+import SuccessResponse from "@/shared/responses/success.response";
 import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { CreateTopicEventDto } from "./dto/create-topic-event.dto";
@@ -10,27 +11,32 @@ export class TopicEventController {
   constructor(private readonly topicEventService: TopicEventService){}
 
   @Get()
-  getTopicEvents(@Param('topicId') topicId: string) {
-    return this.topicEventService.getTopicEvents(topicId);
+  public async getTopicEvents(@Param('topicId') topicId: string): Promise<SuccessResponse> {
+    const result = await this.topicEventService.getTopicEvents(topicId);
+    return new SuccessResponse('Success get all records!', result); 
   }
 
   @Get(':id')
-  getTopicEventById(@Param('id') topicEventId: string) {
-    return this.topicEventService.getTopicEventById(topicEventId);
+  public async getTopicEventById(@Param('id') topicEventId: string): Promise<SuccessResponse> {
+    const result = await this.topicEventService.getTopicEventById(topicEventId);
+    return new SuccessResponse(`Success get Topic Event ${topicEventId}!`, result);
   }
 
   @Post()
-  createTopicEvent(@Param('topicId') topicId: string, @Body() dto: CreateTopicEventDto) {
-    return this.topicEventService.createTopicEvent(topicId, dto);
+  public async createTopicEvent(@Param('topicId') topicId: string, @Body() dto: CreateTopicEventDto): Promise<SuccessResponse> {
+    const result = await this.topicEventService.createTopicEvent(topicId, dto);
+    return new SuccessResponse(`Success Create Topic Event!`, result);
   }
 
   @Patch(':id')
-  editTopicEventById(@Param('topicId') topicId: string, @Param('id') topicEventId: string, @Body() dto: EditTopicEventDto) {
-    return this.topicEventService.editTopicEventById(topicId, topicEventId, dto);
+  public async editTopicEventById(@Param('topicId') topicId: string, @Param('id') topicEventId: string, @Body() dto: EditTopicEventDto): Promise<SuccessResponse> {
+    const result = await this.topicEventService.editTopicEventById(topicId, topicEventId, dto);
+    return new SuccessResponse(`Success update Topic Event ${topicEventId}!`, result);
   }
 
   @Delete(':id')
-  deleteTopicEventById(@Param('id') topicEventId: string) {
-    return this.topicEventService.deleteTopicEventById(topicEventId);
+  public async deleteTopicEventById(@Param('id') topicEventId: string): Promise<SuccessResponse> {
+    const result = await this.topicEventService.deleteTopicEventById(topicEventId);
+    return new SuccessResponse(`Topic Event: ${topicEventId} success deleted!`, result); 
   }
 }

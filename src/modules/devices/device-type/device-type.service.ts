@@ -1,6 +1,5 @@
 import PrismaService from '@/prisma/prisma.service';
 import { ForbiddenException, NotFoundException } from '@/shared/exceptions/common.exception';
-import SuccessResponse from '@/shared/responses/success.response';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateDeviceTypeDto } from './dto/create-device-type.dto';
 import { EditDeviceTypeDto } from './dto/edit-device-type.dto';
@@ -95,9 +94,6 @@ export class DeviceTypeService {
       },
     });
 
-    return new SuccessResponse(
-      `Device Type: ${deviceTypeId} success deleted!`,
-      result,
-    );
+    return result;
   }
 }
