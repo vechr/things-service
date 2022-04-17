@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
 import { DashboardModule } from './modules/dashboards/dashboards.module';
 import { DeviceModule } from './modules/devices/device.module';
+import { TopicModule } from './modules/topics/topic.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { logger } from './shared/utils/log.util';
 
@@ -12,6 +13,7 @@ import { logger } from './shared/utils/log.util';
     }),
     DashboardModule,
     DeviceModule,
+    TopicModule,
 
     //plugins
     PrismaModule,

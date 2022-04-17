@@ -10,7 +10,17 @@ export class DeviceService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getDevices() {
-    return await this.prisma.device.findMany();
+    const result = await this.prisma.device.findMany({
+      include: {
+        topics: true
+      }
+    })
+
+    const filter = result.map((device) => {
+      return {...device, topics: device.topics.map((topic) => ({id: topic.id, name: topic.name, description: topic.description}))};
+    })
+
+    return filter;
   }
 
   async getDeviceById(deviceId: string) {
