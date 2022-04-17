@@ -28,6 +28,10 @@ export class DeviceService {
       where: {
         id: deviceId,
       },
+      include: {
+        topics: true,
+        deviceType: true
+      }
     });
 
     if (!device) {
@@ -37,7 +41,19 @@ export class DeviceService {
       });
     }
 
-    return device;
+    const filter = device.topics.map((topic) => topic)
+
+    const response = {
+      id: device.id,
+      name: device.name,
+      description: device.description,
+      createdAt: device.createdAt,
+      updatedAt: device.updatedAt,
+      deviceType: device.deviceType,
+      topics: filter
+    }
+
+    return response;
   }
 
   async createDevice(dto: CreateDeviceDto) {

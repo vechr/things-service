@@ -48,7 +48,20 @@ export class DashboardService {
       });
     }
 
-    return dashboard;
+    const filter = dashboard.devices.map((device) => {
+      return device.device;
+    });
+
+    const response = {
+      id: dashboard.id,
+      name: dashboard.name,
+      description: dashboard.description,
+      createdAt: dashboard.createdAt,
+      updatedAt: dashboard.updatedAt,
+      devices: filter
+    }
+
+    return response;
   }
 
   async createDashboard(dto: CreateDashboardDto) {
