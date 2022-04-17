@@ -54,7 +54,7 @@ const natsServer = new Promise(async (resolve, reject) => {
       {
         transport: Transport.NATS,
         options: {
-          servers: [],
+          servers: [appConstant.NATS_URL],
         },
       },
     );
