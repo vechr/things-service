@@ -32,7 +32,7 @@ export class TopicEventController {
   ): Promise<SuccessResponse> {
     const result = await this.topicEventService.getTopicEventById(topicEventId);
     return new SuccessResponse(
-      `Success get Topic Event ${topicEventId}!`,
+      `Success get Topic Event ${result.name}!`,
       result,
     );
   }
@@ -58,7 +58,7 @@ export class TopicEventController {
       dto,
     );
     return new SuccessResponse(
-      `Success update Topic Event ${topicEventId}!`,
+      `Success update Topic Event ${result.name}!`,
       result,
     );
   }
@@ -71,7 +71,7 @@ export class TopicEventController {
       topicEventId,
     );
     return new SuccessResponse(
-      `Topic Event: ${topicEventId} success deleted!`,
+      `Topic Event: ${result.name} success deleted!`,
       result,
     );
   }

@@ -28,7 +28,7 @@ export class DashboardController {
     @Param('id') dashboardId: string,
   ): Promise<SuccessResponse> {
     const result = await this.dashboardService.getDashboardById(dashboardId);
-    return new SuccessResponse(`Success get Dashboard ${dashboardId}!`, result);
+    return new SuccessResponse(`Success get Dashboard ${result.name}!`, result);
   }
 
   @Post()
@@ -49,7 +49,7 @@ export class DashboardController {
       dto,
     );
     return new SuccessResponse(
-      `Success update Dashboard ${dashboardId}!`,
+      `Success update Dashboard ${result.name}!`,
       result,
     );
   }
@@ -58,7 +58,7 @@ export class DashboardController {
   public async deleteDashboardById(@Param('id') dashboardId: string) {
     const result = await this.dashboardService.deleteDashboardById(dashboardId);
     return new SuccessResponse(
-      `Dashboard: ${dashboardId} success deleted!`,
+      `Dashboard: ${result.name} success deleted!`,
       result,
     );
   }

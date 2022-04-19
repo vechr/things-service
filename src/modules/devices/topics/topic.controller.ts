@@ -31,7 +31,7 @@ export class TopicController {
     @Param('id') topicId: string,
   ): Promise<SuccessResponse> {
     const result = await this.topicService.getTopicById(topicId);
-    return new SuccessResponse(`Success get Topic ${topicId}!`, result);
+    return new SuccessResponse(`Success get Topic ${result.name}!`, result);
   }
 
   @Post()
@@ -54,7 +54,7 @@ export class TopicController {
       topicId,
       dto,
     );
-    return new SuccessResponse(`Success update Topic ${topicId}!`, result);
+    return new SuccessResponse(`Success update Topic ${result.name}!`, result);
   }
 
   @Delete(':id')
@@ -62,6 +62,9 @@ export class TopicController {
     @Param('id') topicId: string,
   ): Promise<SuccessResponse> {
     const result = await this.topicService.deleteTopicById(topicId);
-    return new SuccessResponse(`Topic: ${topicId} success deleted!`, result);
+    return new SuccessResponse(
+      `Topic: ${result.name} success deleted!`,
+      result,
+    );
   }
 }

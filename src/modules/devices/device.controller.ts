@@ -27,7 +27,7 @@ export class DeviceController {
   @Get(':id')
   public async getDeviceById(@Param('id') deviceId: string) {
     const result = await this.deviceService.getDeviceById(deviceId);
-    return new SuccessResponse(`Success get Device ${deviceId}!`, result);
+    return new SuccessResponse(`Success get Device ${result.name}!`, result);
   }
 
   @Post()
@@ -44,7 +44,7 @@ export class DeviceController {
     @Body() dto: EditDeviceDto,
   ): Promise<SuccessResponse> {
     const result = await this.deviceService.editDeviceById(deviceId, dto);
-    return new SuccessResponse(`Success update Device ${deviceId}!`, result);
+    return new SuccessResponse(`Success update Device ${result.name}!`, result);
   }
 
   @Delete(':id')
@@ -52,6 +52,9 @@ export class DeviceController {
     @Param('id') deviceId: string,
   ): Promise<SuccessResponse> {
     const result = await this.deviceService.deleteDeviceById(deviceId);
-    return new SuccessResponse(`Device: ${deviceId} success deleted!`, result);
+    return new SuccessResponse(
+      `Device: ${result.name} success deleted!`,
+      result,
+    );
   }
 }

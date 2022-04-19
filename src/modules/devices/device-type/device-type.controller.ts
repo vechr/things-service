@@ -30,7 +30,7 @@ export class DeviceTypeController {
   ): Promise<SuccessResponse> {
     const result = await this.deviceTypeService.getDeviceTypeById(deviceTypeId);
     return new SuccessResponse(
-      `Success get device type ${deviceTypeId}!`,
+      `Success get device type ${result.name}!`,
       result,
     );
   }
@@ -51,7 +51,7 @@ export class DeviceTypeController {
       dto,
     );
     return new SuccessResponse(
-      `Success update device type ${deviceTypeId}!`,
+      `Success update device type ${result.name}!`,
       result,
     );
   }
@@ -62,7 +62,7 @@ export class DeviceTypeController {
       deviceTypeId,
     );
     return new SuccessResponse(
-      `Device Type: ${deviceTypeId} success deleted!`,
+      `Device Type: ${result.name} success deleted!`,
       result,
     );
   }
