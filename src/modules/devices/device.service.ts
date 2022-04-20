@@ -60,6 +60,7 @@ export class DeviceService {
       createdAt: device.createdAt,
       updatedAt: device.updatedAt,
       deviceType: device.deviceType,
+      isActive: device.isActive,
       topics: filter,
     };
 

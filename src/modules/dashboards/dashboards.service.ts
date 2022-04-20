@@ -121,13 +121,33 @@ export class DashboardService {
         devices: {
           deleteMany: {},
           create: devices.map((device) => ({
-            device: { connect: { id: device.id } },
+            device: { connect: { id: device } },
           })),
+        },
+      },
+      include: {
+        devices: {
+          include: {
+            device: true,
+          },
         },
       },
     });
 
-    return result;
+    const filter = result.devices.map((device) => {
+      return device.device;
+    });
+
+    const response = {
+      id: result.id,
+      name: result.name,
+      description: result.description,
+      createdAt: result.createdAt,
+      updatedAt: result.updatedAt,
+      devices: filter,
+    };
+
+    return response;
   }
 
   async deleteDashboardById(dashboardId: string) {
