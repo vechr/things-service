@@ -69,6 +69,19 @@ export class DashboardService {
   }
 
   async createDashboard(dto: CreateDashboardDto) {
+    const checkDashboard = await this.prisma.dashboard.findUnique({
+      where: {
+        name: dto.name
+      }
+    });
+
+    if (checkDashboard) {
+      throw new ForbiddenException({
+        code: HttpStatus.FORBIDDEN.toString(),
+        message: 'Dashboard already Exists!',
+      });
+    }
+
     const dashboard = await this.prisma.dashboard.create({
       data: {
         ...dto,
@@ -134,19 +147,22 @@ export class DashboardService {
       });
     }
 
-    if (dashboard.devices.length > 0) {
-      throw new ForbiddenException({
-        code: HttpStatus.FORBIDDEN.toString(),
-        message:
-          'Dashboard contain some devices, you cannot delete this dashboard!',
-      });
-    }
-
-    const result = await this.prisma.dashboard.delete({
+    await this.prisma.dashboard.update({
       where: {
         id: dashboardId,
       },
+      data: {
+        devices: {
+          deleteMany: {}
+        }
+      }
     });
+
+    const result = await this.prisma.dashboard.delete({
+      where: {
+        id: dashboardId
+      },
+    })
 
     return result;
   }

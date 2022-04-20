@@ -135,7 +135,7 @@ export class TopicService {
     if (!topic) {
       throw new NotFoundException({
         code: HttpStatus.NOT_FOUND.toString(),
-        message: 'Dashboard is not found!',
+        message: 'Topic is not found!',
       });
     }
 

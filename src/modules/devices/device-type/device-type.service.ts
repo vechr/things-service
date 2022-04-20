@@ -40,6 +40,19 @@ export class DeviceTypeService {
   }
 
   async createDeviceType(dto: CreateDeviceTypeDto) {
+    const checkDeviceType = await this.prisma.deviceType.findUnique({
+      where: {
+        name: dto.name
+      }
+    });
+
+    if (checkDeviceType) {
+      throw new ForbiddenException({
+        code: HttpStatus.FORBIDDEN.toString(),
+        message: 'Device Type already Exists!',
+      });
+    }
+
     const deviceType = await this.prisma.deviceType.create({
       data: {
         ...dto,

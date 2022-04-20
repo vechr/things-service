@@ -67,6 +67,19 @@ export class DeviceService {
   }
 
   async createDevice(dto: CreateDeviceDto) {
+    const checkDevice = await this.prisma.device.findUnique({
+      where: {
+        name: dto.name
+      }
+    });
+
+    if (checkDevice) {
+      throw new ForbiddenException({
+        code: HttpStatus.FORBIDDEN.toString(),
+        message: 'Device already Exists!',
+      });
+    }
+
     const deviceType = await this.prisma.deviceType.findUnique({
       where: {
         id: dto.deviceTypeId,
@@ -127,6 +140,10 @@ export class DeviceService {
       data: {
         ...dto,
       },
+      include: {
+        deviceType: true,
+        topics: true
+      }
     });
   }
 
@@ -154,11 +171,22 @@ export class DeviceService {
       });
     }
 
-    const result = await this.prisma.device.delete({
+    await this.prisma.device.update({
       where: {
         id: deviceId,
       },
+      data: {
+        dashboards: {
+          deleteMany: {}
+        }
+      }
     });
+
+    const result = await this.prisma.device.delete({
+      where: {
+        id: deviceId
+      }
+    })
 
     return result;
   }
