@@ -12,7 +12,11 @@ export class DeviceTypeService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getDeviceTypes() {
-    return await this.prisma.deviceType.findMany();
+    return await this.prisma.deviceType.findMany({
+      include: {
+        devices: true
+      }
+    });
   }
 
   async getDeviceTypeById(deviceTypeId: string) {
@@ -20,6 +24,9 @@ export class DeviceTypeService {
       where: {
         id: deviceTypeId,
       },
+      include: {
+        devices: true
+      }
     });
 
     if (!deviceType) {
@@ -37,6 +44,9 @@ export class DeviceTypeService {
       data: {
         ...dto,
       },
+      include: {
+        devices: true
+      }
     });
 
     return deviceType;
@@ -63,6 +73,9 @@ export class DeviceTypeService {
       data: {
         ...dto,
       },
+      include: {
+        devices: true
+      }
     });
   }
 
@@ -94,6 +107,9 @@ export class DeviceTypeService {
     const result = await this.prisma.deviceType.delete({
       where: {
         id: deviceTypeId,
+      },
+      include: {
+        devices: true,
       },
     });
 
