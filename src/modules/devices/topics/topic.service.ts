@@ -71,6 +71,9 @@ export class TopicService {
         description,
         deviceId,
       },
+      include: {
+        topicEvents: true
+      }
     });
 
     return topic;

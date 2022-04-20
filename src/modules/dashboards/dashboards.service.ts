@@ -73,6 +73,9 @@ export class DashboardService {
       data: {
         ...dto,
       },
+      include: {
+        devices: true
+      }
     });
 
     return dashboard;

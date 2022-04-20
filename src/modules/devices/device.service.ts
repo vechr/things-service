@@ -15,6 +15,7 @@ export class DeviceService {
     const result = await this.prisma.device.findMany({
       include: {
         topics: true,
+        deviceType: true
       },
     });
 
@@ -83,6 +84,10 @@ export class DeviceService {
       data: {
         ...dto,
       },
+      include: {
+        deviceType: true,
+        topics: true
+      }
     });
 
     return device;
