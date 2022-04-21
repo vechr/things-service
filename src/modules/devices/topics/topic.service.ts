@@ -119,6 +119,9 @@ export class TopicService {
         description,
         deviceId,
       },
+      include: {
+        topicEvents: true,
+      },
     });
   }
 
@@ -150,6 +153,9 @@ export class TopicService {
     const result = await this.prisma.topic.delete({
       where: {
         id: topicId,
+      },
+      include: {
+        topicEvents: true,
       },
     });
 
