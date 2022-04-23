@@ -31,6 +31,36 @@ export class DashboardService {
     return filter;
   }
 
+  async getDashboardDetails() {
+    const result = await this.prisma.dashboard.findMany({
+      include: {
+        devices: {
+          include: {
+            device: {
+              include: {
+                deviceType: true,
+                topics: {
+                  include: {
+                    topicEvents: true
+                  }
+                }
+              }
+            }
+          },
+        },
+      },
+    });
+
+    const filter = result.map((dashboard) => {
+      return {
+        ...dashboard,
+        devices: dashboard.devices.map((device) => device.device),
+      };
+    });
+
+    return filter;
+  }
+
   async getDashboardById(dashboardId: string) {
     const dashboard = await this.prisma.dashboard.findUnique({
       where: {

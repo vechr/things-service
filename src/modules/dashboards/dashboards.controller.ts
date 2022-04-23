@@ -23,6 +23,12 @@ export class DashboardController {
     return new SuccessResponse('Success get all records!', result);
   }
 
+  @Get('details')
+  public async getDashboardDetails(): Promise<SuccessResponse> {
+    const result = await this.dashboardService.getDashboardDetails();
+    return new SuccessResponse('Success get all records!', result);
+  }
+
   @Get(':id')
   public async getDashboardById(
     @Param('id') dashboardId: string,
