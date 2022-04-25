@@ -4,19 +4,28 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { CreateTopicDto } from './dto/create-topic.dto';
-import { EditTopicDto } from './dto/edit-topic.dto';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateTopicDto, DBLoggerDto, EditTopicDto } from './dto';
 import { TopicService } from './topic.service';
 
 @ApiTags('Topic')
 @Controller('device/:deviceId/topic')
 export class TopicController {
   constructor(private readonly topicService: TopicService) {}
+
+  @ApiOperation({ summary: 'this API is used to query data from database (influxdb)' })
+  @ApiResponse({ status: 200, description: '[<your data in here>]' })
+  @HttpCode(HttpStatus.OK)
+  @Post('query')
+  getDataTopic (@Body() dto: DBLoggerDto) {
+    return this.topicService.getDataTopic(dto);
+  }
 
   @Get()
   public async getTopics(

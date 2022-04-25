@@ -3,13 +3,22 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@/shared/exceptions/common.exception';
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { ClientNats } from '@nestjs/microservices';
+import { DBLoggerDto, QueryCreateEventDto } from './dto';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { EditTopicDto } from './dto/edit-topic.dto';
 
 @Injectable()
 export class TopicService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Inject('DB_LOGGER_SERVICE') private readonly dbLoggerClient: ClientNats  
+  ) {}
+
+  getDataTopic(dto: DBLoggerDto) {
+    return this.dbLoggerClient.send('getData.query', new QueryCreateEventDto(dto.dashboardId, dto.deviceId, dto.topicId, dto.topic));
+  }
 
   async getTopics(deviceId: string) {
     const result = await this.prisma.topic.findMany({
