@@ -8,6 +8,8 @@ import log from './shared/utils/log.util';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import NatsModule from './nats.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import express from 'express';
+import { join } from 'path';
 
 const httpServer = new Promise(async (resolve, reject) => {
   try {
@@ -17,11 +19,12 @@ const httpServer = new Promise(async (resolve, reject) => {
       new UnknownExceptionsFilter(),
       new HttpExceptionFilter(),
     );
+    app.use('/public', express.static(join(__dirname, '..', 'public')));
     const option = {
       customCss: `
-      .topbar-wrapper img {content:url(\'https://svgshare.com/i/fmL.svg'); width:200px; height:auto;}
+      .topbar-wrapper img {content:url('/public/kreMES.svg'); width:200px; height:auto;}
       .swagger-ui .topbar { background-color: #000000; }`,
-      customfavIcon: 'https://svgshare.com/i/fmL.svg',
+      customfavIcon: `/public/kreMES.svg`,
       customSiteTitle: 'kreMES API Things Services',
     };
     const config = new DocumentBuilder()

@@ -15,7 +15,7 @@ export class DeviceService {
     const result = await this.prisma.device.findMany({
       include: {
         topics: true,
-        deviceType: true
+        deviceType: true,
       },
     });
 
@@ -70,8 +70,8 @@ export class DeviceService {
   async createDevice(dto: CreateDeviceDto) {
     const checkDevice = await this.prisma.device.findUnique({
       where: {
-        name: dto.name
-      }
+        name: dto.name,
+      },
     });
 
     if (checkDevice) {
@@ -100,8 +100,8 @@ export class DeviceService {
       },
       include: {
         deviceType: true,
-        topics: true
-      }
+        topics: true,
+      },
     });
 
     return device;
@@ -143,8 +143,8 @@ export class DeviceService {
       },
       include: {
         deviceType: true,
-        topics: true
-      }
+        topics: true,
+      },
     });
   }
 
@@ -178,16 +178,16 @@ export class DeviceService {
       },
       data: {
         dashboards: {
-          deleteMany: {}
-        }
-      }
+          deleteMany: {},
+        },
+      },
     });
 
     const result = await this.prisma.device.delete({
       where: {
-        id: deviceId
-      }
-    })
+        id: deviceId,
+      },
+    });
 
     return result;
   }

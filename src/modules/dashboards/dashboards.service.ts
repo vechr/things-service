@@ -41,11 +41,11 @@ export class DashboardService {
                 deviceType: true,
                 topics: {
                   include: {
-                    topicEvents: true
-                  }
-                }
-              }
-            }
+                    topicEvents: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
@@ -101,8 +101,8 @@ export class DashboardService {
   async createDashboard(dto: CreateDashboardDto) {
     const checkDashboard = await this.prisma.dashboard.findUnique({
       where: {
-        name: dto.name
-      }
+        name: dto.name,
+      },
     });
 
     if (checkDashboard) {
@@ -117,8 +117,8 @@ export class DashboardService {
         ...dto,
       },
       include: {
-        devices: true
-      }
+        devices: true,
+      },
     });
 
     return dashboard;
@@ -203,16 +203,16 @@ export class DashboardService {
       },
       data: {
         devices: {
-          deleteMany: {}
-        }
-      }
+          deleteMany: {},
+        },
+      },
     });
 
     const result = await this.prisma.dashboard.delete({
       where: {
-        id: dashboardId
+        id: dashboardId,
       },
-    })
+    });
 
     return result;
   }
