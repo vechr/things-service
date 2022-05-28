@@ -8,6 +8,19 @@ generator client {
   previewFeatures = ["interactiveTransactions"]
 }
 
+enum WidgetType{
+  BAR
+  BUBBLE
+  DOUGHNUT
+  PIE
+  GAUGE
+  LINE
+  POLAR
+  RADAR
+  SCATTER
+  MAPS
+}
+
 model Dashboard {
   id                          String @id @default(uuid()) @db.VarChar(36)
   name                        String @unique @db.VarChar(50)
@@ -15,8 +28,26 @@ model Dashboard {
   createdAt                   DateTime @default(now())
   updatedAt                   DateTime @updatedAt()
   devices                     DashboardsDevices[]
+  widgets                     Widget[]
 
   @@map("dashboards")
+}
+
+model Widget {
+  id                          String @id @default(uuid()) @db.VarChar(36)
+  Dashboard                   Dashboard @relation(fields: [dashboardId], references: [id])
+  dashboardId                 String @db.VarChar(36)
+  name                        String @db.VarChar(50)
+  description                 String? @db.Text()
+  node                        Json?
+  widgetData                  Json?
+  widgetType                  WidgetType
+  topic                       Topic @relation(fields: [topicId], references: [id])
+  topicId                     String @db.VarChar(36)
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt()
+
+  @@map("widgets")
 }
 
 model DashboardsDevices {
@@ -66,6 +97,7 @@ model Topic {
   createdAt                   DateTime @default(now())
   updatedAt                   DateTime @updatedAt()
   topicEvents                 TopicEvent[]
+  widgets                     Widget[]
 
   @@map("topics")
 }
