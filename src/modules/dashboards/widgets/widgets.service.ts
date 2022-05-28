@@ -12,6 +12,10 @@ export class WidgetService {
       where: {
         dashboardId: dashboardId,
       },
+      include: {
+        Dashboard: true,
+        topic: true
+      }
     });
 
     return result;
