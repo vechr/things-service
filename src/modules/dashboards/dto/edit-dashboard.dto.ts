@@ -21,8 +21,8 @@ export class EditDashboardDto {
 
   @ApiProperty({
     example: [
-      '32fed155-1eba-4461-8918-04bcacf1762d', 
-      'c55a05aa-2b2f-4ff4-b7b5-eb048a2cd27f'
+      '32fed155-1eba-4461-8918-04bcacf1762d',
+      'c55a05aa-2b2f-4ff4-b7b5-eb048a2cd27f',
     ],
     description: 'You can attach device into this dashboard!',
   })

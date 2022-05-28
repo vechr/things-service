@@ -6,13 +6,14 @@ import { TopicService } from './topic.service';
 
 @Module({
   imports: [
-    ClientsModule.register([{
-      name: 'DB_LOGGER_SERVICE',
-      transport: Transport.NATS,
-      options: {
-        servers: [appConstant.NATS_URL]
-      }
-    }
+    ClientsModule.register([
+      {
+        name: 'DB_LOGGER_SERVICE',
+        transport: Transport.NATS,
+        options: {
+          servers: [appConstant.NATS_URL],
+        },
+      },
     ]),
   ],
   providers: [TopicService],

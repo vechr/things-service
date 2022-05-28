@@ -21,12 +21,12 @@ export class CreateWidgetDto {
 
   @ApiProperty({
     example: {
-      content: "myChart_9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+      content: 'myChart_9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
       h: 6,
-      id: "myChart_9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+      id: 'myChart_9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
       w: 3,
       x: 12,
-      y: 5
+      y: 5,
     },
     description: 'Insert your Node Widget in Here!',
   })
@@ -36,21 +36,19 @@ export class CreateWidgetDto {
 
   @ApiProperty({
     example: {
-      labels: [
-        'Red',
-        'Blue',
-        'Yellow'
+      labels: ['Red', 'Blue', 'Yellow'],
+      datasets: [
+        {
+          label: 'Data Example',
+          data: [300, 50, 100],
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)',
+          ],
+          hoverOffset: 4,
+        },
       ],
-      datasets: [{
-        label: 'Data Example',
-        data: [300, 50, 100],
-        backgroundColor: [
-          'rgb(255, 99, 132)',
-          'rgb(54, 162, 235)',
-          'rgb(255, 205, 86)'
-        ],
-        hoverOffset: 4
-      }]
     },
     description: 'Insert your Data Widget in Here!',
   })

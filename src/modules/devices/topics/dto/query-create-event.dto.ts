@@ -6,12 +6,12 @@ export class QueryCreateEventDto {
     public readonly topic: string,
   ) {}
 
-  toString(){
+  toString() {
     return JSON.stringify({
       dashboardId: this.dashboardId,
       deviceId: this.deviceId,
       topicId: this.topicId,
-      topic: this.topic
-    })
+      topic: this.topic,
+    });
   }
 }

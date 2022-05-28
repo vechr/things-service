@@ -14,8 +14,8 @@ export class DeviceTypeService {
   async getDeviceTypes() {
     return await this.prisma.deviceType.findMany({
       include: {
-        devices: true
-      }
+        devices: true,
+      },
     });
   }
 
@@ -25,8 +25,8 @@ export class DeviceTypeService {
         id: deviceTypeId,
       },
       include: {
-        devices: true
-      }
+        devices: true,
+      },
     });
 
     if (!deviceType) {
@@ -42,8 +42,8 @@ export class DeviceTypeService {
   async createDeviceType(dto: CreateDeviceTypeDto) {
     const checkDeviceType = await this.prisma.deviceType.findUnique({
       where: {
-        name: dto.name
-      }
+        name: dto.name,
+      },
     });
 
     if (checkDeviceType) {
@@ -58,8 +58,8 @@ export class DeviceTypeService {
         ...dto,
       },
       include: {
-        devices: true
-      }
+        devices: true,
+      },
     });
 
     return deviceType;
@@ -87,8 +87,8 @@ export class DeviceTypeService {
         ...dto,
       },
       include: {
-        devices: true
-      }
+        devices: true,
+      },
     });
   }
 

@@ -13,11 +13,19 @@ import { EditTopicDto } from './dto/edit-topic.dto';
 export class TopicService {
   constructor(
     private readonly prisma: PrismaService,
-    @Inject('DB_LOGGER_SERVICE') private readonly dbLoggerClient: ClientNats  
+    @Inject('DB_LOGGER_SERVICE') private readonly dbLoggerClient: ClientNats,
   ) {}
 
   getDataTopic(dto: DBLoggerDto) {
-    return this.dbLoggerClient.send('getData.query', new QueryCreateEventDto(dto.dashboardId, dto.deviceId, dto.topicId, dto.topic));
+    return this.dbLoggerClient.send(
+      'getData.query',
+      new QueryCreateEventDto(
+        dto.dashboardId,
+        dto.deviceId,
+        dto.topicId,
+        dto.topic,
+      ),
+    );
   }
 
   async getTopics(deviceId: string) {
@@ -81,8 +89,8 @@ export class TopicService {
         deviceId,
       },
       include: {
-        topicEvents: true
-      }
+        topicEvents: true,
+      },
     });
 
     return topic;

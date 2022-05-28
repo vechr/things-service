@@ -10,9 +10,9 @@ export class WidgetService {
   async getWidgets(dashboardId: string) {
     const result = await this.prisma.widget.findMany({
       where: {
-        dashboardId: dashboardId
-      }
-    })
+        dashboardId: dashboardId,
+      },
+    });
 
     return result;
   }
@@ -43,7 +43,7 @@ export class WidgetService {
 
     const checkTopic = await this.prisma.topic.findUnique({
       where: {
-        id: topicId
+        id: topicId,
       },
     });
 
@@ -59,10 +59,10 @@ export class WidgetService {
         device: {
           dashboards: {
             some: {
-              dashboardId: dashboardId
-            }
-          }
-        }
+              dashboardId: dashboardId,
+            },
+          },
+        },
       },
     });
 

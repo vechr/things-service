@@ -19,11 +19,13 @@ import { TopicService } from './topic.service';
 export class TopicController {
   constructor(private readonly topicService: TopicService) {}
 
-  @ApiOperation({ summary: 'this API is used to query data from database (influxdb)' })
+  @ApiOperation({
+    summary: 'this API is used to query data from database (influxdb)',
+  })
   @ApiResponse({ status: 200, description: '[<your data in here>]' })
   @HttpCode(HttpStatus.OK)
   @Post('query')
-  getDataTopic (@Body() dto: DBLoggerDto) {
+  getDataTopic(@Body() dto: DBLoggerDto) {
     return this.topicService.getDataTopic(dto);
   }
 
