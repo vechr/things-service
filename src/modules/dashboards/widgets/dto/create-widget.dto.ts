@@ -1,4 +1,4 @@
-import { IsJSON, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsJSON, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { WidgetType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -21,9 +21,9 @@ export class CreateWidgetDto {
 
   @ApiProperty({
     example: {
-      content: 'myChart_9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
+      content: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
       h: 6,
-      id: 'myChart_9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
+      id: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
       w: 3,
       x: 12,
       y: 5,
@@ -33,6 +33,14 @@ export class CreateWidgetDto {
   @IsJSON()
   @IsNotEmpty()
   node: string;
+
+  @ApiProperty({
+    example: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
+    description: 'Insert your Node Id of your Widget in Here!',
+  })
+  @IsString()
+  @IsNotEmpty()
+  nodeId: string;
 
   @ApiProperty({
     example: {
@@ -58,11 +66,27 @@ export class CreateWidgetDto {
 
   @ApiProperty({
     example: 'DOUGHNUT',
-    description: 'Insert your Type Widget in Here!',
+    description: 'Insert your Type Widget in Here! Can be (BAR, BUBBLE, DOUGHNUT, PIE, GAUGE, LINE, POLAR, RADAR, SCATTER, MAPS)',
   })
   @IsString()
   @IsNotEmpty()
   widgetType: WidgetType;
+
+  @ApiProperty({
+    example: false,
+    description: 'Flag for the last data is being saved in Database! (optional)',
+  })
+  @IsBoolean()
+  @IsOptional()
+  persistance?: boolean;
+
+  @ApiProperty({
+    example: false,
+    description: 'Flag for the widget will hide in frontend! (optional)',
+  })
+  @IsBoolean()
+  @IsOptional()
+  hidden?: boolean;
 
   @ApiProperty({
     example: '19e64612-2b72-4d6f-8e1b-e811edafe7e7',
@@ -72,14 +96,3 @@ export class CreateWidgetDto {
   @IsNotEmpty()
   topicId: string;
 }
-
-// id                          String @id @default(uuid()) @db.VarChar(36)
-//   Dashboard                   Dashboard @relation(fields: [dashboardId], references: [id])
-//   dashboardId                 String @db.VarChar(36)
-//   name                        String @db.VarChar(50)
-//   description                 String? @db.Text()
-//   node                        Json?
-//   widgetData                  Json?
-//   widgetType                  WidgetType
-//   topic                       Topic @relation(fields: [topicId], references: [id])
-//   topicId                     String @db.VarChar(36)

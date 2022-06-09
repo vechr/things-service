@@ -29,6 +29,9 @@ export class WidgetService {
       topicId,
       description,
       node,
+      nodeId,
+      hidden,
+      persistance,
       widgetData,
     }: CreateWidgetDto,
   ) {
@@ -80,12 +83,15 @@ export class WidgetService {
     const widget = await this.prisma.widget.create({
       data: {
         name,
-        widgetType,
-        dashboardId,
-        topicId,
         description,
         node,
+        nodeId,
+        widgetType,
         widgetData,
+        persistance,
+        hidden,
+        dashboardId,
+        topicId,
       },
     });
 

@@ -68,7 +68,7 @@ export class TopicService {
     return topic;
   }
 
-  async createTopic(deviceId: string, { name, description }: CreateTopicDto) {
+  async createTopic(deviceId: string, { name, description, widgetType }: CreateTopicDto) {
     const device = await this.prisma.device.findUnique({
       where: {
         id: deviceId,
@@ -86,6 +86,7 @@ export class TopicService {
       data: {
         name,
         description,
+        widgetType,
         deviceId,
       },
       include: {
