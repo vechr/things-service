@@ -1,3 +1,5 @@
+import { NatsService } from '@/modules/services/nats.service';
+import { ExceptionFilter } from '@/shared/filters/rpc-exception.filter';
 import SuccessResponse from '@/shared/responses/success.response';
 import {
   Body,
@@ -9,15 +11,30 @@ import {
   Param,
   Patch,
   Post,
+  UseFilters,
 } from '@nestjs/common';
+import { EventPattern, Payload } from '@nestjs/microservices';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateTopicDto, DBLoggerDto, EditTopicDto } from './dto';
+import { TopicIdRequestDto } from './dto/topic-id-request.dto';
 import { TopicService } from './topic.service';
 
 @ApiTags('Topic')
 @Controller('device/:deviceId/topic')
 export class TopicController {
   constructor(private readonly topicService: TopicService) {}
+
+  @UseFilters(new ExceptionFilter())
+  @EventPattern('set.topic.widget.kv')
+  async getTopicWidget(
+    @Payload() { topicId }: TopicIdRequestDto,
+  ): Promise<void> {
+    const result = await this.topicService.getTopicById(topicId);
+    await NatsService.kv.put(
+      result.id,
+      NatsService.sc.encode(JSON.stringify(result)),
+    );
+  }
 
   @ApiOperation({
     summary: 'this API is used to query data from database (influxdb)',
