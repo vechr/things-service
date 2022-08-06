@@ -1,3 +1,4 @@
+import { NatsService } from '@/modules/services/nats.service';
 import PrismaService from '@/prisma/prisma.service';
 import {
   ForbiddenException,
@@ -68,7 +69,10 @@ export class TopicService {
     return topic;
   }
 
-  async createTopic(deviceId: string, { name, description, widgetType }: CreateTopicDto) {
+  async createTopic(
+    deviceId: string,
+    { name, description, widgetType }: CreateTopicDto,
+  ) {
     const device = await this.prisma.device.findUnique({
       where: {
         id: deviceId,
@@ -93,6 +97,11 @@ export class TopicService {
         topicEvents: true,
       },
     });
+
+    await NatsService.kv.put(
+      topic.id,
+      NatsService.sc.encode(JSON.stringify(topic)),
+    );
 
     return topic;
   }
@@ -128,7 +137,7 @@ export class TopicService {
       });
     }
 
-    return this.prisma.topic.update({
+    const topicUpdated = await this.prisma.topic.update({
       where: {
         id: topicId,
       },
@@ -141,6 +150,13 @@ export class TopicService {
         topicEvents: true,
       },
     });
+
+    await NatsService.kv.put(
+      topicUpdated.id,
+      NatsService.sc.encode(JSON.stringify(topicUpdated)),
+    );
+
+    return topicUpdated;
   }
 
   async deleteTopicById(topicId: string) {
@@ -176,6 +192,8 @@ export class TopicService {
         topicEvents: true,
       },
     });
+
+    await NatsService.kv.purge(result.id);
 
     return result;
   }

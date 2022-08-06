@@ -1,4 +1,10 @@
-import { IsBoolean, IsJSON, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsJSON,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { WidgetType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -66,7 +72,8 @@ export class CreateWidgetDto {
 
   @ApiProperty({
     example: 'DOUGHNUT',
-    description: 'Insert your Type Widget in Here! Can be (BAR, BUBBLE, DOUGHNUT, PIE, GAUGE, LINE, POLAR, RADAR, SCATTER, MAPS)',
+    description:
+      'Insert your Type Widget in Here! Can be (BAR, BUBBLE, DOUGHNUT, PIE, GAUGE, LINE, POLAR, RADAR, SCATTER, MAPS)',
   })
   @IsString()
   @IsNotEmpty()
@@ -74,7 +81,8 @@ export class CreateWidgetDto {
 
   @ApiProperty({
     example: false,
-    description: 'Flag for the last data is being saved in Database! (optional)',
+    description:
+      'Flag for the last data is being saved in Database! (optional)',
   })
   @IsBoolean()
   @IsOptional()

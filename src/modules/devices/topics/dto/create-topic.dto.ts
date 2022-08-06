@@ -21,7 +21,8 @@ export class CreateTopicDto {
 
   @ApiProperty({
     example: 'DOUGHNUT',
-    description: 'Insert your Type Widget in Here! Can be (BAR, BUBBLE, DOUGHNUT, PIE, GAUGE, LINE, POLAR, RADAR, SCATTER, MAPS)',
+    description:
+      'Insert your Type Widget in Here! Can be (BAR, BUBBLE, DOUGHNUT, PIE, GAUGE, LINE, POLAR, RADAR, SCATTER, MAPS)',
   })
   @IsString()
   @IsOptional()

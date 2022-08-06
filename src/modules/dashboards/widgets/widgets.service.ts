@@ -14,8 +14,8 @@ export class WidgetService {
       },
       include: {
         Dashboard: true,
-        topic: true
-      }
+        topic: true,
+      },
     });
 
     return result;
