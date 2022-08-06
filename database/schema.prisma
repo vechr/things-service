@@ -39,9 +39,12 @@ model Widget {
   dashboardId                 String @db.VarChar(36)
   name                        String @db.VarChar(50)
   description                 String? @db.Text()
-  node                        Json?
-  widgetData                  Json?
+  node                        Json
+  nodeId                      String @db.VarChar(50)
+  widgetData                  Json
   widgetType                  WidgetType
+  persistance                 Boolean?
+  hidden                      Boolean?
   topic                       Topic @relation(fields: [topicId], references: [id])
   topicId                     String @db.VarChar(36)
   createdAt                   DateTime @default(now())
@@ -94,6 +97,7 @@ model Topic {
   deviceId                    String @db.VarChar(36)
   name                        String @db.VarChar(50)
   description                 String? @db.Text()
+  widgetType                  WidgetType?
   createdAt                   DateTime @default(now())
   updatedAt                   DateTime @updatedAt()
   topicEvents                 TopicEvent[]

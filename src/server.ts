@@ -10,6 +10,8 @@ import NatsModule from './nats.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import express from 'express';
 import { join } from 'path';
+import { NatsService } from './modules/services/nats.service';
+import { NatsHelper } from './shared/helpers/nats.helper';
 
 const httpServer = new Promise(async (resolve, reject) => {
   try {
@@ -76,4 +78,6 @@ const natsServer = new Promise(async (resolve, reject) => {
 
 (async function () {
   await Promise.all([httpServer, natsServer]);
+  const natsService = new NatsService(await NatsHelper.getConnection());
+  await natsService.createBucket('kremes_topics', { history: 5 });
 })();

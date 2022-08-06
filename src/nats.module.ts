@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
+import { TopicModule } from './modules/devices/topics/topic.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { logger } from './shared/utils/log.util';
 
@@ -13,6 +14,7 @@ export const NATS_SEVICE = 'NATS_SERVICE';
 
     //plugins
     PrismaModule,
+    TopicModule,
   ],
 })
 export default class NatsModule {}
