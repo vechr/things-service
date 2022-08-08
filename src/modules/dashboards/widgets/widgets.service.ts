@@ -97,7 +97,7 @@ export class WidgetService {
       include: {
         Dashboard: true,
         topic: true,
-      }
+      },
     });
 
     return widget;
