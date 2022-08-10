@@ -39,6 +39,44 @@ export class WidgetService {
     }
   }
 
+  async deleteWidgetById(
+    dashboardId: string,
+    widgetId: string,
+  ): Promise<Widget> {
+    try {
+      const checkDashboard = await this.prisma.dashboard.findUnique({
+        where: {
+          id: dashboardId,
+        },
+      });
+
+      if (!checkDashboard) {
+        throw new NotFoundException({
+          code: HttpStatus.NOT_FOUND.toString(),
+          message: 'Dashboard is not found!',
+        });
+      }
+
+      const deleteWidget = await this.prisma.widget.delete({
+        where: {
+          id: widgetId,
+        },
+      });
+
+      return deleteWidget;
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        log.error(error.message);
+        throw new UnknownException({
+          code: HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+          message: `Error unexpected!`,
+          params: { exception: error.message },
+        });
+      }
+      throw error;
+    }
+  }
+
   async createWidget(
     dashboardId: string,
     {
