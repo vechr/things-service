@@ -1,5 +1,5 @@
 import SuccessResponse from '@/shared/responses/success.response';
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateWidgetDto } from './dto/create-widget.dto';
 import { WidgetService } from './widgets.service';
@@ -24,5 +24,17 @@ export class WidgetController {
   ): Promise<SuccessResponse> {
     const result = await this.widgetService.createWidget(dashboardId, dto);
     return new SuccessResponse('Success create widget!', result);
+  }
+
+  @Delete(':id')
+  public async deleteWidget(
+    @Param('dashboardId') dashboardId: string,
+    @Param('id') widgetId: string,
+  ): Promise<SuccessResponse> {
+    const result = await this.widgetService.deleteWidgetById(
+      dashboardId,
+      widgetId,
+    );
+    return new SuccessResponse('Success delete widget!', result);
   }
 }
