@@ -8,6 +8,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { Widget } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { CreateWidgetDto } from './dto/create-widget.dto';
+import { UpdateWidgetDto } from './dto/update-widget.dto';
 
 @Injectable()
 export class WidgetService {
@@ -77,6 +78,93 @@ export class WidgetService {
     }
   }
 
+  async editWidgetById(
+    dashboardId: string,
+    {
+      description,
+      hidden,
+      name,
+      node,
+      persistance,
+      widgetData,
+    }: UpdateWidgetDto,
+    widgetId: string,
+  ): Promise<Widget> {
+    try {
+      const checkDashboard = await this.prisma.dashboard.findUnique({
+        where: {
+          id: dashboardId,
+        },
+      });
+
+      if (!checkDashboard) {
+        throw new NotFoundException({
+          code: HttpStatus.NOT_FOUND.toString(),
+          message: 'Dashboard is not found!',
+        });
+      }
+
+      const checkWidget = await this.prisma.widget.findUnique({
+        where: {
+          id: widgetId,
+        },
+      });
+
+      if (!checkWidget) {
+        throw new NotFoundException({
+          code: HttpStatus.NOT_FOUND.toString(),
+          message: 'Widget is not found!',
+        });
+      }
+
+      const checkWidgetDashboard = await this.prisma.widget.findMany({
+        where: {
+          AND: {
+            dashboardId: dashboardId,
+            id: widgetId,
+          },
+        },
+      });
+
+      if (!checkWidgetDashboard) {
+        throw new NotFoundException({
+          code: HttpStatus.NOT_FOUND.toString(),
+          message: 'Widget is not belong to the Dashboard!',
+        });
+      }
+
+      const result = await this.prisma.widget.update({
+        where: {
+          id: widgetId,
+        },
+        data: {
+          node,
+          description,
+          hidden,
+          name,
+          persistance,
+          widgetData,
+        },
+        include: {
+          Dashboard: true,
+          topic: true,
+        },
+      });
+
+      return result;
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        log.error(error.message);
+        throw new UnknownException({
+          code: HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+          message: `Error unexpected!`,
+          params: { exception: error.message },
+        });
+      }
+      throw error;
+    }
+  }
+
   async createWidget(
     dashboardId: string,
     {
@@ -133,7 +221,7 @@ export class WidgetService {
       if (!checkTopicDashboard) {
         throw new NotFoundException({
           code: HttpStatus.NOT_FOUND.toString(),
-          message: 'Topic is belong to the Dashboard!',
+          message: 'Topic is not belong to the Dashboard!',
         });
       }
 
