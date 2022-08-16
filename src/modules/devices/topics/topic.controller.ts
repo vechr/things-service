@@ -42,8 +42,9 @@ export class TopicController {
   @ApiResponse({ status: 200, description: '[<your data in here>]' })
   @HttpCode(HttpStatus.OK)
   @Post('query')
-  getDataTopic(@Body() dto: DBLoggerDto) {
-    return this.topicService.getDataTopic(dto);
+  async getDataTopic(@Body() dto: DBLoggerDto): Promise<SuccessResponse<any>> {
+    const result = await this.topicService.getDataTopic(dto);
+    return new SuccessResponse('Success get record all data Topic!', result);
   }
 
   @Get()

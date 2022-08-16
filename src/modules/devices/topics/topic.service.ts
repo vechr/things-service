@@ -10,6 +10,7 @@ import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ClientNats } from '@nestjs/microservices';
 import { Topic } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { lastValueFrom } from 'rxjs';
 import { DBLoggerDto, QueryCreateEventDto } from './dto';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { EditTopicDto } from './dto/edit-topic.dto';
@@ -21,8 +22,8 @@ export class TopicService {
     @Inject('DB_LOGGER_SERVICE') private readonly dbLoggerClient: ClientNats,
   ) {}
 
-  getDataTopic(dto: DBLoggerDto) {
-    return this.dbLoggerClient.send(
+  async getDataTopic(dto: DBLoggerDto) {
+    const source = this.dbLoggerClient.send(
       'getData.query',
       new QueryCreateEventDto(
         dto.dashboardId,
@@ -31,6 +32,7 @@ export class TopicService {
         dto.topic,
       ),
     );
+    return await lastValueFrom(source);
   }
 
   async getTopics(deviceId: string): Promise<Topic[]> {
