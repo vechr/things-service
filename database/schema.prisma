@@ -43,8 +43,7 @@ model Widget {
   nodeId                      String @db.VarChar(50)
   widgetData                  Json
   widgetType                  WidgetType
-  persistance                 Boolean?
-  hidden                      Boolean?
+  shiftData                   Boolean?
   topic                       Topic @relation(fields: [topicId], references: [id])
   topicId                     String @db.VarChar(36)
   createdAt                   DateTime @default(now())

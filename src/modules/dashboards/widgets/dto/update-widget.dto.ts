@@ -57,18 +57,9 @@ export class UpdateWidgetDto {
 
   @ApiProperty({
     example: false,
-    description:
-      'Flag for the last data is being saved in Database! (optional)',
+    description: 'Flag for whether data it will be shifted or not! (optional)',
   })
   @IsBoolean()
   @IsOptional()
-  persistance?: boolean;
-
-  @ApiProperty({
-    example: false,
-    description: 'Flag for the widget will hide in frontend! (optional)',
-  })
-  @IsBoolean()
-  @IsOptional()
-  hidden?: boolean;
+  shiftData?: boolean;
 }

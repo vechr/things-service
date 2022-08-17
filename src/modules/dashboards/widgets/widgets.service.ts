@@ -80,14 +80,7 @@ export class WidgetService {
 
   async editWidgetById(
     dashboardId: string,
-    {
-      description,
-      hidden,
-      name,
-      node,
-      persistance,
-      widgetData,
-    }: UpdateWidgetDto,
+    { description, name, node, shiftData, widgetData }: UpdateWidgetDto,
     widgetId: string,
   ): Promise<Widget> {
     try {
@@ -140,9 +133,8 @@ export class WidgetService {
         data: {
           node,
           description,
-          hidden,
           name,
-          persistance,
+          shiftData,
           widgetData,
         },
         include: {
@@ -174,8 +166,7 @@ export class WidgetService {
       description,
       node,
       nodeId,
-      hidden,
-      persistance,
+      shiftData,
       widgetData,
     }: CreateWidgetDto,
   ): Promise<Widget> {
@@ -233,8 +224,7 @@ export class WidgetService {
           nodeId,
           widgetType,
           widgetData,
-          persistance,
-          hidden,
+          shiftData,
           dashboardId,
           topicId,
         },
