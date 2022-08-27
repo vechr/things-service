@@ -65,7 +65,14 @@ export class TopicEventService {
 
   async createTopicEvent(
     topicId,
-    { name, description, eventExpression }: CreateTopicEventDto,
+    {
+      name,
+      description,
+      eventExpression,
+      bodyEmail,
+      htmlBodyEmail,
+      notificationEmailId,
+    }: CreateTopicEventDto,
   ): Promise<TopicEvent> {
     try {
       const topic = await this.prisma.topic.findUnique({
@@ -90,6 +97,9 @@ export class TopicEventService {
           description,
           eventExpression,
           topicId,
+          bodyEmail,
+          htmlBodyEmail,
+          notificationEmailId,
         },
       });
 
@@ -115,7 +125,14 @@ export class TopicEventService {
   async editTopicEventById(
     topicId: string,
     topicEventId: string,
-    { name, description, eventExpression }: EditTopicEventDto,
+    {
+      name,
+      description,
+      eventExpression,
+      bodyEmail,
+      htmlBodyEmail,
+      notificationEmailId,
+    }: EditTopicEventDto,
   ): Promise<TopicEvent> {
     try {
       const topicEvent = await this.prisma.topicEvent.findUnique({
@@ -156,6 +173,9 @@ export class TopicEventService {
           description,
           eventExpression,
           topicId,
+          bodyEmail,
+          htmlBodyEmail,
+          notificationEmailId,
         },
       });
 

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsJSON, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsJSON, IsOptional, IsString } from 'class-validator';
 
 export class EditTopicEventDto {
   @ApiProperty({
@@ -25,4 +25,33 @@ export class EditTopicEventDto {
   @IsJSON()
   @IsOptional()
   eventExpression?: string;
+
+  @ApiProperty({
+    example: [
+      'de2d547a-2601-11ed-861d-0242ac120002',
+      'e7207a94-2601-11ed-861d-0242ac120002',
+    ],
+    description: 'Insert your notification Email ID in here',
+  })
+  @IsArray()
+  @IsOptional()
+  notificationEmailId: string[];
+
+  @ApiProperty({
+    example: 'Hello this is body email',
+    description:
+      'Email text body that will be send when expression is triggered',
+  })
+  @IsString()
+  @IsOptional()
+  bodyEmail: string;
+
+  @ApiProperty({
+    example: '<h1>Hello this is body email</h1>',
+    description:
+      'Email html body that will be send when expression is triggered',
+  })
+  @IsString()
+  @IsOptional()
+  htmlBodyEmail: string;
 }
