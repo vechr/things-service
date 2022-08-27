@@ -25,8 +25,8 @@ const httpServer = new Promise(async (resolve, reject) => {
     app.use('/public', express.static(join(__dirname, '..', 'public')));
     const option = {
       customCss: `
-      .topbar-wrapper img {content:url('/public/kreMES.svg'); width:200px; height:auto;}
-      .swagger-ui .topbar { background-color: #000000; }`,
+      .topbar-wrapper img {content:url('/public/kreMESWhite.svg'); width:200px; height:auto;}
+      .swagger-ui .topbar { background: linear-gradient(45deg, rgba(0,209,255,1) 42%, rgba(0,217,139,1) 100%); }`,
       customfavIcon: `/public/kreMES.svg`,
       customSiteTitle: 'kreMES API Things Services',
     };
