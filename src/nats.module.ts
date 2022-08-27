@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
-import { TopicModule } from './modules/devices/topics/topic.module';
+import { TopicModule } from './modules/topics/topic.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { logger } from './shared/utils/log.util';
 
