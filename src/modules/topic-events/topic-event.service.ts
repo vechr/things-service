@@ -103,9 +103,18 @@ export class TopicEventService {
         },
       });
 
+      const topicUpdated = await this.prisma.topic.findUnique({
+        where: {
+          id: topicId,
+        },
+        include: {
+          topicEvents: true,
+        },
+      });
+
       await NatsService.kv.put(
         topic.id,
-        NatsService.sc.encode(JSON.stringify(topic)),
+        NatsService.sc.encode(JSON.stringify(topicUpdated)),
       );
 
       return topicEvent;
@@ -179,9 +188,18 @@ export class TopicEventService {
         },
       });
 
+      const topicUpdated = await this.prisma.topic.findUnique({
+        where: {
+          id: topicId,
+        },
+        include: {
+          topicEvents: true,
+        },
+      });
+
       await NatsService.kv.put(
         topic.id,
-        NatsService.sc.encode(JSON.stringify(topic)),
+        NatsService.sc.encode(JSON.stringify(topicUpdated)),
       );
       return result;
     } catch (error) {
