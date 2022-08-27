@@ -1,3 +1,4 @@
+import { NatsService } from '@/modules/services/nats.service';
 import PrismaService from '@/prisma/prisma.service';
 import { UnknownException } from '@/shared/exceptions/common.exception';
 import log from '@/shared/utils/log.util';
@@ -67,13 +68,16 @@ export class TopicEventService {
     { name, description, eventExpression }: CreateTopicEventDto,
   ): Promise<TopicEvent> {
     try {
-      const topics = await this.prisma.topic.findUnique({
+      const topic = await this.prisma.topic.findUnique({
         where: {
           id: topicId,
         },
+        include: {
+          topicEvents: true,
+        },
       });
 
-      if (!topics) {
+      if (!topic) {
         throw new NotFoundException({
           code: HttpStatus.NOT_FOUND.toString(),
           message: 'Topic is not found!',
@@ -88,6 +92,11 @@ export class TopicEventService {
           topicId,
         },
       });
+
+      await NatsService.kv.put(
+        topic.id,
+        NatsService.sc.encode(JSON.stringify(topic)),
+      );
 
       return topicEvent;
     } catch (error) {
@@ -126,6 +135,9 @@ export class TopicEventService {
         where: {
           id: topicId,
         },
+        include: {
+          topicEvents: true,
+        },
       });
 
       if (!topic) {
@@ -135,7 +147,7 @@ export class TopicEventService {
         });
       }
 
-      return this.prisma.topicEvent.update({
+      const result = await this.prisma.topicEvent.update({
         where: {
           id: topicEventId,
         },
@@ -146,6 +158,12 @@ export class TopicEventService {
           topicId,
         },
       });
+
+      await NatsService.kv.put(
+        topic.id,
+        NatsService.sc.encode(JSON.stringify(topic)),
+      );
+      return result;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         log.error(error.message);
@@ -174,11 +192,32 @@ export class TopicEventService {
         });
       }
 
+      const topic = await this.prisma.topic.findUnique({
+        where: {
+          id: topicEvent.topicId,
+        },
+        include: {
+          topicEvents: true,
+        },
+      });
+
+      if (!topic) {
+        throw new NotFoundException({
+          code: HttpStatus.NOT_FOUND.toString(),
+          message: 'Topic is not found!',
+        });
+      }
+
       const result = await this.prisma.topicEvent.delete({
         where: {
           id: topicEventId,
         },
       });
+
+      await NatsService.kv.put(
+        topic.id,
+        NatsService.sc.encode(JSON.stringify(topic)),
+      );
 
       return result;
     } catch (error) {

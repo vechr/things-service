@@ -9,8 +9,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateTopicEventDto } from './dto/create-topic-event.dto';
-import { EditTopicEventDto } from './dto/edit-topic-event.dto';
+import { CreateTopicEventDto, EditTopicEventDto } from './dto';
 import { TopicEventService } from './topic-event.service';
 
 @ApiTags('Topic Event')

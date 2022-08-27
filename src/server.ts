@@ -12,6 +12,7 @@ import express from 'express';
 import { join } from 'path';
 import { NatsService } from './modules/services/nats.service';
 import { NatsHelper } from './shared/helpers/nats.helper';
+import { ValidationHelper } from './shared/helpers/validation.helper';
 
 const httpServer = new Promise(async (resolve, reject) => {
   try {
@@ -78,6 +79,12 @@ const natsServer = new Promise(async (resolve, reject) => {
 
 (async function () {
   await Promise.all([httpServer, natsServer]);
-  const natsService = new NatsService(await NatsHelper.getConnection());
+  const natsService = new NatsService(
+    await NatsHelper.getConnection(),
+    new ValidationHelper(log),
+  );
   await natsService.createBucket('kremes_topics', { history: 5 });
+  await natsService.subscribe(
+    'kreMES.DashboardID.*.DeviceID.*.TopicID.*.Topic.>',
+  );
 })();

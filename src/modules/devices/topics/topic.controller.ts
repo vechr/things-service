@@ -15,8 +15,12 @@ import {
 } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateTopicDto, DBLoggerDto, EditTopicDto } from './dto';
-import { TopicIdRequestDto } from './dto/topic-id-request.dto';
+import {
+  CreateTopicDto,
+  DBLoggerDto,
+  EditTopicDto,
+  TopicIdRequestDto,
+} from './dto';
 import { TopicService } from './topic.service';
 
 @ApiTags('Topic')

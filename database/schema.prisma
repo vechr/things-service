@@ -112,6 +112,9 @@ model TopicEvent {
   name                        String @db.VarChar(50)
   description                 String? @db.Text()
   eventExpression             Json?
+  notificationEmailId         String[] @db.Text()
+  bodyEmail                   String? @db.Text()
+  htmlBodyEmail               String? @db.Text()
   createdAt                   DateTime @default(now())
   updatedAt                   DateTime @updatedAt()
 
