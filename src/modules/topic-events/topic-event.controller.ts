@@ -1,3 +1,4 @@
+import { ExceptionFilter } from '@/shared/filters/rpc-exception.filter';
 import SuccessResponse from '@/shared/responses/success.response';
 import {
   Body,
@@ -7,15 +8,28 @@ import {
   Param,
   Patch,
   Post,
+  UseFilters,
 } from '@nestjs/common';
+import { EventPattern, Payload } from '@nestjs/microservices';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateTopicEventDto, EditTopicEventDto } from './dto';
+import { NotificationEmailDto } from './dto/notification-email-event.dto';
 import { TopicEventService } from './topic-event.service';
 
 @ApiTags('Topic Event')
 @Controller('topic/:topicId/topic-events')
 export class TopicEventController {
   constructor(private readonly topicEventService: TopicEventService) {}
+
+  @UseFilters(new ExceptionFilter())
+  @EventPattern('notification.email.deleted')
+  public async updateNotificationEmailInTopicEvent(
+    @Payload() data: NotificationEmailDto,
+  ): Promise<void> {
+    await this.topicEventService.syncronizationNotificationEmailTopicEvent(
+      data,
+    );
+  }
 
   @Get()
   public async getTopicEvents(

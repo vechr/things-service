@@ -7,6 +7,7 @@ import { TopicEvent } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { CreateTopicEventDto } from './dto/create-topic-event.dto';
 import { EditTopicEventDto } from './dto/edit-topic-event.dto';
+import { NotificationEmailDto } from './dto/notification-email-event.dto';
 
 @Injectable()
 export class TopicEventService {
@@ -63,9 +64,51 @@ export class TopicEventService {
     }
   }
 
+  async syncronizationNotificationEmailTopicEvent(dto: NotificationEmailDto) {
+    try {
+      const search = await this.prisma.topicEvent.findMany({
+        where: {
+          notificationEmailId: {
+            has: dto.id,
+          },
+        },
+      });
+
+      search.forEach(async (item) => {
+        await this.prisma.topicEvent.update({
+          where: {
+            id: item.id,
+          },
+          data: {
+            notificationEmailId: {
+              set: item.notificationEmailId.filter((id) => id !== dto.id),
+            },
+          },
+        });
+      });
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        log.error(error.message);
+        throw new UnknownException({
+          code: HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+          message: `Error unexpected!`,
+          params: { exception: error.message },
+        });
+      }
+      throw error;
+    }
+  }
+
   async createTopicEvent(
     topicId,
-    { name, description, eventExpression }: CreateTopicEventDto,
+    {
+      name,
+      description,
+      eventExpression,
+      bodyEmail,
+      htmlBodyEmail,
+      notificationEmailId,
+    }: CreateTopicEventDto,
   ): Promise<TopicEvent> {
     try {
       const topic = await this.prisma.topic.findUnique({
@@ -90,12 +133,24 @@ export class TopicEventService {
           description,
           eventExpression,
           topicId,
+          bodyEmail,
+          htmlBodyEmail,
+          notificationEmailId,
+        },
+      });
+
+      const topicUpdated = await this.prisma.topic.findUnique({
+        where: {
+          id: topicId,
+        },
+        include: {
+          topicEvents: true,
         },
       });
 
       await NatsService.kv.put(
         topic.id,
-        NatsService.sc.encode(JSON.stringify(topic)),
+        NatsService.sc.encode(JSON.stringify(topicUpdated)),
       );
 
       return topicEvent;
@@ -115,7 +170,14 @@ export class TopicEventService {
   async editTopicEventById(
     topicId: string,
     topicEventId: string,
-    { name, description, eventExpression }: EditTopicEventDto,
+    {
+      name,
+      description,
+      eventExpression,
+      bodyEmail,
+      htmlBodyEmail,
+      notificationEmailId,
+    }: EditTopicEventDto,
   ): Promise<TopicEvent> {
     try {
       const topicEvent = await this.prisma.topicEvent.findUnique({
@@ -156,12 +218,24 @@ export class TopicEventService {
           description,
           eventExpression,
           topicId,
+          bodyEmail,
+          htmlBodyEmail,
+          notificationEmailId,
+        },
+      });
+
+      const topicUpdated = await this.prisma.topic.findUnique({
+        where: {
+          id: topicId,
+        },
+        include: {
+          topicEvents: true,
         },
       });
 
       await NatsService.kv.put(
         topic.id,
-        NatsService.sc.encode(JSON.stringify(topic)),
+        NatsService.sc.encode(JSON.stringify(topicUpdated)),
       );
       return result;
     } catch (error) {
