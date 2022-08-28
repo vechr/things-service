@@ -7,6 +7,7 @@ import { TopicEvent } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { CreateTopicEventDto } from './dto/create-topic-event.dto';
 import { EditTopicEventDto } from './dto/edit-topic-event.dto';
+import { NotificationEmailDto } from './dto/notification-email-event.dto';
 
 @Injectable()
 export class TopicEventService {
@@ -50,6 +51,41 @@ export class TopicEventService {
       }
 
       return topicEvent;
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        log.error(error.message);
+        throw new UnknownException({
+          code: HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+          message: `Error unexpected!`,
+          params: { exception: error.message },
+        });
+      }
+      throw error;
+    }
+  }
+
+  async syncronizationNotificationEmailTopicEvent(dto: NotificationEmailDto) {
+    try {
+      const search = await this.prisma.topicEvent.findMany({
+        where: {
+          notificationEmailId: {
+            has: dto.id,
+          },
+        },
+      });
+
+      search.forEach(async (item) => {
+        await this.prisma.topicEvent.update({
+          where: {
+            id: item.id,
+          },
+          data: {
+            notificationEmailId: {
+              set: item.notificationEmailId.filter((id) => id !== dto.id),
+            },
+          },
+        });
+      });
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         log.error(error.message);
