@@ -17,17 +17,21 @@ import { ValidationHelper } from './shared/helpers/validation.helper';
 const httpServer = new Promise(async (resolve, reject) => {
   try {
     const app = await NestFactory.create(HttpModule);
+    app.setGlobalPrefix('api/v1/things');
     app.enableCors();
     app.useGlobalFilters(
       new UnknownExceptionsFilter(),
       new HttpExceptionFilter(),
     );
-    app.use('/public', express.static(join(__dirname, '..', 'public')));
+    app.use(
+      '/api/v1/things/public',
+      express.static(join(__dirname, '..', 'public')),
+    );
     const option = {
       customCss: `
-      .topbar-wrapper img {content:url('/public/kreMESWhite.svg'); width:200px; height:auto;}
+      .topbar-wrapper img {content:url('/api/v1/things/public/kreMESWhite.svg'); width:200px; height:auto;}
       .swagger-ui .topbar { background: linear-gradient(45deg, rgba(0,209,255,1) 42%, rgba(0,217,139,1) 100%); }`,
-      customfavIcon: `/public/kreMES.svg`,
+      customfavIcon: `/api/v1/things/public/kreMES.svg`,
       customSiteTitle: 'kreMES API Things Services',
     };
     const config = new DocumentBuilder()
@@ -36,6 +40,7 @@ const httpServer = new Promise(async (resolve, reject) => {
         'This is a Things Service for creating Metadata IoT system',
       )
       .setVersion('1.0.0')
+      .setBasePath('api/v1/things')
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
