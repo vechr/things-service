@@ -106,7 +106,7 @@ export class NatsService {
   public sendEmail(data: string, topicEvent: ITopicEvent[]) {
     const sc = StringCodec();
     topicEvent.map((val) => {
-      if (data === JSON.stringify(val.eventExpression))
+      if (data === val.eventExpression)
         this.nats.publish(
           'notification.email',
           sc.encode(
@@ -117,7 +117,7 @@ export class NatsService {
             ).toString(),
           ),
         );
-      log.info(JSON.stringify(val.eventExpression));
+      log.info(val.eventExpression ?? '');
     });
   }
 }

@@ -111,7 +111,7 @@ model TopicEvent {
   topicId                     String @db.VarChar(36)
   name                        String @db.VarChar(50)
   description                 String? @db.Text()
-  eventExpression             Json?
+  eventExpression             String?
   notificationEmailId         String[] @db.Text()
   bodyEmail                   String? @db.Text()
   htmlBodyEmail               String? @db.Text()
