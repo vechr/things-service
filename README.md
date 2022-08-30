@@ -19,8 +19,8 @@ yarn db:studio
 yarn watch
 ```
 
-# Access Open API (Swagger UI)
-For creating metadata you can create through this Open API
-```
-http://localhost:3000/api/things
+# Build Image for Production
+```bash
+chmod +x ./docker/build.sh
+./docker/build.sh
 ```

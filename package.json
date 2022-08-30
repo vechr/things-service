@@ -14,7 +14,10 @@
     "db:migrations": "prisma migrate dev --schema './database/schema.prisma' --create-only --name",
     "db:migrate": "prisma migrate dev --schema './database/schema.prisma'",
     "prisma:sync": "prisma generate --schema './database/schema.prisma'",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "prisma:prod:deploy": "prisma migrate deploy --schema './database/schema.prisma'",
+    "prestart:prod": "npm run prisma:prod:deploy",
+    "start:prod": "node .build/server"
   },
   "dependencies": {
     "@nestjs/common": "^8.4.3",
