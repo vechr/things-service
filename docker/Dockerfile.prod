@@ -28,6 +28,7 @@ COPY --chown=node:node yarn.lock ./
 COPY --chown=node:node --from=development /usr/src/app/database/schema.prisma ./database/schema.prisma
 COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=development /usr/src/app/package.json .
+COPY --chown=node:node --from=development /usr/src/app/public ./public
 COPY --chown=node:node . .
 
 RUN yarn build
@@ -46,6 +47,7 @@ RUN apt-get install -y openssl
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/.build ./.build
 COPY --chown=node:node --from=build /usr/src/app/package.json .
+COPY --chown=node:node --from=build /usr/src/app/public ./public
 COPY --chown=node:node --from=build /usr/src/app/database/schema.prisma ./database/schema.prisma
 
 CMD ["yarn", "start:prod"]
