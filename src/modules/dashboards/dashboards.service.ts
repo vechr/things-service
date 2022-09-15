@@ -1,14 +1,14 @@
-import PrismaService from '@/prisma/prisma.service';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { Dashboard } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { CreateDashboardDto, EditDashboardDto } from './dto';
+import log from '@/shared/utils/log.util';
 import {
   ForbiddenException,
   NotFoundException,
   UnknownException,
 } from '@/shared/exceptions/common.exception';
-import log from '@/shared/utils/log.util';
-import { HttpStatus, Injectable } from '@nestjs/common';
-import { Dashboard } from '@prisma/client';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
-import { CreateDashboardDto, EditDashboardDto } from './dto';
+import PrismaService from '@/prisma/prisma.service';
 
 @Injectable()
 export class DashboardService {

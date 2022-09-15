@@ -1,11 +1,3 @@
-import { NatsService } from '@/modules/services/nats.service';
-import PrismaService from '@/prisma/prisma.service';
-import {
-  ForbiddenException,
-  NotFoundException,
-  UnknownException,
-} from '@/shared/exceptions/common.exception';
-import log from '@/shared/utils/log.util';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ClientNats } from '@nestjs/microservices';
 import { Topic } from '@prisma/client';
@@ -14,6 +6,14 @@ import { lastValueFrom } from 'rxjs';
 import { DBLoggerDto, QueryCreateEventDto } from './dto';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { EditTopicDto } from './dto/edit-topic.dto';
+import log from '@/shared/utils/log.util';
+import {
+  ForbiddenException,
+  NotFoundException,
+  UnknownException,
+} from '@/shared/exceptions/common.exception';
+import PrismaService from '@/prisma/prisma.service';
+import { NatsService } from '@/modules/services/nats.service';
 
 @Injectable()
 export class TopicService {

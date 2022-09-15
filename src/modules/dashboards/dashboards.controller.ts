@@ -1,4 +1,3 @@
-import SuccessResponse from '@/shared/responses/success.response';
 import {
   Body,
   Controller,
@@ -11,6 +10,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { DashboardService } from './dashboards.service';
 import { CreateDashboardDto, EditDashboardDto } from './dto';
+import SuccessResponse from '@/shared/responses/success.response';
 
 @ApiTags('Dashboard')
 @Controller('dashboard')

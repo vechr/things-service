@@ -1,6 +1,3 @@
-import { NatsService } from '@/modules/services/nats.service';
-import { ExceptionFilter } from '@/shared/filters/rpc-exception.filter';
-import SuccessResponse from '@/shared/responses/success.response';
 import {
   Body,
   Controller,
@@ -22,6 +19,9 @@ import {
   TopicIdRequestDto,
 } from './dto';
 import { TopicService } from './topic.service';
+import SuccessResponse from '@/shared/responses/success.response';
+import { ExceptionFilter } from '@/shared/filters/rpc-exception.filter';
+import { NatsService } from '@/modules/services/nats.service';
 
 @ApiTags('Topic')
 @Controller('device/:deviceId/topic')

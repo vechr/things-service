@@ -1,13 +1,13 @@
-import { NatsService } from '@/modules/services/nats.service';
-import PrismaService from '@/prisma/prisma.service';
-import { UnknownException } from '@/shared/exceptions/common.exception';
-import log from '@/shared/utils/log.util';
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { TopicEvent } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { CreateTopicEventDto } from './dto/create-topic-event.dto';
 import { EditTopicEventDto } from './dto/edit-topic-event.dto';
 import { NotificationEmailDto } from './dto/notification-email-event.dto';
+import log from '@/shared/utils/log.util';
+import { UnknownException } from '@/shared/exceptions/common.exception';
+import PrismaService from '@/prisma/prisma.service';
+import { NatsService } from '@/modules/services/nats.service';
 
 @Injectable()
 export class TopicEventService {

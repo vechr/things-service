@@ -1,9 +1,9 @@
-import { ValidationHelper } from '@/shared/helpers/validation.helper';
-import { ITopic, ITopicEvent } from '@/shared/types';
-import log from '@/shared/utils/log.util';
 import { NatsConnection, StringCodec } from 'nats';
 import { KV, KvOptions } from 'nats/lib/nats-base-client/types';
 import { EventRequesTopicDto, EventSendEmailDto } from './dto';
+import { ValidationHelper } from '@/shared/helpers/validation.helper';
+import { ITopic, ITopicEvent } from '@/shared/types';
+import log from '@/shared/utils/log.util';
 
 export class NatsService {
   constructor(
@@ -59,7 +59,7 @@ export class NatsService {
         const subjectParses: string[] = m.subject.split('.');
 
         // Value from Subject
-        let data = sc.decode(m.data);
+        const data = sc.decode(m.data);
 
         // Ambil informasi value dari key
         NatsService.topicData = await this.getTopicKV(subjectParses[6]);

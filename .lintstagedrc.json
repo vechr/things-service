@@ -1,6 +1,5 @@
 {
   "src/**/*.{js,ts}": [
-    "npx eslint \"src/**/*.ts\"",
-    "prettier --write \"src/**/*.ts\""
+    "prettier --check \"src/**/*.ts\""
   ]
 }

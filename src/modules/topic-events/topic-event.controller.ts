@@ -1,5 +1,3 @@
-import { ExceptionFilter } from '@/shared/filters/rpc-exception.filter';
-import SuccessResponse from '@/shared/responses/success.response';
 import {
   Body,
   Controller,
@@ -15,6 +13,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateTopicEventDto, EditTopicEventDto } from './dto';
 import { NotificationEmailDto } from './dto/notification-email-event.dto';
 import { TopicEventService } from './topic-event.service';
+import SuccessResponse from '@/shared/responses/success.response';
+import { ExceptionFilter } from '@/shared/filters/rpc-exception.filter';
 
 @ApiTags('Topic Event')
 @Controller('topic/:topicId/topic-events')

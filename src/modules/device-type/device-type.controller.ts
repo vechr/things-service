@@ -1,4 +1,3 @@
-import SuccessResponse from '@/shared/responses/success.response';
 import {
   Body,
   Controller,
@@ -12,6 +11,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { DeviceTypeService } from './device-type.service';
 import { CreateDeviceTypeDto } from './dto/create-device-type.dto';
 import { EditDeviceTypeDto } from './dto/edit-device-type.dto';
+import SuccessResponse from '@/shared/responses/success.response';
 
 @ApiTags('Device Type')
 @Controller('device-type')

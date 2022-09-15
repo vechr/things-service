@@ -1,8 +1,8 @@
-import appConstant from '@/constants/app.constant';
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TopicController } from './topic.controller';
 import { TopicService } from './topic.service';
+import appConstant from '@/constants/app.constant';
 
 @Module({
   imports: [

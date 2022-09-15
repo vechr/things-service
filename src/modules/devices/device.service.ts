@@ -1,15 +1,15 @@
-import PrismaService from '@/prisma/prisma.service';
-import {
-  ForbiddenException,
-  NotFoundException,
-  UnknownException,
-} from '@/shared/exceptions/common.exception';
-import log from '@/shared/utils/log.util';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { Device } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { EditDeviceDto } from './dto/edit-device.dto';
+import log from '@/shared/utils/log.util';
+import {
+  ForbiddenException,
+  NotFoundException,
+  UnknownException,
+} from '@/shared/exceptions/common.exception';
+import PrismaService from '@/prisma/prisma.service';
 
 @Injectable()
 export class DeviceService {

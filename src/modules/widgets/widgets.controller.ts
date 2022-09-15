@@ -1,4 +1,3 @@
-import SuccessResponse from '@/shared/responses/success.response';
 import {
   Body,
   Controller,
@@ -12,6 +11,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateWidgetDto } from './dto/create-widget.dto';
 import { UpdateWidgetDto } from './dto/update-widget.dto';
 import { WidgetService } from './widgets.service';
+import SuccessResponse from '@/shared/responses/success.response';
 
 @ApiTags('Widget')
 @Controller('dashboard/:dashboardId/widget')
