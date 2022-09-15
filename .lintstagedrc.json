@@ -1,3 +1,6 @@
 {
-  "src/**/*.{js,ts}": ["prettier --write \"src/**/*.ts\""]
+  "src/**/*.{js,ts}": [
+    "npx eslint \"src/**/*.ts\"",
+    "prettier --write \"src/**/*.ts\""
+  ]
 }
