@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="" target="blank"><img src="./public/kreMES.svg" width="320" alt="kreMES Logo" /></a>
+  <a href="" target="blank"><img src="./public/logo.svg" width="320" alt="Vechr Logo" /></a>
 </p>
 
 # Edit your `.env` file
@@ -7,7 +7,7 @@ There's PORT for this app, Your NATS URL, and Database things
 ```
 APP_PORT=3000
 NATS_URL=nats://localhost:4222
-DB_URL="postgresql://kreMES:123@localhost:5432/things-db?schema=public"
+DB_URL="postgresql://Vechr:123@localhost:5432/things-db?schema=public"
 ```
 
 # Running Thing Service

@@ -29,10 +29,10 @@ const httpServer = new Promise(async (resolve, reject) => {
     );
     const option = {
       customCss: `
-      .topbar-wrapper img {content:url('/api/v1/things/public/kreMESWhite.svg'); width:200px; height:auto;}
+      .topbar-wrapper img {content:url('/api/v1/things/public/logo.svg'); width:200px; height:auto;}
       .swagger-ui .topbar { background: linear-gradient(45deg, rgba(0,209,255,1) 42%, rgba(0,217,139,1) 100%); }`,
-      customfavIcon: `/api/v1/things/public/kreMES.svg`,
-      customSiteTitle: 'kreMES API Things Services',
+      customfavIcon: `/api/v1/things/public/logo.svg`,
+      customSiteTitle: 'Vechr API Things Services',
     };
     const config = new DocumentBuilder()
       .setTitle('Things Service API Documentation')
@@ -40,7 +40,6 @@ const httpServer = new Promise(async (resolve, reject) => {
         'This is a Things Service for creating Metadata IoT system',
       )
       .setVersion('1.0.0')
-      .setBasePath('api/v1/things')
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
@@ -90,6 +89,6 @@ const natsServer = new Promise(async (resolve, reject) => {
   );
   await natsService.createBucket('kremes_topics', { history: 5 });
   await natsService.subscribe(
-    'kreMES.DashboardID.*.DeviceID.*.TopicID.*.Topic.>',
+    'Vechr.DashboardID.*.DeviceID.*.TopicID.*.Topic.>',
   );
 })();
