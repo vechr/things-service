@@ -16,7 +16,7 @@ import { TopicEventService } from './topic-event.service';
 import SuccessResponse from '@/shared/responses/success.response';
 import { ExceptionFilter } from '@/shared/filters/rpc-exception.filter';
 
-@ApiTags('Topic Event')
+@ApiTags('TopicEvent')
 @Controller('topic/:topicId/topic-events')
 export class TopicEventController {
   constructor(private readonly topicEventService: TopicEventService) {}

@@ -13,7 +13,7 @@ import { CreateDeviceTypeDto } from './dto/create-device-type.dto';
 import { EditDeviceTypeDto } from './dto/edit-device-type.dto';
 import SuccessResponse from '@/shared/responses/success.response';
 
-@ApiTags('Device Type')
+@ApiTags('DeviceType')
 @Controller('device-type')
 export class DeviceTypeController {
   constructor(private readonly deviceTypeService: DeviceTypeService) {}
