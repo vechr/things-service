@@ -23,6 +23,7 @@ const httpServer = new Promise(async (resolve, reject) => {
       new UnknownExceptionsFilter(),
       new HttpExceptionFilter(),
     );
+    app.useGlobalInterceptors(new ContextInterceptor());
     app.use(
       '/api/v1/things/public',
       express.static(join(__dirname, '..', 'public')),

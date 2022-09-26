@@ -11,7 +11,11 @@ export default class SuccessResponse<T = any> extends BaseResponse<
   T | IListSuccessResponse<T>,
   null
 > {
-  constructor(public message: string, result: T | IListSuccessResponse<T>) {
-    super(message, result, null);
+  constructor(
+    public message: string,
+    result: T | IListSuccessResponse<T>,
+    meta = {},
+  ) {
+    super(true, message, result, null, meta);
   }
 }
