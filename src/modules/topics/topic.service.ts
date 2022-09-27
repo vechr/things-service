@@ -6,6 +6,7 @@ import { lastValueFrom } from 'rxjs';
 import { DBLoggerDto, QueryCreateEventDto } from './dto';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { EditTopicDto } from './dto/edit-topic.dto';
+import { IListTopicRequestQuery } from './requests/list-topic.request';
 import log from '@/shared/utils/log.util';
 import {
   ForbiddenException,
@@ -14,6 +15,8 @@ import {
 } from '@/shared/exceptions/common.exception';
 import PrismaService from '@/prisma/prisma.service';
 import { NatsService } from '@/modules/services/nats.service';
+import { IContext } from '@/shared/interceptors/context.interceptor';
+import { parseMeta, parseQuery } from '@/shared/utils/query.util';
 
 @Injectable()
 export class TopicService {
@@ -21,6 +24,43 @@ export class TopicService {
     private readonly prisma: PrismaService,
     @Inject('DB_LOGGER_SERVICE') private readonly dbLoggerClient: ClientNats,
   ) {}
+
+  async list(ctx: IContext): Promise<{
+    result: Topic[];
+    meta: { count: number; total: number; page: number; totalPage: number };
+  }> {
+    const query = ctx.params.query as IListTopicRequestQuery;
+
+    const { limit, offset, order, page } =
+      parseQuery<IListTopicRequestQuery>(query);
+
+    const selectOptions = {
+      orderBy: order,
+      where: query.filters.field,
+    };
+
+    const pageOptions = {
+      take: limit,
+      skip: offset,
+    };
+
+    const [total, topic] = await this.prisma.$transaction([
+      this.prisma.topic.count(selectOptions),
+      this.prisma.topic.findMany({ ...pageOptions, ...selectOptions }),
+    ]);
+
+    const meta = parseMeta<Topic>({
+      result: topic,
+      total,
+      page,
+      limit,
+    });
+
+    return {
+      result: topic,
+      meta,
+    };
+  }
 
   async getDataTopic(dto: DBLoggerDto) {
     const source = this.dbLoggerClient.send(

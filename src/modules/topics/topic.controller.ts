@@ -19,14 +19,35 @@ import {
   TopicIdRequestDto,
 } from './dto';
 import { TopicService } from './topic.service';
+import ListTopicValidator, {
+  ListTopicQueryValidator,
+} from './validators/list-topic.validator';
+import ListTopicResponse from './serializers/list.topic.response';
 import SuccessResponse from '@/shared/responses/success.response';
 import { ExceptionFilter } from '@/shared/filters/rpc-exception.filter';
 import { NatsService } from '@/modules/services/nats.service';
+import UseList from '@/shared/decorators/uselist.decorator';
+import Validator from '@/shared/decorators/validator.decorator';
+import Serializer from '@/shared/decorators/serializer.decorator';
+import { ApiFilterQuery } from '@/shared/decorators/api-filter-query.decorator';
+import Context from '@/shared/decorators/context.decorator';
+import { IContext } from '@/shared/interceptors/context.interceptor';
 
 @ApiTags('Topic')
 @Controller('device/:deviceId/topic')
 export class TopicController {
   constructor(private readonly topicService: TopicService) {}
+
+  @Get('pagination')
+  @HttpCode(HttpStatus.OK)
+  @UseList()
+  @Validator(ListTopicValidator)
+  @Serializer(ListTopicResponse)
+  @ApiFilterQuery('filters', ListTopicQueryValidator)
+  public async list(@Context() ctx: IContext): Promise<SuccessResponse> {
+    const { result, meta } = await this.topicService.list(ctx);
+    return new SuccessResponse('Success get all records!', result, meta);
+  }
 
   @UseFilters(new ExceptionFilter())
   @EventPattern('set.topic.widget.kv')

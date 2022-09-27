@@ -16,7 +16,7 @@ export function ApiFilterQuery(fieldName: string, filterDto: Function) {
       style: 'deepObject',
       explode: true,
       type: 'object',
-      description: `Example: http://your_host:your_port/your_route?filters[pagination][limit]=2&filters[pagination][page]=1&filters[sort][by]=createdAt&filters[sort][mode]=asc&filters[field][name][contains]=Jakarta </br> </br>
+      description: `Example: http://your_host:your_port/your_route?filters[pagination][limit]=2&filters[pagination][page]=1&filters[sort][by]=createdAt&filters[sort][mode]=asc&filters[field][name][contains]=something about name </br> </br>
          You can filter more than this, please refer to this https://www.prisma.io/docs/reference/api-reference/prisma-client-reference#filter-conditions-and-operators`,
       schema: {
         $ref: getSchemaPath(filterDto),
