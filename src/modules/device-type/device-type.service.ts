@@ -3,6 +3,7 @@ import { DeviceType } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { CreateDeviceTypeDto } from './dto/create-device-type.dto';
 import { EditDeviceTypeDto } from './dto/edit-device-type.dto';
+import { IListDeviceTypeRequestQuery } from './requests/list-device-type.request';
 import log from '@/shared/utils/log.util';
 import {
   ForbiddenException,
@@ -10,10 +11,49 @@ import {
   UnknownException,
 } from '@/shared/exceptions/common.exception';
 import PrismaService from '@/prisma/prisma.service';
+import { parseMeta, parseQuery } from '@/shared/utils/query.util';
+import { IContext } from '@/shared/interceptors/context.interceptor';
 
 @Injectable()
 export class DeviceTypeService {
   constructor(private readonly prisma: PrismaService) {}
+
+  async list(ctx: IContext): Promise<{
+    result: DeviceType[];
+    meta: { count: number; total: number; page: number; totalPage: number };
+  }> {
+    const query = ctx.params.query as IListDeviceTypeRequestQuery;
+
+    const { limit, offset, order, page } =
+      parseQuery<IListDeviceTypeRequestQuery>(query);
+
+    const selectOptions = {
+      orderBy: order,
+      where: query.filters.field,
+    };
+
+    const pageOptions = {
+      take: limit,
+      skip: offset,
+    };
+
+    const [total, deviceType] = await this.prisma.$transaction([
+      this.prisma.deviceType.count(selectOptions),
+      this.prisma.deviceType.findMany({ ...pageOptions, ...selectOptions }),
+    ]);
+
+    const meta = parseMeta<DeviceType>({
+      result: deviceType,
+      total,
+      page,
+      limit,
+    });
+
+    return {
+      result: deviceType,
+      meta,
+    };
+  }
 
   async getDeviceTypes(): Promise<DeviceType[]> {
     try {

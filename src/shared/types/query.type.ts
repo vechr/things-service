@@ -47,7 +47,7 @@ export class OperatorQuery {
   @IsOptional()
   @ApiPropertyOptional({
     description: 'Contains',
-    example: 'Jakarta',
+    example: 'something about name',
     type: String,
   })
   contains: any;
