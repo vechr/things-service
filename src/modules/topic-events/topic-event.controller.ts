@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -13,13 +15,34 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateTopicEventDto, EditTopicEventDto } from './dto';
 import { NotificationEmailDto } from './dto/notification-email-event.dto';
 import { TopicEventService } from './topic-event.service';
+import ListTopicEventValidator, {
+  ListTopicEventQueryValidator,
+} from './validators/list-topic-event.validator';
+import ListTopicEventResponse from './serializers/list-topic-event.response';
 import SuccessResponse from '@/shared/responses/success.response';
 import { ExceptionFilter } from '@/shared/filters/rpc-exception.filter';
+import UseList from '@/shared/decorators/uselist.decorator';
+import Validator from '@/shared/decorators/validator.decorator';
+import Serializer from '@/shared/decorators/serializer.decorator';
+import { ApiFilterQuery } from '@/shared/decorators/api-filter-query.decorator';
+import Context from '@/shared/decorators/context.decorator';
+import { IContext } from '@/shared/interceptors/context.interceptor';
 
 @ApiTags('TopicEvent')
 @Controller('topic/:topicId/topic-events')
 export class TopicEventController {
   constructor(private readonly topicEventService: TopicEventService) {}
+
+  @Get('pagination')
+  @HttpCode(HttpStatus.OK)
+  @UseList()
+  @Validator(ListTopicEventValidator)
+  @Serializer(ListTopicEventResponse)
+  @ApiFilterQuery('filters', ListTopicEventQueryValidator)
+  public async list(@Context() ctx: IContext): Promise<SuccessResponse> {
+    const { result, meta } = await this.topicEventService.list(ctx);
+    return new SuccessResponse('Success get all records!', result, meta);
+  }
 
   @UseFilters(new ExceptionFilter())
   @EventPattern('notification.email.deleted')
