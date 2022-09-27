@@ -33,14 +33,14 @@ class ListDeviceQueryField implements Prisma.DeviceWhereInput {
   @IsOptional()
   @IsObject()
   @Type(() => OperatorQuery)
-  isActive: OperatorQuery;
+  isActive?: OperatorQuery;
 
   @Expose()
   @ValidateNested()
   @IsOptional()
   @IsObject()
   @Type(() => OperatorQuery)
-  deviceTypeId: OperatorQuery;
+  deviceTypeId?: OperatorQuery;
 
   @Expose()
   @ValidateNested()

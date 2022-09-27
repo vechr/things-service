@@ -27,35 +27,35 @@ class ListTopicEventQueryField implements Prisma.TopicEventWhereInput {
   @IsOptional()
   @IsObject()
   @Type(() => OperatorQuery)
-  topicId: OperatorQuery;
+  topicId?: OperatorQuery;
 
   @Expose()
   @ValidateNested()
   @IsOptional()
   @IsObject()
   @Type(() => OperatorQuery)
-  eventExpression: OperatorQuery;
+  eventExpression?: OperatorQuery;
 
   @Expose()
   @ValidateNested()
   @IsOptional()
   @IsObject()
   @Type(() => OperatorQuery)
-  notificationEmailId: OperatorQuery;
+  notificationEmailId?: OperatorQuery;
 
   @Expose()
   @ValidateNested()
   @IsOptional()
   @IsObject()
   @Type(() => OperatorQuery)
-  bodyEmail: OperatorQuery;
+  bodyEmail?: OperatorQuery;
 
   @Expose()
   @ValidateNested()
   @IsOptional()
   @IsObject()
   @Type(() => OperatorQuery)
-  htmlBodyEmail: OperatorQuery;
+  htmlBodyEmail?: OperatorQuery;
 
   @Expose()
   @ValidateNested()
