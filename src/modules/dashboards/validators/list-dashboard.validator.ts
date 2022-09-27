@@ -3,7 +3,7 @@ import { Expose, Type } from 'class-transformer';
 import { IsObject, IsOptional, ValidateNested } from 'class-validator';
 
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IListDashboardRequestQuery } from '../requests/list-dashboard.request';
+import { TListDashboardRequestQuery } from '../requests/list-dashboard.request';
 import { BaseQueryValidator, OperatorQuery } from '@/shared/types/query.type';
 
 class ListDashboardQueryField implements Prisma.DashboardWhereInput {
@@ -53,7 +53,7 @@ export class ListDashboardQueryValidator extends BaseQueryValidator<Dashboard> {
   field?: ListDashboardQueryField;
 }
 
-class FilterDashboardQueryValidator implements IListDashboardRequestQuery {
+class FilterDashboardQueryValidator implements TListDashboardRequestQuery {
   @ValidateNested()
   @IsOptional()
   @IsObject()

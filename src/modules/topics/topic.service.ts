@@ -7,7 +7,7 @@ import { DBLoggerDto, QueryCreateEventDto } from './dto';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { EditTopicDto } from './dto/edit-topic.dto';
 import {
-  IListTopicRequestQuery,
+  TListTopicRequestQuery,
   TTopicRequestParams,
 } from './requests/list-topic.request';
 import log from '@/shared/utils/log.util';
@@ -32,11 +32,11 @@ export class TopicService {
     result: Topic[];
     meta: { count: number; total: number; page: number; totalPage: number };
   }> {
-    const query = ctx.params.query as IListTopicRequestQuery;
+    const query = ctx.params.query as TListTopicRequestQuery;
     const params = ctx.params.params as TTopicRequestParams;
 
     const { limit, offset, order, page } =
-      parseQuery<IListTopicRequestQuery>(query);
+      parseQuery<TListTopicRequestQuery>(query);
 
     const selectOptions = {
       orderBy: order,

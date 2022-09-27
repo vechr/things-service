@@ -3,7 +3,7 @@ import { DeviceType } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { CreateDeviceTypeDto } from './dto/create-device-type.dto';
 import { EditDeviceTypeDto } from './dto/edit-device-type.dto';
-import { IListDeviceTypeRequestQuery } from './requests/list-device-type.request';
+import { TListDeviceTypeRequestQuery } from './requests/list-device-type.request';
 import log from '@/shared/utils/log.util';
 import {
   ForbiddenException,
@@ -22,10 +22,10 @@ export class DeviceTypeService {
     result: DeviceType[];
     meta: { count: number; total: number; page: number; totalPage: number };
   }> {
-    const query = ctx.params.query as IListDeviceTypeRequestQuery;
+    const query = ctx.params.query as TListDeviceTypeRequestQuery;
 
     const { limit, offset, order, page } =
-      parseQuery<IListDeviceTypeRequestQuery>(query);
+      parseQuery<TListDeviceTypeRequestQuery>(query);
 
     const selectOptions = {
       orderBy: order,

@@ -2,7 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { Dashboard } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { CreateDashboardDto, EditDashboardDto } from './dto';
-import { IListDashboardRequestQuery } from './requests/list-dashboard.request';
+import { TListDashboardRequestQuery } from './requests/list-dashboard.request';
 import log from '@/shared/utils/log.util';
 import {
   ForbiddenException,
@@ -21,10 +21,10 @@ export class DashboardService {
     result: Dashboard[];
     meta: { count: number; total: number; page: number; totalPage: number };
   }> {
-    const query = ctx.params.query as IListDashboardRequestQuery;
+    const query = ctx.params.query as TListDashboardRequestQuery;
 
     const { limit, offset, order, page } =
-      parseQuery<IListDashboardRequestQuery>(query);
+      parseQuery<TListDashboardRequestQuery>(query);
 
     const selectOptions = {
       orderBy: order,

@@ -3,7 +3,7 @@ import { Expose, Type } from 'class-transformer';
 import { IsObject, IsOptional, ValidateNested } from 'class-validator';
 
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IListTopicEventRequestQuery } from '../requests/list-topic-event.request';
+import { TListTopicEventRequestQuery } from '../requests/list-topic-event.request';
 import { BaseQueryValidator, OperatorQuery } from '@/shared/types/query.type';
 
 class ListTopicEventQueryField implements Prisma.TopicEventWhereInput {
@@ -88,7 +88,7 @@ export class ListTopicEventQueryValidator extends BaseQueryValidator<TopicEvent>
   field?: ListTopicEventQueryField;
 }
 
-class FilterTopicEventQueryValidator implements IListTopicEventRequestQuery {
+class FilterTopicEventQueryValidator implements TListTopicEventRequestQuery {
   @ValidateNested()
   @IsOptional()
   @IsObject()

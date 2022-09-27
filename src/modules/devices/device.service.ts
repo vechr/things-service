@@ -3,7 +3,7 @@ import { Device } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { EditDeviceDto } from './dto/edit-device.dto';
-import { IListDeviceRequestQuery } from './requests/list-device.request';
+import { TListDeviceRequestQuery } from './requests/list-device.request';
 import log from '@/shared/utils/log.util';
 import {
   ForbiddenException,
@@ -22,10 +22,10 @@ export class DeviceService {
     result: Device[];
     meta: { count: number; total: number; page: number; totalPage: number };
   }> {
-    const query = ctx.params.query as IListDeviceRequestQuery;
+    const query = ctx.params.query as TListDeviceRequestQuery;
 
     const { limit, offset, order, page } =
-      parseQuery<IListDeviceRequestQuery>(query);
+      parseQuery<TListDeviceRequestQuery>(query);
 
     const selectOptions = {
       orderBy: order,

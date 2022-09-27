@@ -5,7 +5,7 @@ import { CreateTopicEventDto } from './dto/create-topic-event.dto';
 import { EditTopicEventDto } from './dto/edit-topic-event.dto';
 import { NotificationEmailDto } from './dto/notification-email-event.dto';
 import {
-  IListTopicEventRequestQuery,
+  TListTopicEventRequestQuery,
   TTopicEventRequestParams,
 } from './requests/list-topic-event.request';
 import log from '@/shared/utils/log.util';
@@ -23,11 +23,11 @@ export class TopicEventService {
     result: TopicEvent[];
     meta: { count: number; total: number; page: number; totalPage: number };
   }> {
-    const query = ctx.params.query as IListTopicEventRequestQuery;
+    const query = ctx.params.query as TListTopicEventRequestQuery;
     const params = ctx.params.params as TTopicEventRequestParams;
 
     const { limit, offset, order, page } =
-      parseQuery<IListTopicEventRequestQuery>(query);
+      parseQuery<TListTopicEventRequestQuery>(query);
 
     const selectOptions = {
       orderBy: order,

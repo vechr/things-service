@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { DeviceType, Prisma } from '@prisma/client';
 import { Expose, Type } from 'class-transformer';
 import { IsObject, IsOptional, ValidateNested } from 'class-validator';
-import { IListDeviceTypeRequestQuery } from '../requests/list-device-type.request';
+import { TListDeviceTypeRequestQuery } from '../requests/list-device-type.request';
 import { BaseQueryValidator, OperatorQuery } from '@/shared/types/query.type';
 
 class ListDeviceTypeQueryField implements Prisma.DeviceTypeWhereInput {
@@ -52,7 +52,7 @@ export class ListDeviceTypeQueryValidator extends BaseQueryValidator<DeviceType>
   field?: ListDeviceTypeQueryField;
 }
 
-class FilterDeviceTypeQueryValidator implements IListDeviceTypeRequestQuery {
+class FilterDeviceTypeQueryValidator implements TListDeviceTypeRequestQuery {
   @ValidateNested()
   @IsOptional()
   @IsObject()
