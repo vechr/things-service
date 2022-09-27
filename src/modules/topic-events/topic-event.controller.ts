@@ -11,7 +11,7 @@ import {
   UseFilters,
 } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { CreateTopicEventDto, EditTopicEventDto } from './dto';
 import { NotificationEmailDto } from './dto/notification-email-event.dto';
 import { TopicEventService } from './topic-event.service';
@@ -39,6 +39,11 @@ export class TopicEventController {
   @Validator(ListTopicEventValidator)
   @Serializer(ListTopicEventResponse)
   @ApiFilterQuery('filters', ListTopicEventQueryValidator)
+  @ApiParam({
+    name: 'topicId',
+    example: '6af7cc7b-c121-437d-a694-d9b685521661',
+    type: String,
+  })
   public async list(@Context() ctx: IContext): Promise<SuccessResponse> {
     const { result, meta } = await this.topicEventService.list(ctx);
     return new SuccessResponse('Success get all records!', result, meta);

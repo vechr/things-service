@@ -11,7 +11,7 @@ import {
   UseFilters,
 } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   CreateTopicDto,
   DBLoggerDto,
@@ -44,6 +44,11 @@ export class TopicController {
   @Validator(ListTopicValidator)
   @Serializer(ListTopicResponse)
   @ApiFilterQuery('filters', ListTopicQueryValidator)
+  @ApiParam({
+    name: 'deviceId',
+    example: 'f24ec74b-8716-4fc5-b60a-e4cd62967f47',
+    type: String,
+  })
   public async list(@Context() ctx: IContext): Promise<SuccessResponse> {
     const { result, meta } = await this.topicService.list(ctx);
     return new SuccessResponse('Success get all records!', result, meta);

@@ -4,7 +4,10 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { CreateTopicEventDto } from './dto/create-topic-event.dto';
 import { EditTopicEventDto } from './dto/edit-topic-event.dto';
 import { NotificationEmailDto } from './dto/notification-email-event.dto';
-import { IListTopicEventRequestQuery } from './requests/list-topic-event.request';
+import {
+  IListTopicEventRequestQuery,
+  TTopicEventRequestParams,
+} from './requests/list-topic-event.request';
 import log from '@/shared/utils/log.util';
 import { UnknownException } from '@/shared/exceptions/common.exception';
 import PrismaService from '@/prisma/prisma.service';
@@ -21,6 +24,7 @@ export class TopicEventService {
     meta: { count: number; total: number; page: number; totalPage: number };
   }> {
     const query = ctx.params.query as IListTopicEventRequestQuery;
+    const params = ctx.params.params as TTopicEventRequestParams;
 
     const { limit, offset, order, page } =
       parseQuery<IListTopicEventRequestQuery>(query);
@@ -37,7 +41,11 @@ export class TopicEventService {
 
     const [total, topicEvent] = await this.prisma.$transaction([
       this.prisma.topicEvent.count(selectOptions),
-      this.prisma.topicEvent.findMany({ ...pageOptions, ...selectOptions }),
+      this.prisma.topicEvent.findMany({
+        ...pageOptions,
+        ...selectOptions,
+        where: { topicId: params.topicId },
+      }),
     ]);
 
     const meta = parseMeta<TopicEvent>({

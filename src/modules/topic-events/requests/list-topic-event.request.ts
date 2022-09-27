@@ -5,3 +5,7 @@ export type IListTopicEventRequestQuery = IListRequestQuery<
   TopicEvent,
   Prisma.TopicEventWhereInput
 >;
+
+export type TTopicEventRequestParams = {
+  topicId: string;
+};

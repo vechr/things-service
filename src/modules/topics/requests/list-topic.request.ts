@@ -5,3 +5,7 @@ export type IListTopicRequestQuery = IListRequestQuery<
   Topic,
   Prisma.TopicWhereInput
 >;
+
+export type TTopicRequestParams = {
+  deviceId: string;
+};

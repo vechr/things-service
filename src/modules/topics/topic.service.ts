@@ -6,7 +6,10 @@ import { lastValueFrom } from 'rxjs';
 import { DBLoggerDto, QueryCreateEventDto } from './dto';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { EditTopicDto } from './dto/edit-topic.dto';
-import { IListTopicRequestQuery } from './requests/list-topic.request';
+import {
+  IListTopicRequestQuery,
+  TTopicRequestParams,
+} from './requests/list-topic.request';
 import log from '@/shared/utils/log.util';
 import {
   ForbiddenException,
@@ -30,6 +33,7 @@ export class TopicService {
     meta: { count: number; total: number; page: number; totalPage: number };
   }> {
     const query = ctx.params.query as IListTopicRequestQuery;
+    const params = ctx.params.params as TTopicRequestParams;
 
     const { limit, offset, order, page } =
       parseQuery<IListTopicRequestQuery>(query);
@@ -46,7 +50,11 @@ export class TopicService {
 
     const [total, topic] = await this.prisma.$transaction([
       this.prisma.topic.count(selectOptions),
-      this.prisma.topic.findMany({ ...pageOptions, ...selectOptions }),
+      this.prisma.topic.findMany({
+        ...pageOptions,
+        ...selectOptions,
+        where: { deviceId: params.deviceId },
+      }),
     ]);
 
     const meta = parseMeta<Topic>({
