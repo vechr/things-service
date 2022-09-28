@@ -54,6 +54,7 @@ export class TopicService {
         ...pageOptions,
         ...selectOptions,
         where: { deviceId: params.deviceId },
+        include: { topicEvents: true },
       }),
     ]);
 
