@@ -39,7 +39,11 @@ export class DeviceTypeService {
 
     const [total, deviceType] = await this.prisma.$transaction([
       this.prisma.deviceType.count(selectOptions),
-      this.prisma.deviceType.findMany({ ...pageOptions, ...selectOptions }),
+      this.prisma.deviceType.findMany({
+        ...pageOptions,
+        ...selectOptions,
+        include: { devices: true },
+      }),
     ]);
 
     const meta = parseMeta<DeviceType>({
