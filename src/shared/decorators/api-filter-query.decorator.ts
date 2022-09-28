@@ -6,8 +6,12 @@ import { ApiExtraModels, ApiQuery, getSchemaPath } from '@nestjs/swagger';
  *  - has support for swagger
  *  - automatic transformation with nestjs
  */
-// eslint-disable-next-line @typescript-eslint/ban-types,@typescript-eslint/explicit-module-boundary-types
-export function ApiFilterQuery(fieldName: string, filterDto: Function) {
+
+interface ClassConstructor {
+  new (...args: any[]): any;
+}
+
+export function ApiFilterQuery(fieldName: string, filterDto: ClassConstructor) {
   return applyDecorators(
     ApiExtraModels(filterDto),
     ApiQuery({

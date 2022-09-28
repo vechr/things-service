@@ -36,10 +36,21 @@ export class DashboardService {
       skip: offset,
     };
 
-    const [total, dashboards] = await this.prisma.$transaction([
+    const [total, result] = await this.prisma.$transaction([
       this.prisma.dashboard.count(selectOptions),
-      this.prisma.dashboard.findMany({ ...pageOptions, ...selectOptions }),
+      this.prisma.dashboard.findMany({
+        ...pageOptions,
+        ...selectOptions,
+        include: { devices: { include: { device: true } } },
+      }),
     ]);
+
+    const dashboards = result.map((dashboard) => {
+      return {
+        ...dashboard,
+        devices: dashboard.devices.map((device) => device.device),
+      };
+    });
 
     const meta = parseMeta<Dashboard>({
       result: dashboards,
