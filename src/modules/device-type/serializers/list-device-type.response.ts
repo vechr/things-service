@@ -1,7 +1,7 @@
 import { Device, DeviceType } from '@prisma/client';
 // import { Exclude } from 'class-transformer';
 
-class ListDeviceTypeDevice implements Device {
+export class ListDeviceTypeDevice implements Device {
   id: string;
 
   deviceTypeId: string;
@@ -17,14 +17,14 @@ class ListDeviceTypeDevice implements Device {
   updatedAt: Date;
 }
 
-export default class ListDeviceTypeResponse implements DeviceType {
+export default class ListDeviceTypeResponse<T> implements DeviceType {
   id: string;
 
   name: string;
 
   description: string | null;
 
-  devices: ListDeviceTypeDevice;
+  devices: T;
 
   // @Exclude()
   createdAt: Date;

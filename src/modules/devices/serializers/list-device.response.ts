@@ -1,6 +1,6 @@
 import { Device, DeviceType, Topic, WidgetType } from '@prisma/client';
 
-class ListDeviceDeviceTypeResponse implements DeviceType {
+export class ListDeviceDeviceTypeResponse implements DeviceType {
   id: string;
 
   name: string;
@@ -11,7 +11,7 @@ class ListDeviceDeviceTypeResponse implements DeviceType {
 
   updatedAt: Date;
 }
-class ListDeviceTopicsResponse implements Topic {
+export class ListDeviceTopicsResponse implements Topic {
   id: string;
 
   deviceId: string;
@@ -26,7 +26,7 @@ class ListDeviceTopicsResponse implements Topic {
 
   updatedAt: Date;
 }
-export default class ListDeviceResponse implements Device {
+export default class ListDeviceResponse<T, D> implements Device {
   id: string;
 
   deviceTypeId: string;
@@ -43,7 +43,7 @@ export default class ListDeviceResponse implements Device {
   // @Exclude()
   updatedAt: Date;
 
-  topics: ListDeviceTopicsResponse;
+  topics: T;
 
-  deviceType: ListDeviceDeviceTypeResponse;
+  deviceType: D;
 }

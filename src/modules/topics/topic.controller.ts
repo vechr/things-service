@@ -22,7 +22,9 @@ import { TopicService } from './topic.service';
 import ListTopicValidator, {
   ListTopicQueryValidator,
 } from './validators/list-topic.validator';
-import ListTopicResponse from './serializers/list.topic.response';
+import ListTopicResponse, {
+  ListTopicTopicEventResponse,
+} from './serializers/list.topic.response';
 import SuccessResponse from '@/shared/responses/success.response';
 import { ExceptionFilter } from '@/shared/filters/rpc-exception.filter';
 import { NatsService } from '@/modules/services/nats.service';
@@ -42,7 +44,7 @@ export class TopicController {
   @HttpCode(HttpStatus.OK)
   @UseList()
   @Validator(ListTopicValidator)
-  @Serializer(ListTopicResponse)
+  @Serializer(ListTopicResponse<ListTopicTopicEventResponse>)
   @ApiFilterQuery('filters', ListTopicQueryValidator)
   @ApiParam({
     name: 'deviceId',

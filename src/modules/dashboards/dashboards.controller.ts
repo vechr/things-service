@@ -15,7 +15,9 @@ import { CreateDashboardDto, EditDashboardDto } from './dto';
 import ListDashboardValidator, {
   ListDashboardQueryValidator,
 } from './validators/list-dashboard.validator';
-import ListDashboardResponse from './serializers/list-dashboard.response';
+import ListDashboardResponse, {
+  ListDashboardDeviceResponse,
+} from './serializers/list-dashboard.response';
 import SuccessResponse from '@/shared/responses/success.response';
 import UseList from '@/shared/decorators/uselist.decorator';
 import Validator from '@/shared/decorators/validator.decorator';
@@ -32,7 +34,7 @@ export class DashboardController {
   @HttpCode(HttpStatus.OK)
   @UseList()
   @Validator(ListDashboardValidator)
-  @Serializer(ListDashboardResponse)
+  @Serializer(ListDashboardResponse<ListDashboardDeviceResponse>)
   @ApiFilterQuery('filters', ListDashboardQueryValidator)
   public async list(@Context() ctx: IContext): Promise<SuccessResponse> {
     const { result, meta } = await this.dashboardService.list(ctx);

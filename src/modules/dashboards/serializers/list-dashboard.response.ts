@@ -1,7 +1,7 @@
 import { Dashboard, Device } from '@prisma/client';
 // import { Exclude } from 'class-transformer';
 
-class ListDashboardDeviceResponse implements Device {
+export class ListDashboardDeviceResponse implements Device {
   // @Exclude()
   id: string;
 
@@ -23,14 +23,14 @@ class ListDashboardDeviceResponse implements Device {
   updatedAt: Date;
 }
 
-export default class ListDashboardResponse implements Dashboard {
+export default class ListDashboardResponse<T> implements Dashboard {
   id: string;
 
   name: string;
 
   description: string | null;
 
-  devices: ListDashboardDeviceResponse;
+  devices: T;
 
   // @Exclude()
   createdAt: Date;

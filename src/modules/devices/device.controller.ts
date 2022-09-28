@@ -16,7 +16,10 @@ import { EditDeviceDto } from './dto/edit-device.dto';
 import ListDeviceValidator, {
   ListDeviceQueryValidator,
 } from './validators/list-device.validator';
-import ListDeviceResponse from './serializers/list-device.response';
+import ListDeviceResponse, {
+  ListDeviceDeviceTypeResponse,
+  ListDeviceTopicsResponse,
+} from './serializers/list-device.response';
 import SuccessResponse from '@/shared/responses/success.response';
 import UseList from '@/shared/decorators/uselist.decorator';
 import Validator from '@/shared/decorators/validator.decorator';
@@ -34,7 +37,9 @@ export class DeviceController {
   @HttpCode(HttpStatus.OK)
   @UseList()
   @Validator(ListDeviceValidator)
-  @Serializer(ListDeviceResponse)
+  @Serializer(
+    ListDeviceResponse<ListDeviceTopicsResponse, ListDeviceDeviceTypeResponse>,
+  )
   @ApiFilterQuery('filters', ListDeviceQueryValidator)
   public async list(@Context() ctx: IContext): Promise<SuccessResponse> {
     const { result, meta } = await this.deviceService.list(ctx);

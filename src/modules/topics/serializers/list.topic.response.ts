@@ -1,6 +1,6 @@
 import { Topic, TopicEvent, WidgetType } from '@prisma/client';
 
-class ListTopicTopicEventResponse implements TopicEvent {
+export class ListTopicTopicEventResponse implements TopicEvent {
   id: string;
   topicId: string;
   name: string;
@@ -13,7 +13,7 @@ class ListTopicTopicEventResponse implements TopicEvent {
   updatedAt: Date;
 }
 
-export default class ListTopicResponse implements Topic {
+export default class ListTopicResponse<T> implements Topic {
   id: string;
   deviceId: string;
   name: string;
@@ -21,5 +21,5 @@ export default class ListTopicResponse implements Topic {
   widgetType: WidgetType | null;
   createdAt: Date;
   updatedAt: Date;
-  topicEvents: ListTopicTopicEventResponse;
+  topicEvents: T;
 }
