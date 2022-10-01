@@ -691,10 +691,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@nestjs/cli@^9.1.3":
-  version "9.1.3"
-  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-9.1.3.tgz#b1891268e20ecc1b55d730ec3013f1a3683fca64"
-  integrity sha512-ILACqDDrplvOb7HwCFJCvghMyXSHPwhqzxzant4AwYzu3BGsZVQG7TRNPxu+qfHZH6o4EBglpBwkb+8vbnVBKA==
+"@nestjs/cli@^9.1.4":
+  version "9.1.4"
+  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-9.1.4.tgz#a5a88d02d90a5eff279aa00af3c84ff74882e63c"
+  integrity sha512-cvN4DcLzaqFzKRmpU3tOeLmw7+1p4XXsFLyWgteId0Szf6cAk5KJpD5jl2Kw7f39vNw9Pss8yiJ1q1CD/fcbwQ==
   dependencies:
     "@angular-devkit/core" "14.2.2"
     "@angular-devkit/schematics" "14.2.2"
@@ -1162,7 +1162,7 @@
   dependencies:
     "@typescript-eslint/types" "5.38.1"
     "@typescript-eslint/visitor-keys" "5.38.1"
-    
+
 "@typescript-eslint/type-utils@5.38.1":
   version "5.38.1"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/type-utils/-/type-utils-5.38.1.tgz#7f038fcfcc4ade4ea76c7c69b2aa25e6b261f4c1"
@@ -1202,14 +1202,6 @@
     "@typescript-eslint/typescript-estree" "5.38.1"
     eslint-scope "^5.1.1"
     eslint-utils "^3.0.0"
-
-"@typescript-eslint/visitor-keys@5.38.1":
-  version "5.38.1"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/visitor-keys/-/visitor-keys-5.38.1.tgz#508071bfc6b96d194c0afe6a65ad47029059edbc"
-  integrity sha512-bSHr1rRxXt54+j2n4k54p4fj8AHJ49VDWtjpImOpzQj4qjAiOpPni+V1Tyajh19Api1i844F757cur8wH3YvOA==
-  dependencies:
-    "@typescript-eslint/types" "5.38.1"
-    eslint-visitor-keys "^3.3.0"
 
 "@typescript-eslint/visitor-keys@5.38.1":
   version "5.38.1"
