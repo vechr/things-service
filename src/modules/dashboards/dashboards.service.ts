@@ -2,6 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { Dashboard } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { CreateDashboardDto, EditDashboardDto } from './dto';
+import { TListDashboardRequestQuery } from './requests/list-dashboard.request';
 import log from '@/shared/utils/log.util';
 import {
   ForbiddenException,
@@ -9,10 +10,60 @@ import {
   UnknownException,
 } from '@/shared/exceptions/common.exception';
 import PrismaService from '@/prisma/prisma.service';
+import { IContext } from '@/shared/interceptors/context.interceptor';
+import { parseMeta, parseQuery } from '@/shared/utils/query.util';
 
 @Injectable()
 export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
+
+  async list(ctx: IContext): Promise<{
+    result: Dashboard[];
+    meta: { count: number; total: number; page: number; totalPage: number };
+  }> {
+    const query = ctx.params.query as TListDashboardRequestQuery;
+
+    const { limit, offset, order, page } =
+      parseQuery<TListDashboardRequestQuery>(query);
+
+    const selectOptions = {
+      orderBy: order,
+      where: query.filters.field,
+    };
+
+    const pageOptions = {
+      take: limit,
+      skip: offset,
+    };
+
+    const [total, result] = await this.prisma.$transaction([
+      this.prisma.dashboard.count(selectOptions),
+      this.prisma.dashboard.findMany({
+        ...pageOptions,
+        ...selectOptions,
+        include: { devices: { include: { device: true } } },
+      }),
+    ]);
+
+    const dashboards = result.map((dashboard) => {
+      return {
+        ...dashboard,
+        devices: dashboard.devices.map((device) => device.device),
+      };
+    });
+
+    const meta = parseMeta<Dashboard>({
+      result: dashboards,
+      total,
+      page,
+      limit,
+    });
+
+    return {
+      result: dashboards,
+      meta,
+    };
+  }
 
   async getDashboard(): Promise<Dashboard[]> {
     try {
