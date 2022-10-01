@@ -3,6 +3,7 @@ import { Device } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { EditDeviceDto } from './dto/edit-device.dto';
+import { TListDeviceRequestQuery } from './requests/list-device.request';
 import log from '@/shared/utils/log.util';
 import {
   ForbiddenException,
@@ -10,10 +11,56 @@ import {
   UnknownException,
 } from '@/shared/exceptions/common.exception';
 import PrismaService from '@/prisma/prisma.service';
+import { IContext } from '@/shared/interceptors/context.interceptor';
+import { parseMeta, parseQuery } from '@/shared/utils/query.util';
 
 @Injectable()
 export class DeviceService {
   constructor(private readonly prisma: PrismaService) {}
+
+  async list(ctx: IContext): Promise<{
+    result: Device[];
+    meta: { count: number; total: number; page: number; totalPage: number };
+  }> {
+    const query = ctx.params.query as TListDeviceRequestQuery;
+
+    const { limit, offset, order, page } =
+      parseQuery<TListDeviceRequestQuery>(query);
+
+    const selectOptions = {
+      orderBy: order,
+      where: query.filters.field,
+    };
+
+    const pageOptions = {
+      take: limit,
+      skip: offset,
+    };
+
+    const [total, device] = await this.prisma.$transaction([
+      this.prisma.device.count(selectOptions),
+      this.prisma.device.findMany({
+        ...pageOptions,
+        ...selectOptions,
+        include: {
+          topics: true,
+          deviceType: true,
+        },
+      }),
+    ]);
+
+    const meta = parseMeta<Device>({
+      result: device,
+      total,
+      page,
+      limit,
+    });
+
+    return {
+      result: device,
+      meta,
+    };
+  }
 
   async getDevices(): Promise<Device[]> {
     try {

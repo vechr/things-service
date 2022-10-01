@@ -14,7 +14,7 @@ import { WidgetService } from './widgets.service';
 import SuccessResponse from '@/shared/responses/success.response';
 
 @ApiTags('Widget')
-@Controller('dashboard/:dashboardId/widget')
+@Controller('things/dashboard/:dashboardId/widget')
 export class WidgetController {
   constructor(private readonly widgetService: WidgetService) {}
 
