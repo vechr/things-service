@@ -51,8 +51,6 @@ const httpServer = new Promise(async (resolve, reject) => {
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('/api/things', app, document, option);
 
-    app.useGlobalInterceptors(new ContextInterceptor());
-
     await app
       .listen(appConstant.APP_PORT)
       .then(() =>
