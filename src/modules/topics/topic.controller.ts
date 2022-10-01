@@ -9,9 +9,10 @@ import {
   Patch,
   Post,
   UseFilters,
+  Version,
 } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   CreateTopicDto,
   DBLoggerDto,
@@ -19,14 +20,43 @@ import {
   TopicIdRequestDto,
 } from './dto';
 import { TopicService } from './topic.service';
+import ListTopicValidator, {
+  ListTopicQueryValidator,
+} from './validators/list-topic.validator';
+import ListTopicResponse, {
+  ListTopicTopicEventResponse,
+} from './serializers/list.topic.response';
 import SuccessResponse from '@/shared/responses/success.response';
 import { ExceptionFilter } from '@/shared/filters/rpc-exception.filter';
 import { NatsService } from '@/modules/services/nats.service';
+import UseList from '@/shared/decorators/uselist.decorator';
+import Validator from '@/shared/decorators/validator.decorator';
+import Serializer from '@/shared/decorators/serializer.decorator';
+import { ApiFilterQuery } from '@/shared/decorators/api-filter-query.decorator';
+import Context from '@/shared/decorators/context.decorator';
+import { IContext } from '@/shared/interceptors/context.interceptor';
 
 @ApiTags('Topic')
-@Controller('device/:deviceId/topic')
+@Controller('things/device/:deviceId/topic')
 export class TopicController {
   constructor(private readonly topicService: TopicService) {}
+
+  @Version('2')
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  @UseList()
+  @Validator(ListTopicValidator)
+  @Serializer(ListTopicResponse<ListTopicTopicEventResponse>)
+  @ApiFilterQuery('filters', ListTopicQueryValidator)
+  @ApiParam({
+    name: 'deviceId',
+    example: 'f24ec74b-8716-4fc5-b60a-e4cd62967f47',
+    type: String,
+  })
+  public async list(@Context() ctx: IContext): Promise<SuccessResponse> {
+    const { result, meta } = await this.topicService.list(ctx);
+    return new SuccessResponse('Success get all records!', result, meta);
+  }
 
   @UseFilters(new ExceptionFilter())
   @EventPattern('set.topic.widget.kv')
