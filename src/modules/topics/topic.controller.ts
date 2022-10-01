@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   UseFilters,
+  Version,
 } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -36,11 +37,12 @@ import Context from '@/shared/decorators/context.decorator';
 import { IContext } from '@/shared/interceptors/context.interceptor';
 
 @ApiTags('Topic')
-@Controller('device/:deviceId/topic')
+@Controller('things/device/:deviceId/topic')
 export class TopicController {
   constructor(private readonly topicService: TopicService) {}
 
-  @Get('pagination')
+  @Version('2')
+  @Get()
   @HttpCode(HttpStatus.OK)
   @UseList()
   @Validator(ListTopicValidator)

@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Version,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { DashboardService } from './dashboards.service';
@@ -26,11 +27,12 @@ import Context from '@/shared/decorators/context.decorator';
 import { IContext } from '@/shared/interceptors/context.interceptor';
 import { ApiFilterQuery } from '@/shared/decorators/api-filter-query.decorator';
 @ApiTags('Dashboard')
-@Controller('dashboard')
+@Controller('things/dashboard')
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
-  @Get('pagination')
+  @Version('2')
+  @Get()
   @HttpCode(HttpStatus.OK)
   @UseList()
   @Validator(ListDashboardValidator)

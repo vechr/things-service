@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Version,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { DeviceService } from './device.service';
@@ -29,11 +30,12 @@ import Context from '@/shared/decorators/context.decorator';
 import { IContext } from '@/shared/interceptors/context.interceptor';
 
 @ApiTags('Device')
-@Controller('device')
+@Controller('things/device')
 export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
 
-  @Get('pagination')
+  @Version('2')
+  @Get()
   @HttpCode(HttpStatus.OK)
   @UseList()
   @Validator(ListDeviceValidator)

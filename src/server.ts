@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import express from 'express';
+import { VersioningType } from '@nestjs/common';
 import { HttpModule } from './http.module';
 import appConstant from './constants/app.constant';
 import UnknownExceptionsFilter from './shared/filters/unknown.filter';
@@ -17,22 +18,26 @@ import { ValidationHelper } from './shared/helpers/validation.helper';
 const httpServer = new Promise(async (resolve, reject) => {
   try {
     const app = await NestFactory.create(HttpModule);
-    app.setGlobalPrefix('api/v1/things');
+    app.setGlobalPrefix('api');
     app.enableCors();
     app.useGlobalFilters(
       new UnknownExceptionsFilter(),
       new HttpExceptionFilter(),
     );
+    app.enableVersioning({
+      defaultVersion: '1',
+      type: VersioningType.URI,
+    });
     app.useGlobalInterceptors(new ContextInterceptor());
     app.use(
-      '/api/v1/things/public',
+      '/api/things/public',
       express.static(join(__dirname, '..', 'public')),
     );
     const option = {
       customCss: `
-      .topbar-wrapper img {content:url('/api/v1/things/public/logo.svg'); width:200px; height:auto;}
+      .topbar-wrapper img {content:url('/api/things/public/logo.svg'); width:200px; height:auto;}
       .swagger-ui .topbar { background: linear-gradient(45deg, rgba(0,209,255,1) 42%, rgba(0,217,139,1) 100%); }`,
-      customfavIcon: `/api/v1/things/public/logo.svg`,
+      customfavIcon: `/api/things/public/logo.svg`,
       customSiteTitle: 'Vechr API Things Services',
     };
     const config = new DocumentBuilder()
