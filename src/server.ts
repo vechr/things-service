@@ -46,6 +46,17 @@ const httpServer = new Promise(async (resolve, reject) => {
         'This is a Things Service for creating Metadata IoT system',
       )
       .setVersion('1.0.0')
+      .addBearerAuth(
+        {
+          description: `[just text field] Please enter token in following format: Bearer <JWT>`,
+          name: 'Authorization',
+          bearerFormat: 'Bearer', // I`ve tested not to use this field, but the result was the same
+          scheme: 'Bearer',
+          type: 'http', // I`ve attempted type: 'apiKey' too
+          in: 'Header',
+        },
+        'access-token', // This name here is important for matching up with @ApiBearerAuth() in your controller!
+      )
       .build();
 
     const document = SwaggerModule.createDocument(app, config);

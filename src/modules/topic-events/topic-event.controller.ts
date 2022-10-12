@@ -12,7 +12,7 @@ import {
   Version,
 } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { CreateTopicEventDto, EditTopicEventDto } from './dto';
 import { NotificationEmailDto } from './dto/notification-email-event.dto';
 import { TopicEventService } from './topic-event.service';
@@ -28,8 +28,11 @@ import Serializer from '@/shared/decorators/serializer.decorator';
 import { ApiFilterQuery } from '@/shared/decorators/api-filter-query.decorator';
 import Context from '@/shared/decorators/context.decorator';
 import { IContext } from '@/shared/interceptors/context.interceptor';
+import Authentication from '@/shared/decorators/authentication.decorator';
+import Authorization from '@/shared/decorators/authorization.decorator';
 
 @ApiTags('TopicEvent')
+@ApiBearerAuth('access-token')
 @Controller('things/topic/:topicId/topic-events')
 export class TopicEventController {
   constructor(private readonly topicEventService: TopicEventService) {}
@@ -38,6 +41,8 @@ export class TopicEventController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @UseList()
+  @Authentication(true)
+  @Authorization('topic-events:read@auth')
   @Validator(ListTopicEventValidator)
   @Serializer(ListTopicEventResponse)
   @ApiFilterQuery('filters', ListTopicEventQueryValidator)
@@ -62,6 +67,8 @@ export class TopicEventController {
   }
 
   @Get()
+  @Authentication(true)
+  @Authorization('topic-events:read@auth')
   public async getTopicEvents(
     @Param('topicId') topicId: string,
   ): Promise<SuccessResponse> {
@@ -70,6 +77,8 @@ export class TopicEventController {
   }
 
   @Get(':id')
+  @Authentication(true)
+  @Authorization('topic-events:read@auth')
   public async getTopicEventById(
     @Param('id') topicEventId: string,
   ): Promise<SuccessResponse> {
@@ -81,6 +90,8 @@ export class TopicEventController {
   }
 
   @Post()
+  @Authentication(true)
+  @Authorization('topic-events:create@auth')
   public async createTopicEvent(
     @Param('topicId') topicId: string,
     @Body() dto: CreateTopicEventDto,
@@ -90,6 +101,8 @@ export class TopicEventController {
   }
 
   @Patch(':id')
+  @Authentication(true)
+  @Authorization('topic-events:update@auth')
   public async editTopicEventById(
     @Param('topicId') topicId: string,
     @Param('id') topicEventId: string,
@@ -107,6 +120,8 @@ export class TopicEventController {
   }
 
   @Delete(':id')
+  @Authentication(true)
+  @Authorization('topic-events:delete@auth')
   public async deleteTopicEventById(
     @Param('id') topicEventId: string,
   ): Promise<SuccessResponse> {

@@ -10,7 +10,7 @@ import {
   Post,
   Version,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DeviceTypeService } from './device-type.service';
 import { CreateDeviceTypeDto } from './dto/create-device-type.dto';
 import { EditDeviceTypeDto } from './dto/edit-device-type.dto';
@@ -25,8 +25,11 @@ import Serializer from '@/shared/decorators/serializer.decorator';
 import { ApiFilterQuery } from '@/shared/decorators/api-filter-query.decorator';
 import Context from '@/shared/decorators/context.decorator';
 import { IContext } from '@/shared/interceptors/context.interceptor';
+import Authentication from '@/shared/decorators/authentication.decorator';
+import Authorization from '@/shared/decorators/authorization.decorator';
 
 @ApiTags('DeviceType')
+@ApiBearerAuth('access-token')
 @Controller('things/device-type')
 export class DeviceTypeController {
   constructor(private readonly deviceTypeService: DeviceTypeService) {}
@@ -35,6 +38,8 @@ export class DeviceTypeController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @UseList()
+  @Authentication(true)
+  @Authorization('device-types:read@auth')
   @Validator(ListDeviceTypeValidator)
   @Serializer(ListDeviceTypeResponse)
   @ApiFilterQuery('filters', ListDeviceTypeQueryValidator)
@@ -44,12 +49,16 @@ export class DeviceTypeController {
   }
 
   @Get()
+  @Authentication(true)
+  @Authorization('device-types:read@auth')
   public async getDeviceTypes(): Promise<SuccessResponse> {
     const result = await this.deviceTypeService.getDeviceTypes();
     return new SuccessResponse('Success get all records!', result);
   }
 
   @Get(':id')
+  @Authentication(true)
+  @Authorization('device-types:read@auth')
   public async getDeviceTypeById(
     @Param('id') deviceTypeId: string,
   ): Promise<SuccessResponse> {
@@ -61,12 +70,16 @@ export class DeviceTypeController {
   }
 
   @Post()
+  @Authentication(true)
+  @Authorization('device-types:create@auth')
   public async createDeviceType(@Body() dto: CreateDeviceTypeDto) {
     const result = await this.deviceTypeService.createDeviceType(dto);
     return new SuccessResponse(`Success Create device type!`, result);
   }
 
   @Patch(':id')
+  @Authentication(true)
+  @Authorization('device-types:update@auth')
   public async editDeviceTypeById(
     @Param('id') deviceTypeId: string,
     @Body() dto: EditDeviceTypeDto,
@@ -82,6 +95,8 @@ export class DeviceTypeController {
   }
 
   @Delete(':id')
+  @Authentication(true)
+  @Authorization('device-types:delete@auth')
   public async deleteDeviceTypeById(@Param('id') deviceTypeId: string) {
     const result = await this.deviceTypeService.deleteDeviceTypeById(
       deviceTypeId,

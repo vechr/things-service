@@ -10,16 +10,17 @@ import ErrorResponse from '../responses/error.response';
 import log from '../utils/log.util';
 
 @Catch()
-export default class UnknownExceptionsFilter implements ExceptionFilter {
-  catch(exception: any, host: ArgumentsHost): void {
+export default class UnknownExceptionFilter implements ExceptionFilter {
+  catch(exception: any, host: ArgumentsHost) {
     if (!(exception instanceof HttpException)) {
-      log.fatal('unhandled error', exception);
+      log.fatal('Unhandled Error!', exception);
     } else {
-      log.error('known error', exception);
+      log.error('Known Error!', exception);
     }
 
     const ctx = host.switchToHttp();
     const res = ctx.getResponse();
+
     const { status, response } = this.prepareException(exception);
 
     res.status(status).send(response);
@@ -41,9 +42,9 @@ export default class UnknownExceptionsFilter implements ExceptionFilter {
       const response = new ErrorResponse(
         errMessage,
         typeof data === 'string'
-          ? { code: 'KNW000', message: data, params: {} }
+          ? { code: '500', message: data, params: {} }
           : {
-              code: 'KNW000',
+              code: '500',
               message: errMessage,
               params: data,
             },
