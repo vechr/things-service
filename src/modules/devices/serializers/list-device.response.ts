@@ -1,6 +1,7 @@
 import { Device, DeviceType, Topic, WidgetType } from '@prisma/client';
+import { Type } from 'class-transformer';
 
-export class ListDeviceDeviceTypeResponse implements DeviceType {
+export class ListDeviceTypeResponse implements DeviceType {
   id: string;
 
   name: string;
@@ -11,7 +12,7 @@ export class ListDeviceDeviceTypeResponse implements DeviceType {
 
   updatedAt: Date;
 }
-export class ListDeviceTopicsResponse implements Topic {
+export class ListTopicsResponse implements Topic {
   id: string;
 
   deviceId: string;
@@ -26,7 +27,7 @@ export class ListDeviceTopicsResponse implements Topic {
 
   updatedAt: Date;
 }
-export default class ListDeviceResponse<T, D> implements Device {
+export default class ListDeviceResponse implements Device {
   id: string;
 
   deviceTypeId: string;
@@ -43,7 +44,9 @@ export default class ListDeviceResponse<T, D> implements Device {
   // @Exclude()
   updatedAt: Date;
 
-  topics: T;
+  @Type(() => ListTopicsResponse)
+  topics: ListTopicsResponse[];
 
-  deviceType: D;
+  @Type(() => ListDeviceTypeResponse)
+  deviceType: ListDeviceTypeResponse;
 }

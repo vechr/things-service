@@ -7,18 +7,23 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateWidgetDto } from './dto/create-widget.dto';
 import { UpdateWidgetDto } from './dto/update-widget.dto';
 import { WidgetService } from './widgets.service';
 import SuccessResponse from '@/shared/responses/success.response';
+import Authentication from '@/shared/decorators/authentication.decorator';
+import Authorization from '@/shared/decorators/authorization.decorator';
 
 @ApiTags('Widget')
+@ApiBearerAuth('access-token')
 @Controller('things/dashboard/:dashboardId/widget')
 export class WidgetController {
   constructor(private readonly widgetService: WidgetService) {}
 
   @Get()
+  @Authentication(true)
+  @Authorization('widgets:read@auth')
   public async getWidgets(
     @Param('dashboardId') dashboardId: string,
   ): Promise<SuccessResponse> {
@@ -27,6 +32,8 @@ export class WidgetController {
   }
 
   @Post()
+  @Authentication(true)
+  @Authorization('widgets:create@auth')
   public async createWidget(
     @Param('dashboardId') dashboardId: string,
     @Body() dto: CreateWidgetDto,
@@ -36,6 +43,8 @@ export class WidgetController {
   }
 
   @Delete(':id')
+  @Authentication(true)
+  @Authorization('widgets:delete@auth')
   public async deleteWidgetId(
     @Param('dashboardId') dashboardId: string,
     @Param('id') widgetId: string,
@@ -48,6 +57,8 @@ export class WidgetController {
   }
 
   @Patch(':id')
+  @Authentication(true)
+  @Authorization('widgets:update@auth')
   public async editWidgetById(
     @Param('dashboardId') dashboardId: string,
     @Param('id') widgetId: string,

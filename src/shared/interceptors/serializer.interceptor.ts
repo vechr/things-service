@@ -1,5 +1,5 @@
 import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { map, Observable } from 'rxjs';
 
 import SuccessResponse from '../responses/success.response';
@@ -14,7 +14,19 @@ export default class SerializerInterceptor implements NestInterceptor {
   intercept(ctx: ExecutionContext, handler: CallHandler): Observable<any> {
     return handler.handle().pipe(
       map((data: SuccessResponse) => {
-        const result = plainToClass(this.dto, data.getResult());
+        const plainResult = data.getResult();
+
+        if (Array.isArray(plainResult)) {
+          const result: any[] = [];
+
+          for (const item of plainResult) {
+            result.push(plainToInstance(this.dto, item));
+          }
+
+          return { ...data, result };
+        }
+
+        const result = plainToInstance(this.dto, plainResult);
 
         return { ...data, result };
       }),

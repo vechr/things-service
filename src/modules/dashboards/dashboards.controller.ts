@@ -10,15 +10,13 @@ import {
   Post,
   Version,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DashboardService } from './dashboards.service';
 import { CreateDashboardDto, EditDashboardDto } from './dto';
 import ListDashboardValidator, {
   ListDashboardQueryValidator,
 } from './validators/list-dashboard.validator';
-import ListDashboardResponse, {
-  ListDashboardDeviceResponse,
-} from './serializers/list-dashboard.response';
+import ListDashboardResponse from './serializers/list-dashboard.response';
 import SuccessResponse from '@/shared/responses/success.response';
 import UseList from '@/shared/decorators/uselist.decorator';
 import Validator from '@/shared/decorators/validator.decorator';
@@ -26,7 +24,10 @@ import Serializer from '@/shared/decorators/serializer.decorator';
 import Context from '@/shared/decorators/context.decorator';
 import { IContext } from '@/shared/interceptors/context.interceptor';
 import { ApiFilterQuery } from '@/shared/decorators/api-filter-query.decorator';
+import Authentication from '@/shared/decorators/authentication.decorator';
+import Authorization from '@/shared/decorators/authorization.decorator';
 @ApiTags('Dashboard')
+@ApiBearerAuth('access-token')
 @Controller('things/dashboard')
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
@@ -35,8 +36,10 @@ export class DashboardController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @UseList()
+  @Authentication(true)
+  @Authorization('dashboards:read@auth')
   @Validator(ListDashboardValidator)
-  @Serializer(ListDashboardResponse<ListDashboardDeviceResponse>)
+  @Serializer(ListDashboardResponse)
   @ApiFilterQuery('filters', ListDashboardQueryValidator)
   public async list(@Context() ctx: IContext): Promise<SuccessResponse> {
     const { result, meta } = await this.dashboardService.list(ctx);
@@ -44,18 +47,24 @@ export class DashboardController {
   }
 
   @Get()
+  @Authentication(true)
+  @Authorization('dashboards:read@auth')
   public async getDashboard(): Promise<SuccessResponse> {
     const result = await this.dashboardService.getDashboard();
     return new SuccessResponse('Success get all records!', result);
   }
 
   @Get('details')
+  @Authentication(true)
+  @Authorization('dashboards:read@auth')
   public async getDashboardDetails(): Promise<SuccessResponse> {
     const result = await this.dashboardService.getDashboardDetails();
     return new SuccessResponse('Success get all records!', result);
   }
 
   @Get(':id')
+  @Authentication(true)
+  @Authorization('dashboards:read@auth')
   public async getDashboardById(
     @Param('id') dashboardId: string,
   ): Promise<SuccessResponse> {
@@ -64,6 +73,8 @@ export class DashboardController {
   }
 
   @Post()
+  @Authentication(true)
+  @Authorization('dashboards:create@auth')
   public async createDashboard(
     @Body() dto: CreateDashboardDto,
   ): Promise<SuccessResponse> {
@@ -72,6 +83,8 @@ export class DashboardController {
   }
 
   @Patch(':id')
+  @Authentication(true)
+  @Authorization('dashboards:update@auth')
   public async editDashboardById(
     @Param('id') dashboardId: string,
     @Body() dto: EditDashboardDto,
@@ -87,6 +100,8 @@ export class DashboardController {
   }
 
   @Delete(':id')
+  @Authentication(true)
+  @Authorization('dashboards:delete@auth')
   public async deleteDashboardById(@Param('id') dashboardId: string) {
     const result = await this.dashboardService.deleteDashboardById(dashboardId);
     return new SuccessResponse(

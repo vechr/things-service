@@ -31,7 +31,7 @@ export class TopicEventService {
 
     const selectOptions = {
       orderBy: order,
-      where: query.filters.field,
+      where: { ...query.filters.field, topicId: params.topicId },
     };
 
     const pageOptions = {
@@ -44,7 +44,6 @@ export class TopicEventService {
       this.prisma.topicEvent.findMany({
         ...pageOptions,
         ...selectOptions,
-        where: { topicId: params.topicId },
       }),
     ]);
 

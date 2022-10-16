@@ -4,11 +4,11 @@ import { Observable } from 'rxjs';
 export interface IContextParams {
   params: Record<string, any>;
   query: Record<string, any>;
-  body: ReadableStream<Uint8Array> | null;
+  body: Record<string, any>;
 }
 
 export interface IContext {
-  headers: Headers;
+  headers: Record<string, any>;
   user: any;
   params: IContextParams;
 }
@@ -29,7 +29,7 @@ export default class ContextInterceptor implements NestInterceptor {
       params: {
         params: request.params,
         query: request.query,
-        body: request.body,
+        body: request.body as Record<string, any>,
       },
     };
 
