@@ -3,11 +3,11 @@ import { HttpStatus } from '@nestjs/common';
 import BaseException from './base.exception';
 
 export enum EErrorCommonCode {
-  BAD_REQUEST = 'COM400',
-  UNAUTHORIZED = 'COM401',
-  FORBIDDEN = 'COM403',
-  NOT_FOUND = 'COM404',
-  INTERNAL_SERVER_ERROR = 'COM500',
+  BAD_REQUEST = '400',
+  UNAUTHORIZED = '401',
+  FORBIDDEN = '403',
+  NOT_FOUND = '404',
+  INTERNAL_SERVER_ERROR = '500',
 }
 
 export class BadRequestException extends BaseException {

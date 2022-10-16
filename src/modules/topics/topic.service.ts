@@ -40,7 +40,7 @@ export class TopicService {
 
     const selectOptions = {
       orderBy: order,
-      where: query.filters.field,
+      where: { ...query.filters.field, deviceId: params.deviceId },
     };
 
     const pageOptions = {
@@ -53,7 +53,6 @@ export class TopicService {
       this.prisma.topic.findMany({
         ...pageOptions,
         ...selectOptions,
-        where: { deviceId: params.deviceId },
         include: { topicEvents: true },
       }),
     ]);

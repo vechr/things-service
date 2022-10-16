@@ -12,7 +12,13 @@ import {
   Version,
 } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   CreateTopicDto,
   DBLoggerDto,
@@ -23,9 +29,7 @@ import { TopicService } from './topic.service';
 import ListTopicValidator, {
   ListTopicQueryValidator,
 } from './validators/list-topic.validator';
-import ListTopicResponse, {
-  ListTopicTopicEventResponse,
-} from './serializers/list.topic.response';
+import ListTopicResponse from './serializers/list.topic.response';
 import SuccessResponse from '@/shared/responses/success.response';
 import { ExceptionFilter } from '@/shared/filters/rpc-exception.filter';
 import { NatsService } from '@/modules/services/nats.service';
@@ -35,8 +39,11 @@ import Serializer from '@/shared/decorators/serializer.decorator';
 import { ApiFilterQuery } from '@/shared/decorators/api-filter-query.decorator';
 import Context from '@/shared/decorators/context.decorator';
 import { IContext } from '@/shared/interceptors/context.interceptor';
+import Authentication from '@/shared/decorators/authentication.decorator';
+import Authorization from '@/shared/decorators/authorization.decorator';
 
 @ApiTags('Topic')
+@ApiBearerAuth('access-token')
 @Controller('things/device/:deviceId/topic')
 export class TopicController {
   constructor(private readonly topicService: TopicService) {}
@@ -45,8 +52,10 @@ export class TopicController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @UseList()
+  @Authentication(true)
+  @Authorization('topics:read@auth')
   @Validator(ListTopicValidator)
-  @Serializer(ListTopicResponse<ListTopicTopicEventResponse>)
+  @Serializer(ListTopicResponse)
   @ApiFilterQuery('filters', ListTopicQueryValidator)
   @ApiParam({
     name: 'deviceId',
@@ -76,12 +85,16 @@ export class TopicController {
   @ApiResponse({ status: 200, description: '[<your data in here>]' })
   @HttpCode(HttpStatus.OK)
   @Post('query')
+  @Authentication(true)
+  @Authorization('topics:read@auth')
   async getDataTopic(@Body() dto: DBLoggerDto): Promise<SuccessResponse<any>> {
     const result = await this.topicService.getDataTopic(dto);
     return new SuccessResponse('Success get record all data Topic!', result);
   }
 
   @Get()
+  @Authentication(true)
+  @Authorization('topics:read@auth')
   public async getTopics(
     @Param('deviceId') deviceId: string,
   ): Promise<SuccessResponse> {
@@ -90,6 +103,8 @@ export class TopicController {
   }
 
   @Get(':id')
+  @Authentication(true)
+  @Authorization('topics:read@auth')
   public async getTopicById(
     @Param('id') topicId: string,
   ): Promise<SuccessResponse> {
@@ -98,6 +113,8 @@ export class TopicController {
   }
 
   @Post()
+  @Authentication(true)
+  @Authorization('topics:create@auth')
   public async createTopic(
     @Param('deviceId') deviceId: string,
     @Body() dto: CreateTopicDto,
@@ -107,6 +124,8 @@ export class TopicController {
   }
 
   @Patch(':id')
+  @Authentication(true)
+  @Authorization('topics:update@auth')
   public async editTopicById(
     @Param('deviceId') deviceId: string,
     @Param('id') topicId: string,
@@ -121,6 +140,8 @@ export class TopicController {
   }
 
   @Delete(':id')
+  @Authentication(true)
+  @Authorization('topics:delete@auth')
   public async deleteTopicById(
     @Param('id') topicId: string,
   ): Promise<SuccessResponse> {
