@@ -1,6 +1,8 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { TopicEvent } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { StringCodec } from 'nats';
+import { NatsService } from '../services/natsjs/natsjs.service';
 import { CreateTopicEventDto } from './dto/create-topic-event.dto';
 import { EditTopicEventDto } from './dto/edit-topic-event.dto';
 import { NotificationEmailDto } from './dto/notification-email-event.dto';
@@ -11,13 +13,15 @@ import {
 import log from '@/shared/utils/log.util';
 import { UnknownException } from '@/shared/exceptions/common.exception';
 import PrismaService from '@/prisma/prisma.service';
-import { NatsService } from '@/modules/services/nats.service';
 import { IContext } from '@/shared/interceptors/context.interceptor';
 import { parseMeta, parseQuery } from '@/shared/utils/query.util';
 
 @Injectable()
 export class TopicEventService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly natsService: NatsService,
+  ) {}
 
   async list(ctx: IContext): Promise<{
     result: TopicEvent[];
@@ -195,9 +199,9 @@ export class TopicEventService {
         },
       });
 
-      await NatsService.kv.put(
+      await this.natsService.kv.put(
         topic.id,
-        NatsService.sc.encode(JSON.stringify(topicUpdated)),
+        StringCodec().encode(JSON.stringify(topicUpdated)),
       );
 
       return topicEvent;
@@ -280,9 +284,9 @@ export class TopicEventService {
         },
       });
 
-      await NatsService.kv.put(
+      await this.natsService.kv.put(
         topic.id,
-        NatsService.sc.encode(JSON.stringify(topicUpdated)),
+        StringCodec().encode(JSON.stringify(topicUpdated)),
       );
       return result;
     } catch (error) {
@@ -335,9 +339,9 @@ export class TopicEventService {
         },
       });
 
-      await NatsService.kv.put(
+      await this.natsService.kv.put(
         topic.id,
-        NatsService.sc.encode(JSON.stringify(topic)),
+        StringCodec().encode(JSON.stringify(topic)),
       );
 
       return result;

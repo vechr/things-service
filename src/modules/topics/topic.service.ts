@@ -3,6 +3,8 @@ import { ClientNats } from '@nestjs/microservices';
 import { Topic } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { lastValueFrom } from 'rxjs';
+import { StringCodec } from 'nats';
+import { NatsService } from '../services/natsjs/natsjs.service';
 import { DBLoggerDto, QueryCreateEventDto } from './dto';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { EditTopicDto } from './dto/edit-topic.dto';
@@ -17,7 +19,6 @@ import {
   UnknownException,
 } from '@/shared/exceptions/common.exception';
 import PrismaService from '@/prisma/prisma.service';
-import { NatsService } from '@/modules/services/nats.service';
 import { IContext } from '@/shared/interceptors/context.interceptor';
 import { parseMeta, parseQuery } from '@/shared/utils/query.util';
 
@@ -26,6 +27,7 @@ export class TopicService {
   constructor(
     private readonly prisma: PrismaService,
     @Inject('DB_LOGGER_SERVICE') private readonly dbLoggerClient: ClientNats,
+    private readonly natsService: NatsService,
   ) {}
 
   async list(ctx: IContext): Promise<{
@@ -115,6 +117,14 @@ export class TopicService {
     }
   }
 
+  async getTopicWidget(topicId: string): Promise<void> {
+    const result = await this.getTopicById(topicId);
+    await this.natsService.kv.put(
+      result.id,
+      StringCodec().encode(JSON.stringify(result)),
+    );
+  }
+
   async getTopicById(topicId: string): Promise<Topic> {
     try {
       const topic = await this.prisma.topic.findUnique({
@@ -177,9 +187,9 @@ export class TopicService {
         },
       });
 
-      await NatsService.kv.put(
+      await this.natsService.kv.put(
         topic.id,
-        NatsService.sc.encode(JSON.stringify(topic)),
+        StringCodec().encode(JSON.stringify(topic)),
       );
 
       return topic;
@@ -242,9 +252,9 @@ export class TopicService {
         },
       });
 
-      await NatsService.kv.put(
+      await this.natsService.kv.put(
         topicUpdated.id,
-        NatsService.sc.encode(JSON.stringify(topicUpdated)),
+        StringCodec().encode(JSON.stringify(topicUpdated)),
       );
 
       return topicUpdated;
@@ -296,7 +306,7 @@ export class TopicService {
         },
       });
 
-      await NatsService.kv.purge(result.id);
+      await this.natsService.kv.purge(result.id);
 
       return result;
     } catch (error) {

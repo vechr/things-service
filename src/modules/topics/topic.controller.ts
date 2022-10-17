@@ -32,7 +32,6 @@ import ListTopicValidator, {
 import ListTopicResponse from './serializers/list.topic.response';
 import SuccessResponse from '@/shared/responses/success.response';
 import { ExceptionFilter } from '@/shared/filters/rpc-exception.filter';
-import { NatsService } from '@/modules/services/nats.service';
 import UseList from '@/shared/decorators/uselist.decorator';
 import Validator from '@/shared/decorators/validator.decorator';
 import Serializer from '@/shared/decorators/serializer.decorator';
@@ -72,11 +71,7 @@ export class TopicController {
   async getTopicWidget(
     @Payload() { topicId }: TopicIdRequestDto,
   ): Promise<void> {
-    const result = await this.topicService.getTopicById(topicId);
-    await NatsService.kv.put(
-      result.id,
-      NatsService.sc.encode(JSON.stringify(result)),
-    );
+    await this.topicService.getTopicWidget(topicId);
   }
 
   @ApiOperation({
