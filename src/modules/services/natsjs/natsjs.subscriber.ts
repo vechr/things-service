@@ -1,84 +1,55 @@
 import {
-  connect,
+  Injectable,
+  OnApplicationShutdown,
+  OnModuleInit,
+} from '@nestjs/common';
+import {
   ConnectionOptions,
   NatsConnection,
+  StringCodec,
   Subscription,
-  SubscriptionOptions,
 } from 'nats';
 import { KV, KvOptions } from 'nats/lib/nats-base-client/types';
+import { ThingsBusinessLogic } from '../things.logic';
+import { NatsjsService } from './natsjs.service';
 import { ISubscriber } from './interfaces/subscriber.interface';
-import { sleep } from '@/shared/utils/sleep.util';
-import { ILog } from '@/shared/utils/log.util';
+import appConfig from '@/constants/app.constant';
 
-export class NatsjsSubscriber implements ISubscriber {
-  public nats: NatsConnection;
-  public subscriber: Subscription;
-  public kv: KV;
+@Injectable()
+export class NatsjsSubscriber
+  extends NatsjsService
+  implements OnApplicationShutdown, OnModuleInit, ISubscriber
+{
+  private brokerConfig: ConnectionOptions = { servers: appConfig.NATS_URL };
+  private bucketConfig: Partial<KvOptions> = { history: 5 };
 
-  constructor(
-    private readonly logger: ILog,
-    private broker: ConnectionOptions,
-    private readonly subject: string,
-    private subscriberConfig?: SubscriptionOptions,
-  ) {}
-
-  async connect() {
-    try {
-      await connect(this.broker).then((nats) => {
-        this.nats = nats;
-        this.logger.info(
-          `Nats.js Subscriber Connected to ${this.broker.servers}!`,
-        );
-      });
-    } catch (error) {
-      this.logger.error('Failed to connect to NATS.', error);
-      await sleep(5000);
-      await this.connect();
-    }
+  async onModuleInit() {
+    await this.connect(this.brokerConfig);
+    await this.createBucket('kremes_topics', this.bucketConfig);
+    await this.subscribeThings(
+      'Vechr.DashboardID.*.DeviceID.*.TopicID.*.Topic.>',
+      this.kv,
+      this.nats,
+    );
   }
 
-  async disconnect() {
-    try {
-      await this.nats.close();
-    } catch (err) {
-      this.logger.error(
-        `error connecting to ${JSON.stringify(this.broker.servers)}`,
-      );
-    }
+  async onApplicationShutdown() {
+    await this.disconnect(this.brokerConfig);
   }
 
-  async subscribe(
-    onSubscribe: (
-      sub: Subscription,
-      kv: KV,
-      nats: NatsConnection,
-    ) => Promise<void>,
-  ) {
-    this.subscriber = this.nats.subscribe(this.subject, this.subscriberConfig);
-    onSubscribe(this.subscriber, this.kv, this.nats);
-    this.logger.info(`Success subscribe to: ${this.subject}!`);
+  async subscribeThings(subject: string, kv: KV, nats: NatsConnection) {
+    await this.subscribe(subject, async (sub: Subscription): Promise<void> => {
+      for await (const m of sub) {
+        const thingsLogic = new ThingsBusinessLogic(kv, nats);
 
-    this.subscriber.closed
-      .then(() => {
-        this.logger.info('subscription closed');
-      })
-      .catch((err) => {
-        this.logger.error(`subscription closed with an error ${err.message}`);
-      });
-  }
+        const subjectParses: string[] = m.subject.split('.');
 
-  async createBucket(
-    nameBucket: string,
-    opts?: Partial<KvOptions>,
-  ): Promise<void> {
-    try {
-      const js = this.nats.jetstream();
-      await js.views.kv(nameBucket, opts).then((kv) => {
-        this.kv = kv;
-        this.logger.info(`Success create bucket kv: ${nameBucket}!`);
-      });
-    } catch (error) {
-      this.logger.error(`NATS ${JSON.stringify(error)}`);
-    }
+        const sc = StringCodec();
+        // Value from Subject
+        const data = sc.decode(m.data);
+
+        await thingsLogic.checkMessage(subjectParses[6], data);
+      }
+    });
   }
 }

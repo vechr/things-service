@@ -1,10 +1,10 @@
 import { Global, Module } from '@nestjs/common';
-import { ThingsSubscriber } from '../things.subscriber';
-import { NatsService } from './natsjs.service';
+import { NatsjsSubscriber } from './natsjs.subscriber';
+import { NatsjsService } from './natsjs.service';
 
 @Global()
 @Module({
-  providers: [NatsService, ThingsSubscriber],
-  exports: [NatsService],
+  providers: [NatsjsService, NatsjsSubscriber],
+  exports: [NatsjsService],
 })
 export class NatsjsModule {}
