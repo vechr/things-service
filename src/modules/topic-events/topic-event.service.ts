@@ -2,7 +2,7 @@ import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { TopicEvent } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { StringCodec } from 'nats';
-import { NatsjsService } from '../services/natsjs/natsjs.service';
+import { NatsjsSubscriber } from '../services/natsjs/natsjs.subscriber';
 import { CreateTopicEventDto } from './dto/create-topic-event.dto';
 import { EditTopicEventDto } from './dto/edit-topic-event.dto';
 import { NotificationEmailDto } from './dto/notification-email-event.dto';
@@ -20,7 +20,7 @@ import { parseMeta, parseQuery } from '@/shared/utils/query.util';
 export class TopicEventService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly natsjsService: NatsjsService,
+    private readonly natsjsSubscriber: NatsjsSubscriber,
   ) {}
 
   async list(ctx: IContext): Promise<{
@@ -199,7 +199,7 @@ export class TopicEventService {
         },
       });
 
-      await this.natsjsService.kv.put(
+      await this.natsjsSubscriber.kv.put(
         topic.id,
         StringCodec().encode(JSON.stringify(topicUpdated)),
       );
@@ -284,7 +284,7 @@ export class TopicEventService {
         },
       });
 
-      await this.natsjsService.kv.put(
+      await this.natsjsSubscriber.kv.put(
         topic.id,
         StringCodec().encode(JSON.stringify(topicUpdated)),
       );
@@ -339,7 +339,7 @@ export class TopicEventService {
         },
       });
 
-      await this.natsjsService.kv.put(
+      await this.natsjsSubscriber.kv.put(
         topic.id,
         StringCodec().encode(JSON.stringify(topic)),
       );

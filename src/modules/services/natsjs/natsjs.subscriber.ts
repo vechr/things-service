@@ -25,7 +25,7 @@ export class NatsjsSubscriber
 
   async onModuleInit() {
     await this.connect(this.brokerConfig);
-    await this.createBucket('kremes_topics', this.bucketConfig);
+    await this.createBucket('vechr_topics', this.bucketConfig);
     await this.subscribeThings(
       'Vechr.DashboardID.*.DeviceID.*.TopicID.*.Topic.>',
       this.kv,
@@ -38,7 +38,7 @@ export class NatsjsSubscriber
   }
 
   async subscribeThings(subject: string, kv: KV, nats: NatsConnection) {
-    await this.subscribe(subject, async (sub: Subscription): Promise<void> => {
+    this.subscribe(subject, async (sub: Subscription): Promise<void> => {
       for await (const m of sub) {
         const thingsLogic = new ThingsBusinessLogic(kv, nats);
 

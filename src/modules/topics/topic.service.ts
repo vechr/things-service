@@ -4,7 +4,7 @@ import { Topic } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { lastValueFrom } from 'rxjs';
 import { StringCodec } from 'nats';
-import { NatsjsService } from '../services/natsjs/natsjs.service';
+import { NatsjsSubscriber } from '../services/natsjs/natsjs.subscriber';
 import { DBLoggerDto, QueryCreateEventDto } from './dto';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { EditTopicDto } from './dto/edit-topic.dto';
@@ -27,7 +27,7 @@ export class TopicService {
   constructor(
     private readonly prisma: PrismaService,
     @Inject('DB_LOGGER_SERVICE') private readonly dbLoggerClient: ClientNats,
-    private readonly natsjsService: NatsjsService,
+    private readonly natsjsSubscriber: NatsjsSubscriber,
   ) {}
 
   async list(ctx: IContext): Promise<{
@@ -119,7 +119,7 @@ export class TopicService {
 
   async getTopicWidget(topicId: string): Promise<void> {
     const result = await this.getTopicById(topicId);
-    await this.natsjsService.kv.put(
+    await this.natsjsSubscriber.kv.put(
       result.id,
       StringCodec().encode(JSON.stringify(result)),
     );
@@ -187,7 +187,7 @@ export class TopicService {
         },
       });
 
-      await this.natsjsService.kv.put(
+      await this.natsjsSubscriber.kv.put(
         topic.id,
         StringCodec().encode(JSON.stringify(topic)),
       );
@@ -252,7 +252,7 @@ export class TopicService {
         },
       });
 
-      await this.natsjsService.kv.put(
+      await this.natsjsSubscriber.kv.put(
         topicUpdated.id,
         StringCodec().encode(JSON.stringify(topicUpdated)),
       );
@@ -306,7 +306,7 @@ export class TopicService {
         },
       });
 
-      await this.natsjsService.kv.purge(result.id);
+      await this.natsjsSubscriber.kv.purge(result.id);
 
       return result;
     } catch (error) {
