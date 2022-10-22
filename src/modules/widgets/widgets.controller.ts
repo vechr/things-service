@@ -14,6 +14,8 @@ import { WidgetService } from './widgets.service';
 import SuccessResponse from '@/shared/responses/success.response';
 import Authentication from '@/shared/decorators/authentication.decorator';
 import Authorization from '@/shared/decorators/authorization.decorator';
+import Context from '@/shared/decorators/context.decorator';
+import { IContext } from '@/shared/interceptors/context.interceptor';
 
 @ApiTags('Widget')
 @ApiBearerAuth('access-token')
@@ -35,10 +37,11 @@ export class WidgetController {
   @Authentication(true)
   @Authorization('widgets:create@auth')
   public async createWidget(
+    @Context() ctx: IContext,
     @Param('dashboardId') dashboardId: string,
     @Body() dto: CreateWidgetDto,
   ): Promise<SuccessResponse> {
-    const result = await this.widgetService.createWidget(dashboardId, dto);
+    const result = await this.widgetService.createWidget(ctx, dashboardId, dto);
     return new SuccessResponse('Success create widget!', result);
   }
 
@@ -46,10 +49,12 @@ export class WidgetController {
   @Authentication(true)
   @Authorization('widgets:delete@auth')
   public async deleteWidgetId(
+    @Context() ctx: IContext,
     @Param('dashboardId') dashboardId: string,
     @Param('id') widgetId: string,
   ): Promise<SuccessResponse> {
     const result = await this.widgetService.deleteWidgetById(
+      ctx,
       dashboardId,
       widgetId,
     );
@@ -60,11 +65,13 @@ export class WidgetController {
   @Authentication(true)
   @Authorization('widgets:update@auth')
   public async editWidgetById(
+    @Context() ctx: IContext,
     @Param('dashboardId') dashboardId: string,
     @Param('id') widgetId: string,
     @Body() dto: UpdateWidgetDto,
   ): Promise<SuccessResponse> {
     const result = await this.widgetService.editWidgetById(
+      ctx,
       dashboardId,
       dto,
       widgetId,

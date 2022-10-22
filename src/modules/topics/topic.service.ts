@@ -5,6 +5,8 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { lastValueFrom } from 'rxjs';
 import { StringCodec } from 'nats';
 import { NatsjsSubscriber } from '../services/natsjs/natsjs.subscriber';
+import AuditService from '../audits/audit.service';
+import { AuditAction } from '../audits/types/audit-enum.type';
 import { DBLoggerDto, QueryCreateEventDto } from './dto';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { EditTopicDto } from './dto/edit-topic.dto';
@@ -21,13 +23,15 @@ import {
 import PrismaService from '@/prisma/prisma.service';
 import { IContext } from '@/shared/interceptors/context.interceptor';
 import { parseMeta, parseQuery } from '@/shared/utils/query.util';
+import { Auditable } from '@/shared/types/auditable.type';
 
 @Injectable()
 export class TopicService {
   constructor(
     private readonly prisma: PrismaService,
-    @Inject('DB_LOGGER_SERVICE') private readonly dbLoggerClient: ClientNats,
+    @Inject('NATS_SERVICE') private readonly dbLoggerClient: ClientNats,
     private readonly natsjsSubscriber: NatsjsSubscriber,
+    private readonly auditService: AuditService,
   ) {}
 
   async list(ctx: IContext): Promise<{
@@ -158,6 +162,7 @@ export class TopicService {
   }
 
   async createTopic(
+    ctx: IContext,
     deviceId: string,
     { name, description, widgetType }: CreateTopicDto,
   ): Promise<Topic> {
@@ -192,6 +197,12 @@ export class TopicService {
         StringCodec().encode(JSON.stringify(topic)),
       );
 
+      await this.auditService.sendAudit(ctx, AuditAction.CREATED, {
+        id: topic.id,
+        incoming: topic,
+        auditable: Auditable.TOPIC,
+      });
+
       return topic;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
@@ -207,6 +218,7 @@ export class TopicService {
   }
 
   async editTopicById(
+    ctx: IContext,
     deviceId: string,
     topicId: string,
     { name, description }: EditTopicDto,
@@ -215,6 +227,9 @@ export class TopicService {
       const topic = await this.prisma.topic.findUnique({
         where: {
           id: topicId,
+        },
+        include: {
+          topicEvents: true,
         },
       });
 
@@ -257,6 +272,13 @@ export class TopicService {
         StringCodec().encode(JSON.stringify(topicUpdated)),
       );
 
+      await this.auditService.sendAudit(ctx, AuditAction.UPDATED, {
+        id: topicUpdated.id,
+        prev: topic,
+        incoming: topicUpdated,
+        auditable: Auditable.TOPIC,
+      });
+
       return topicUpdated;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
@@ -271,7 +293,7 @@ export class TopicService {
     }
   }
 
-  async deleteTopicById(topicId: string) {
+  async deleteTopicById(ctx: IContext, topicId: string) {
     try {
       const topic = await this.prisma.topic.findUnique({
         where: {
@@ -307,6 +329,12 @@ export class TopicService {
       });
 
       await this.natsjsSubscriber.kv.purge(result.id);
+
+      await this.auditService.sendAudit(ctx, AuditAction.DELETED, {
+        id: result.id,
+        prev: result,
+        auditable: Auditable.TOPIC,
+      });
 
       return result;
     } catch (error) {

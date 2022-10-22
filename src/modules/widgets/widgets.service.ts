@@ -1,6 +1,8 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { Widget } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import AuditService from '../audits/audit.service';
+import { AuditAction } from '../audits/types/audit-enum.type';
 import { CreateWidgetDto } from './dto/create-widget.dto';
 import { UpdateWidgetDto } from './dto/update-widget.dto';
 import log from '@/shared/utils/log.util';
@@ -9,10 +11,15 @@ import {
   UnknownException,
 } from '@/shared/exceptions/common.exception';
 import PrismaService from '@/prisma/prisma.service';
+import { IContext } from '@/shared/interceptors/context.interceptor';
+import { Auditable } from '@/shared/types/auditable.type';
 
 @Injectable()
 export class WidgetService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly auditService: AuditService,
+  ) {}
 
   async getWidgets(dashboardId: string): Promise<Widget[]> {
     try {
@@ -41,6 +48,7 @@ export class WidgetService {
   }
 
   async deleteWidgetById(
+    ctx: IContext,
     dashboardId: string,
     widgetId: string,
   ): Promise<Widget> {
@@ -62,6 +70,16 @@ export class WidgetService {
         where: {
           id: widgetId,
         },
+        include: {
+          Dashboard: true,
+          topic: true,
+        },
+      });
+
+      await this.auditService.sendAudit(ctx, AuditAction.DELETED, {
+        id: deleteWidget.id,
+        prev: deleteWidget,
+        auditable: Auditable.WIDGET,
       });
 
       return deleteWidget;
@@ -79,6 +97,7 @@ export class WidgetService {
   }
 
   async editWidgetById(
+    ctx: IContext,
     dashboardId: string,
     { description, name, node, shiftData, widgetData }: UpdateWidgetDto,
     widgetId: string,
@@ -100,6 +119,10 @@ export class WidgetService {
       const checkWidget = await this.prisma.widget.findUnique({
         where: {
           id: widgetId,
+        },
+        include: {
+          Dashboard: true,
+          topic: true,
         },
       });
 
@@ -143,6 +166,13 @@ export class WidgetService {
         },
       });
 
+      await this.auditService.sendAudit(ctx, AuditAction.UPDATED, {
+        id: result.id,
+        prev: checkWidget,
+        incoming: result,
+        auditable: Auditable.WIDGET,
+      });
+
       return result;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
@@ -158,6 +188,7 @@ export class WidgetService {
   }
 
   async createWidget(
+    ctx: IContext,
     dashboardId: string,
     {
       name,
@@ -232,6 +263,12 @@ export class WidgetService {
           Dashboard: true,
           topic: true,
         },
+      });
+
+      await this.auditService.sendAudit(ctx, AuditAction.CREATED, {
+        id: widget.id,
+        incoming: widget,
+        auditable: Auditable.WIDGET,
       });
 
       return widget;

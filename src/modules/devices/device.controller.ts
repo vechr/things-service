@@ -68,9 +68,10 @@ export class DeviceController {
   @Authentication(true)
   @Authorization('devices:create@auth')
   public async createDevice(
+    @Context() ctx: IContext,
     @Body() dto: CreateDeviceDto,
   ): Promise<SuccessResponse> {
-    const result = await this.deviceService.createDevice(dto);
+    const result = await this.deviceService.createDevice(ctx, dto);
     return new SuccessResponse(`Success Create Device!`, result);
   }
 
@@ -78,10 +79,11 @@ export class DeviceController {
   @Authentication(true)
   @Authorization('devices:update@auth')
   public async editDeviceById(
+    @Context() ctx: IContext,
     @Param('id') deviceId: string,
     @Body() dto: EditDeviceDto,
   ): Promise<SuccessResponse> {
-    const result = await this.deviceService.editDeviceById(deviceId, dto);
+    const result = await this.deviceService.editDeviceById(ctx, deviceId, dto);
     return new SuccessResponse(`Success update Device ${result.name}!`, result);
   }
 
@@ -89,9 +91,10 @@ export class DeviceController {
   @Authentication(true)
   @Authorization('devices:delete@auth')
   public async deleteDeviceById(
+    @Context() ctx: IContext,
     @Param('id') deviceId: string,
   ): Promise<SuccessResponse> {
-    const result = await this.deviceService.deleteDeviceById(deviceId);
+    const result = await this.deviceService.deleteDeviceById(ctx, deviceId);
     return new SuccessResponse(
       `Device: ${result.name} success deleted!`,
       result,

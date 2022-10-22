@@ -93,10 +93,15 @@ export class TopicEventController {
   @Authentication(true)
   @Authorization('topic-events:create@auth')
   public async createTopicEvent(
+    @Context() ctx: IContext,
     @Param('topicId') topicId: string,
     @Body() dto: CreateTopicEventDto,
   ): Promise<SuccessResponse> {
-    const result = await this.topicEventService.createTopicEvent(topicId, dto);
+    const result = await this.topicEventService.createTopicEvent(
+      ctx,
+      topicId,
+      dto,
+    );
     return new SuccessResponse(`Success Create Topic Event!`, result);
   }
 
@@ -104,11 +109,13 @@ export class TopicEventController {
   @Authentication(true)
   @Authorization('topic-events:update@auth')
   public async editTopicEventById(
+    @Context() ctx: IContext,
     @Param('topicId') topicId: string,
     @Param('id') topicEventId: string,
     @Body() dto: EditTopicEventDto,
   ): Promise<SuccessResponse> {
     const result = await this.topicEventService.editTopicEventById(
+      ctx,
       topicId,
       topicEventId,
       dto,
@@ -123,9 +130,11 @@ export class TopicEventController {
   @Authentication(true)
   @Authorization('topic-events:delete@auth')
   public async deleteTopicEventById(
+    @Context() ctx: IContext,
     @Param('id') topicEventId: string,
   ): Promise<SuccessResponse> {
     const result = await this.topicEventService.deleteTopicEventById(
+      ctx,
       topicEventId,
     );
     return new SuccessResponse(

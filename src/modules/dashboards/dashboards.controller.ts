@@ -76,9 +76,10 @@ export class DashboardController {
   @Authentication(true)
   @Authorization('dashboards:create@auth')
   public async createDashboard(
+    @Context() ctx: IContext,
     @Body() dto: CreateDashboardDto,
   ): Promise<SuccessResponse> {
-    const result = await this.dashboardService.createDashboard(dto);
+    const result = await this.dashboardService.createDashboard(ctx, dto);
     return new SuccessResponse(`Success Create Dashboard!`, result);
   }
 
@@ -86,10 +87,12 @@ export class DashboardController {
   @Authentication(true)
   @Authorization('dashboards:update@auth')
   public async editDashboardById(
+    @Context() ctx: IContext,
     @Param('id') dashboardId: string,
     @Body() dto: EditDashboardDto,
   ): Promise<SuccessResponse> {
     const result = await this.dashboardService.editDashboardById(
+      ctx,
       dashboardId,
       dto,
     );
@@ -102,8 +105,14 @@ export class DashboardController {
   @Delete(':id')
   @Authentication(true)
   @Authorization('dashboards:delete@auth')
-  public async deleteDashboardById(@Param('id') dashboardId: string) {
-    const result = await this.dashboardService.deleteDashboardById(dashboardId);
+  public async deleteDashboardById(
+    @Context() ctx: IContext,
+    @Param('id') dashboardId: string,
+  ) {
+    const result = await this.dashboardService.deleteDashboardById(
+      ctx,
+      dashboardId,
+    );
     return new SuccessResponse(
       `Dashboard: ${result.name} success deleted!`,
       result,

@@ -72,8 +72,11 @@ export class DeviceTypeController {
   @Post()
   @Authentication(true)
   @Authorization('device-types:create@auth')
-  public async createDeviceType(@Body() dto: CreateDeviceTypeDto) {
-    const result = await this.deviceTypeService.createDeviceType(dto);
+  public async createDeviceType(
+    @Context() ctx: IContext,
+    @Body() dto: CreateDeviceTypeDto,
+  ) {
+    const result = await this.deviceTypeService.createDeviceType(ctx, dto);
     return new SuccessResponse(`Success Create device type!`, result);
   }
 
@@ -81,10 +84,12 @@ export class DeviceTypeController {
   @Authentication(true)
   @Authorization('device-types:update@auth')
   public async editDeviceTypeById(
+    @Context() ctx: IContext,
     @Param('id') deviceTypeId: string,
     @Body() dto: EditDeviceTypeDto,
   ): Promise<SuccessResponse> {
     const result = await this.deviceTypeService.editDeviceTypeById(
+      ctx,
       deviceTypeId,
       dto,
     );
@@ -97,8 +102,12 @@ export class DeviceTypeController {
   @Delete(':id')
   @Authentication(true)
   @Authorization('device-types:delete@auth')
-  public async deleteDeviceTypeById(@Param('id') deviceTypeId: string) {
+  public async deleteDeviceTypeById(
+    @Context() ctx: IContext,
+    @Param('id') deviceTypeId: string,
+  ) {
     const result = await this.deviceTypeService.deleteDeviceTypeById(
+      ctx,
       deviceTypeId,
     );
     return new SuccessResponse(

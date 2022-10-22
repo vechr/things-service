@@ -111,10 +111,11 @@ export class TopicController {
   @Authentication(true)
   @Authorization('topics:create@auth')
   public async createTopic(
+    @Context() ctx: IContext,
     @Param('deviceId') deviceId: string,
     @Body() dto: CreateTopicDto,
   ) {
-    const result = await this.topicService.createTopic(deviceId, dto);
+    const result = await this.topicService.createTopic(ctx, deviceId, dto);
     return new SuccessResponse(`Success Create Topic!`, result);
   }
 
@@ -122,11 +123,13 @@ export class TopicController {
   @Authentication(true)
   @Authorization('topics:update@auth')
   public async editTopicById(
+    @Context() ctx: IContext,
     @Param('deviceId') deviceId: string,
     @Param('id') topicId: string,
     @Body() dto: EditTopicDto,
   ): Promise<SuccessResponse> {
     const result = await this.topicService.editTopicById(
+      ctx,
       deviceId,
       topicId,
       dto,
@@ -138,9 +141,10 @@ export class TopicController {
   @Authentication(true)
   @Authorization('topics:delete@auth')
   public async deleteTopicById(
+    @Context() ctx: IContext,
     @Param('id') topicId: string,
   ): Promise<SuccessResponse> {
-    const result = await this.topicService.deleteTopicById(topicId);
+    const result = await this.topicService.deleteTopicById(ctx, topicId);
     return new SuccessResponse(
       `Topic: ${result.name} success deleted!`,
       result,

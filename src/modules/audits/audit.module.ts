@@ -1,10 +1,9 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import AuditService from '../audits/audit.service';
-import { TopicController } from './topic.controller';
-import { TopicService } from './topic.service';
+import AuditService from './audit.service';
 import appConstant from '@/constants/app.constant';
 
+@Global()
 @Module({
   imports: [
     ClientsModule.register([
@@ -17,8 +16,7 @@ import appConstant from '@/constants/app.constant';
       },
     ]),
   ],
-  providers: [TopicService, AuditService],
-  controllers: [TopicController],
-  exports: [TopicService],
+  providers: [AuditService],
+  exports: [AuditService],
 })
-export class TopicModule {}
+export default class AuditModule {}

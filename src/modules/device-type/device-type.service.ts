@@ -1,6 +1,8 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { DeviceType } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import AuditService from '../audits/audit.service';
+import { AuditAction } from '../audits/types/audit-enum.type';
 import { CreateDeviceTypeDto } from './dto/create-device-type.dto';
 import { EditDeviceTypeDto } from './dto/edit-device-type.dto';
 import { TListDeviceTypeRequestQuery } from './requests/list-device-type.request';
@@ -13,10 +15,14 @@ import {
 import PrismaService from '@/prisma/prisma.service';
 import { parseMeta, parseQuery } from '@/shared/utils/query.util';
 import { IContext } from '@/shared/interceptors/context.interceptor';
+import { Auditable } from '@/shared/types/auditable.type';
 
 @Injectable()
 export class DeviceTypeService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly auditService: AuditService,
+  ) {}
 
   async list(ctx: IContext): Promise<{
     result: DeviceType[];
@@ -111,7 +117,10 @@ export class DeviceTypeService {
     }
   }
 
-  async createDeviceType(dto: CreateDeviceTypeDto): Promise<DeviceType> {
+  async createDeviceType(
+    ctx: IContext,
+    dto: CreateDeviceTypeDto,
+  ): Promise<DeviceType> {
     try {
       const checkDeviceType = await this.prisma.deviceType.findUnique({
         where: {
@@ -135,6 +144,12 @@ export class DeviceTypeService {
         },
       });
 
+      await this.auditService.sendAudit(ctx, AuditAction.CREATED, {
+        id: deviceType.id,
+        incoming: deviceType,
+        auditable: Auditable.DEVICE_TYPE,
+      });
+
       return deviceType;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
@@ -150,6 +165,7 @@ export class DeviceTypeService {
   }
 
   async editDeviceTypeById(
+    ctx: IContext,
     deviceTypeId: string,
     dto: EditDeviceTypeDto,
   ): Promise<DeviceType> {
@@ -157,6 +173,9 @@ export class DeviceTypeService {
       const deviceType = await this.prisma.deviceType.findUnique({
         where: {
           id: deviceTypeId,
+        },
+        include: {
+          devices: true,
         },
       });
 
@@ -167,7 +186,7 @@ export class DeviceTypeService {
         });
       }
 
-      return this.prisma.deviceType.update({
+      const result = await this.prisma.deviceType.update({
         where: {
           id: deviceTypeId,
         },
@@ -178,6 +197,15 @@ export class DeviceTypeService {
           devices: true,
         },
       });
+
+      await this.auditService.sendAudit(ctx, AuditAction.UPDATED, {
+        id: result.id,
+        prev: deviceType,
+        incoming: result,
+        auditable: Auditable.DEVICE_TYPE,
+      });
+
+      return result;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         log.error(error.message);
@@ -191,7 +219,10 @@ export class DeviceTypeService {
     }
   }
 
-  async deleteDeviceTypeById(deviceTypeId: string): Promise<DeviceType> {
+  async deleteDeviceTypeById(
+    ctx: IContext,
+    deviceTypeId: string,
+  ): Promise<DeviceType> {
     try {
       const deviceType = await this.prisma.deviceType.findUnique({
         where: {
@@ -224,6 +255,12 @@ export class DeviceTypeService {
         include: {
           devices: true,
         },
+      });
+
+      await this.auditService.sendAudit(ctx, AuditAction.DELETED, {
+        id: result.id,
+        prev: result,
+        auditable: Auditable.DEVICE_TYPE,
       });
 
       return result;

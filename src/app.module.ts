@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
 import AuthModule from './core/auth.module';
+import AuditModule from './modules/audits/audit.module';
 import { DashboardModule } from './modules/dashboards/dashboards.module';
 import { DeviceModule } from './modules/devices/device.module';
 import { NatsjsModule } from './modules/services/natsjs/natsjs.module';
@@ -18,6 +19,7 @@ import { logger } from './shared/utils/log.util';
     PrismaModule,
     NatsjsModule,
     AuthModule,
+    AuditModule,
 
     DashboardModule,
     DeviceModule,
