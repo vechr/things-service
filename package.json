@@ -4,6 +4,11 @@
   "description": "",
   "author": "",
   "private": true,
+  "release": {
+    "branches": [
+      "master"
+    ]
+  },
   "license": "UNLICENSED",
   "scripts": {
     "commit": "cz",
@@ -20,7 +25,8 @@
     "prepare": "husky install",
     "prisma:prod:deploy": "prisma migrate deploy --schema './database/schema.prisma'",
     "prestart:prod": "npm run prisma:prod:deploy",
-    "start:prod": "node .build/server"
+    "start:prod": "node .build/server",
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "@nestjs/common": "^9.2.0",
@@ -78,6 +84,7 @@
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
     "prisma": "^4.6.1",
+    "semantic-release": "^19.0.5",
     "source-map-support": "^0.5.20",
     "supertest": "^6.3.1",
     "ts-jest": "^27.0.3",
