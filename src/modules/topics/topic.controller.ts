@@ -19,6 +19,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { OtelInstanceCounter, OtelMethodCounter } from 'nestjs-otel';
 import {
   CreateTopicDto,
   DBLoggerDto,
@@ -44,6 +45,7 @@ import Authorization from '@/shared/decorators/authorization.decorator';
 @ApiTags('Topic')
 @ApiBearerAuth('access-token')
 @Controller('things/device/:deviceId/topic')
+@OtelInstanceCounter()
 export class TopicController {
   constructor(private readonly topicService: TopicService) {}
 
@@ -61,6 +63,7 @@ export class TopicController {
     example: 'f24ec74b-8716-4fc5-b60a-e4cd62967f47',
     type: String,
   })
+  @OtelMethodCounter()
   public async list(@Context() ctx: IContext): Promise<SuccessResponse> {
     const { result, meta } = await this.topicService.list(ctx);
     return new SuccessResponse('Success get all records!', result, meta);
@@ -68,6 +71,7 @@ export class TopicController {
 
   @UseFilters(new ExceptionFilter())
   @EventPattern('set.topic.widget.kv')
+  @OtelMethodCounter()
   async getTopicWidget(
     @Payload() { topicId }: TopicIdRequestDto,
   ): Promise<void> {
@@ -82,6 +86,7 @@ export class TopicController {
   @Post('query')
   @Authentication(true)
   @Authorization('topics:read@auth')
+  @OtelMethodCounter()
   async getDataTopic(@Body() dto: DBLoggerDto): Promise<SuccessResponse<any>> {
     const result = await this.topicService.getDataTopic(dto);
     return new SuccessResponse('Success get record all data Topic!', result);
@@ -90,6 +95,7 @@ export class TopicController {
   @Get()
   @Authentication(true)
   @Authorization('topics:read@auth')
+  @OtelMethodCounter()
   public async getTopics(
     @Param('deviceId') deviceId: string,
   ): Promise<SuccessResponse> {
@@ -100,6 +106,7 @@ export class TopicController {
   @Get(':id')
   @Authentication(true)
   @Authorization('topics:read@auth')
+  @OtelMethodCounter()
   public async getTopicById(
     @Param('id') topicId: string,
   ): Promise<SuccessResponse> {
@@ -110,6 +117,7 @@ export class TopicController {
   @Post()
   @Authentication(true)
   @Authorization('topics:create@auth')
+  @OtelMethodCounter()
   public async createTopic(
     @Context() ctx: IContext,
     @Param('deviceId') deviceId: string,
@@ -122,6 +130,7 @@ export class TopicController {
   @Patch(':id')
   @Authentication(true)
   @Authorization('topics:update@auth')
+  @OtelMethodCounter()
   public async editTopicById(
     @Context() ctx: IContext,
     @Param('deviceId') deviceId: string,
@@ -140,6 +149,7 @@ export class TopicController {
   @Delete(':id')
   @Authentication(true)
   @Authorization('topics:delete@auth')
+  @OtelMethodCounter()
   public async deleteTopicById(
     @Context() ctx: IContext,
     @Param('id') topicId: string,

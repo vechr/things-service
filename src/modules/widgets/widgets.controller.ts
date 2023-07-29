@@ -8,6 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { OtelInstanceCounter, OtelMethodCounter } from 'nestjs-otel';
 import { CreateWidgetDto } from './dto/create-widget.dto';
 import { UpdateWidgetDto } from './dto/update-widget.dto';
 import { WidgetService } from './widgets.service';
@@ -20,12 +21,14 @@ import { IContext } from '@/shared/interceptors/context.interceptor';
 @ApiTags('Widget')
 @ApiBearerAuth('access-token')
 @Controller('things/dashboard/:dashboardId/widget')
+@OtelInstanceCounter()
 export class WidgetController {
   constructor(private readonly widgetService: WidgetService) {}
 
   @Get()
   @Authentication(true)
   @Authorization('widgets:read@auth')
+  @OtelMethodCounter()
   public async getWidgets(
     @Param('dashboardId') dashboardId: string,
   ): Promise<SuccessResponse> {
@@ -36,6 +39,7 @@ export class WidgetController {
   @Post()
   @Authentication(true)
   @Authorization('widgets:create@auth')
+  @OtelMethodCounter()
   public async createWidget(
     @Context() ctx: IContext,
     @Param('dashboardId') dashboardId: string,
@@ -48,6 +52,7 @@ export class WidgetController {
   @Delete(':id')
   @Authentication(true)
   @Authorization('widgets:delete@auth')
+  @OtelMethodCounter()
   public async deleteWidgetId(
     @Context() ctx: IContext,
     @Param('dashboardId') dashboardId: string,
@@ -64,6 +69,7 @@ export class WidgetController {
   @Patch(':id')
   @Authentication(true)
   @Authorization('widgets:update@auth')
+  @OtelMethodCounter()
   public async editWidgetById(
     @Context() ctx: IContext,
     @Param('dashboardId') dashboardId: string,

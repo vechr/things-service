@@ -11,6 +11,7 @@ import {
   Version,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { OtelInstanceCounter, OtelMethodCounter } from 'nestjs-otel';
 import { DashboardService } from './dashboards.service';
 import { CreateDashboardDto, EditDashboardDto } from './dto';
 import ListDashboardValidator, {
@@ -29,6 +30,7 @@ import Authorization from '@/shared/decorators/authorization.decorator';
 @ApiTags('Dashboard')
 @ApiBearerAuth('access-token')
 @Controller('things/dashboard')
+@OtelInstanceCounter()
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
@@ -41,6 +43,7 @@ export class DashboardController {
   @Validator(ListDashboardValidator)
   @Serializer(ListDashboardResponse)
   @ApiFilterQuery('filters', ListDashboardQueryValidator)
+  @OtelMethodCounter()
   public async list(@Context() ctx: IContext): Promise<SuccessResponse> {
     const { result, meta } = await this.dashboardService.list(ctx);
     return new SuccessResponse('Success get all records!', result, meta);
@@ -49,6 +52,7 @@ export class DashboardController {
   @Get()
   @Authentication(true)
   @Authorization('dashboards:read@auth')
+  @OtelMethodCounter()
   public async getDashboard(): Promise<SuccessResponse> {
     const result = await this.dashboardService.getDashboard();
     return new SuccessResponse('Success get all records!', result);
@@ -57,6 +61,7 @@ export class DashboardController {
   @Get('details')
   @Authentication(true)
   @Authorization('dashboards:read@auth')
+  @OtelMethodCounter()
   public async getDashboardDetails(): Promise<SuccessResponse> {
     const result = await this.dashboardService.getDashboardDetails();
     return new SuccessResponse('Success get all records!', result);
@@ -65,6 +70,7 @@ export class DashboardController {
   @Get(':id')
   @Authentication(true)
   @Authorization('dashboards:read@auth')
+  @OtelMethodCounter()
   public async getDashboardById(
     @Param('id') dashboardId: string,
   ): Promise<SuccessResponse> {
@@ -75,6 +81,7 @@ export class DashboardController {
   @Post()
   @Authentication(true)
   @Authorization('dashboards:create@auth')
+  @OtelMethodCounter()
   public async createDashboard(
     @Context() ctx: IContext,
     @Body() dto: CreateDashboardDto,
@@ -86,6 +93,7 @@ export class DashboardController {
   @Patch(':id')
   @Authentication(true)
   @Authorization('dashboards:update@auth')
+  @OtelMethodCounter()
   public async editDashboardById(
     @Context() ctx: IContext,
     @Param('id') dashboardId: string,
@@ -105,6 +113,7 @@ export class DashboardController {
   @Delete(':id')
   @Authentication(true)
   @Authorization('dashboards:delete@auth')
+  @OtelMethodCounter()
   public async deleteDashboardById(
     @Context() ctx: IContext,
     @Param('id') dashboardId: string,
