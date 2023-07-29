@@ -10,12 +10,14 @@ import {
   Subscription,
 } from 'nats';
 import { KV, KvOptions } from 'nats/lib/nats-base-client/types';
+import { OtelInstanceCounter, OtelMethodCounter } from 'nestjs-otel';
 import { ThingsBusinessLogic } from '../things.logic';
 import { NatsjsService } from './natsjs.service';
 import { ISubscriber } from './interfaces/subscriber.interface';
 import appConfig from '@/constants/app.constant';
 
 @Injectable()
+@OtelInstanceCounter()
 export class NatsjsSubscriber
   extends NatsjsService
   implements OnApplicationShutdown, OnModuleInit, ISubscriber
@@ -46,6 +48,7 @@ export class NatsjsSubscriber
     await this.disconnect(this.brokerConfig);
   }
 
+  @OtelMethodCounter()
   async subscribeThings(subject: string, kv: KV, nats: NatsConnection) {
     this.subscribe(subject, async (sub: Subscription): Promise<void> => {
       for await (const m of sub) {
