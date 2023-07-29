@@ -11,6 +11,7 @@ import {
   Version,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { OtelInstanceCounter, OtelMethodCounter } from 'nestjs-otel';
 import { DeviceService } from './device.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { EditDeviceDto } from './dto/edit-device.dto';
@@ -31,6 +32,7 @@ import Authorization from '@/shared/decorators/authorization.decorator';
 @ApiTags('Device')
 @ApiBearerAuth('access-token')
 @Controller('things/device')
+@OtelInstanceCounter()
 export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
 
@@ -43,6 +45,7 @@ export class DeviceController {
   @Validator(ListDeviceValidator)
   @Serializer(ListDeviceResponse)
   @ApiFilterQuery('filters', ListDeviceQueryValidator)
+  @OtelMethodCounter()
   public async list(@Context() ctx: IContext): Promise<SuccessResponse> {
     const { result, meta } = await this.deviceService.list(ctx);
     return new SuccessResponse('Success get all records!', result, meta);
@@ -51,6 +54,7 @@ export class DeviceController {
   @Get()
   @Authentication(true)
   @Authorization('devices:read@auth')
+  @OtelMethodCounter()
   public async getDevices(): Promise<SuccessResponse> {
     const result = await this.deviceService.getDevices();
     return new SuccessResponse('Success get all records!', result);
@@ -59,6 +63,7 @@ export class DeviceController {
   @Get(':id')
   @Authentication(true)
   @Authorization('devices:read@auth')
+  @OtelMethodCounter()
   public async getDeviceById(@Param('id') deviceId: string) {
     const result = await this.deviceService.getDeviceById(deviceId);
     return new SuccessResponse(`Success get Device ${result.name}!`, result);
@@ -67,6 +72,7 @@ export class DeviceController {
   @Post()
   @Authentication(true)
   @Authorization('devices:create@auth')
+  @OtelMethodCounter()
   public async createDevice(
     @Context() ctx: IContext,
     @Body() dto: CreateDeviceDto,
@@ -78,6 +84,7 @@ export class DeviceController {
   @Patch(':id')
   @Authentication(true)
   @Authorization('devices:update@auth')
+  @OtelMethodCounter()
   public async editDeviceById(
     @Context() ctx: IContext,
     @Param('id') deviceId: string,
@@ -90,6 +97,7 @@ export class DeviceController {
   @Delete(':id')
   @Authentication(true)
   @Authorization('devices:delete@auth')
+  @OtelMethodCounter()
   public async deleteDeviceById(
     @Context() ctx: IContext,
     @Param('id') deviceId: string,

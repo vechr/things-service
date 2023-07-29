@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
+import { OtelInstanceCounter, OtelMethodCounter } from 'nestjs-otel';
 import { CreateTopicEventDto, EditTopicEventDto } from './dto';
 import { NotificationEmailDto } from './dto/notification-email-event.dto';
 import { TopicEventService } from './topic-event.service';
@@ -34,6 +35,7 @@ import Authorization from '@/shared/decorators/authorization.decorator';
 @ApiTags('TopicEvent')
 @ApiBearerAuth('access-token')
 @Controller('things/topic/:topicId/topic-events')
+@OtelInstanceCounter()
 export class TopicEventController {
   constructor(private readonly topicEventService: TopicEventService) {}
 
@@ -51,6 +53,7 @@ export class TopicEventController {
     example: '6af7cc7b-c121-437d-a694-d9b685521661',
     type: String,
   })
+  @OtelMethodCounter()
   public async list(@Context() ctx: IContext): Promise<SuccessResponse> {
     const { result, meta } = await this.topicEventService.list(ctx);
     return new SuccessResponse('Success get all records!', result, meta);
@@ -58,6 +61,7 @@ export class TopicEventController {
 
   @UseFilters(new ExceptionFilter())
   @EventPattern('notification.email.deleted')
+  @OtelMethodCounter()
   public async updateNotificationEmailInTopicEvent(
     @Payload() data: NotificationEmailDto,
   ): Promise<void> {
@@ -69,6 +73,7 @@ export class TopicEventController {
   @Get()
   @Authentication(true)
   @Authorization('topic-events:read@auth')
+  @OtelMethodCounter()
   public async getTopicEvents(
     @Param('topicId') topicId: string,
   ): Promise<SuccessResponse> {
@@ -79,6 +84,7 @@ export class TopicEventController {
   @Get(':id')
   @Authentication(true)
   @Authorization('topic-events:read@auth')
+  @OtelMethodCounter()
   public async getTopicEventById(
     @Param('id') topicEventId: string,
   ): Promise<SuccessResponse> {
@@ -92,6 +98,7 @@ export class TopicEventController {
   @Post()
   @Authentication(true)
   @Authorization('topic-events:create@auth')
+  @OtelMethodCounter()
   public async createTopicEvent(
     @Context() ctx: IContext,
     @Param('topicId') topicId: string,
@@ -108,6 +115,7 @@ export class TopicEventController {
   @Patch(':id')
   @Authentication(true)
   @Authorization('topic-events:update@auth')
+  @OtelMethodCounter()
   public async editTopicEventById(
     @Context() ctx: IContext,
     @Param('topicId') topicId: string,
@@ -129,6 +137,7 @@ export class TopicEventController {
   @Delete(':id')
   @Authentication(true)
   @Authorization('topic-events:delete@auth')
+  @OtelMethodCounter()
   public async deleteTopicEventById(
     @Context() ctx: IContext,
     @Param('id') topicEventId: string,
