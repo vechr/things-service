@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import express from 'express';
 import { VersioningType } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
+import otelSDK from './tracing';
 import { HttpModule } from './app.module';
 import appConstant from './constants/app.constant';
 import UnknownExceptionsFilter from './shared/filters/unknown.filter';
@@ -108,5 +109,7 @@ const httpServer = new Promise(async (resolve, reject) => {
 });
 
 (async function () {
+  if (appConstant.OTLP_HTTP_URL && appConstant.OTLP_HTTP_URL != '')
+    otelSDK.start();
   await Promise.all([httpServer]);
 })();
