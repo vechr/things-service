@@ -1,10 +1,12 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { TerminusModule } from '@nestjs/terminus';
 import { OpenTelemetryModule } from 'nestjs-otel';
 import { LoggerModule } from 'nestjs-pino';
 import AuthModule from './core/auth.module';
 import AuditModule from './modules/audits/audit.module';
 import { DashboardModule } from './modules/dashboards/dashboards.module';
 import { DeviceModule } from './modules/devices/device.module';
+import HealthModule from './modules/health/health.module';
 import { NatsjsModule } from './modules/services/natsjs/natsjs.module';
 import { TopicEventModule } from './modules/topic-events/topic-event.module';
 import { TopicModule } from './modules/topics/topic.module';
@@ -53,6 +55,8 @@ const PinoLoggerModule = LoggerModule.forRoot({
     DeviceModule,
     TopicModule,
     TopicEventModule,
+    TerminusModule,
+    HealthModule,
   ],
 })
 export class HttpModule {
