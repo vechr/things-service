@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import AuditService from '../audits/audit.service';
-import { DeviceTypeController } from '../device-type/device-type.controller';
-import { DeviceTypeService } from '../device-type/device-type.service';
-import { DeviceController } from './device.controller';
-import { DeviceService } from './device.service';
-import appConstant from '@/constants/app.constant';
+import appConstant from '@/config/app.config';
+import { DeviceController } from './infrastructure/device.controller';
+import PrismaService from '@/core/base/frameworks/data-services/prisma/prisma.service';
+import { DeviceUseCase } from './domain/usecase/device.usecase';
+import { DeviceRepository } from './data/device.repository';
 
 @Module({
   imports: [
@@ -25,7 +24,8 @@ import appConstant from '@/constants/app.constant';
       },
     ]),
   ],
-  controllers: [DeviceController, DeviceTypeController],
-  providers: [DeviceService, DeviceTypeService, AuditService],
+  controllers: [DeviceController],
+  providers: [PrismaService, DeviceUseCase, DeviceRepository],
+  exports: [DeviceRepository],
 })
 export class DeviceModule {}

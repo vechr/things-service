@@ -1,18 +1,21 @@
-import { connect, ConnectionOptions, NatsConnection, Subscription } from 'nats';
 import {
+  connect,
+  ConnectionOptions,
   KV,
   KvOptions,
+  NatsConnection,
+  Subscription,
   SubscriptionOptions,
-} from 'nats/lib/nats-base-client/types';
-import { IBaseNatsClient } from './interfaces/base.interface';
-import { sleep } from '@/shared/utils/sleep.util';
-import log, { ILog } from '@/shared/utils/log.util';
+} from 'nats';
+import { IBaseNatsClient } from './domain/entities/interfaces/base.interface';
+import { sleep } from '@/core/base/frameworks/shared/utils/sleep.util';
+import log from '@/core/base/frameworks/shared/utils/log.util';
 
 export class NatsjsService implements IBaseNatsClient {
   public nats: NatsConnection;
   public subscriber: Subscription;
   public kv: KV;
-  public logger: ILog = log;
+  public logger = log;
 
   async connect(broker: ConnectionOptions) {
     try {
