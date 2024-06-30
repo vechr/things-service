@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import AuditService from '../audits/audit.service';
-import { TopicEventController } from './topic-event.controller';
-import { TopicEventService } from './topic-event.service';
-import appConstant from '@/constants/app.constant';
+import appConstant from '@/config/app.config';
+import { TopicEventController } from './infrastructure/topic-event.controller';
+import PrismaService from '@/core/base/frameworks/data-services/prisma/prisma.service';
+import { TopicEventUseCase } from './domain/usecase/topic-event.usecase';
+import { TopicEventRepository } from './data/topic-event.repository';
 
 @Module({
   imports: [
@@ -23,8 +24,8 @@ import appConstant from '@/constants/app.constant';
       },
     ]),
   ],
-  providers: [TopicEventService, AuditService],
   controllers: [TopicEventController],
-  exports: [TopicEventService],
+  providers: [PrismaService, TopicEventUseCase, TopicEventRepository],
+  exports: [TopicEventRepository],
 })
 export class TopicEventModule {}

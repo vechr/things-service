@@ -5,17 +5,38 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import express from 'express';
 import { VersioningType } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
+import HttpExceptionFilter from '@filters/http.filter';
+import UnknownExceptionsFilter from '@filters/unknown.filter';
+import * as expressWinston from 'express-winston';
 import otelSDK from './tracing';
-import { HttpModule } from './app.module';
-import appConstant from './constants/app.constant';
-import UnknownExceptionsFilter from './shared/filters/unknown.filter';
-import HttpExceptionFilter from './shared/filters/http.filter';
-import ContextInterceptor from './shared/interceptors/context.interceptor';
-import log from './shared/utils/log.util';
+import appConstant from './config/app.config';
+import ContextInterceptor from './core/base/frameworks/shared/interceptors/context.interceptor';
+import {
+  log,
+  winstonExpressOptions,
+} from './core/base/frameworks/shared/utils/log.util';
+import appConfig from './config/app.config';
+import ValidationPipe from './core/base/frameworks/shared/pipes/validation.pipe';
+import HttpModule from './app.module';
+
+const printConfig = () => {
+  log.info(`Connected to Redis: ${appConfig.REDIS_URL}`);
+  log.info(`Connected to Grafana Loki: ${appConfig.LOKI_HOST}`);
+  log.info(`Connected to Grafana Tempo: ${appConfig.OTLP_HTTP_URL}`);
+  log.info(
+    `Cookie Configuration => Samesite: ${appConfig.COOKIE_SAME_SITE}, Secure: ${
+      appConfig.COOKIE_SECURE ? 'yes' : 'no'
+    }, HTTP Only: ${appConfig.COOKIE_HTTP_ONLY ? 'yes' : 'no'}`,
+  );
+  log.info(`Application Name: ${appConfig.APP_NAME}`);
+  log.info(`JWT Expiration: ${appConfig.JWT_EXPIRES_IN}`);
+  log.info(`Refresh JWT Expiration: ${appConfig.JWT_REFRESH_EXPIRES_IN}`);
+};
 
 const httpServer = new Promise(async (resolve, reject) => {
   try {
     const app = await NestFactory.create(HttpModule);
+
     // Connect to Broker NATS
     app.connectMicroservice<MicroserviceOptions>({
       transport: Transport.NATS,
@@ -29,11 +50,6 @@ const httpServer = new Promise(async (resolve, reject) => {
         },
       },
     });
-    await app
-      .startAllMicroservices()
-      .then(() =>
-        log.info(`Nest app NATS started at :${appConstant.NATS_URL} `),
-      );
 
     // Set prefix api globally
     app.setGlobalPrefix('api', { exclude: ['health', '/'] });
@@ -43,6 +59,8 @@ const httpServer = new Promise(async (resolve, reject) => {
       credentials: true,
       origin: true,
     });
+
+    app.useGlobalPipes(new ValidationPipe());
 
     // Use Exception Filter
     app.useGlobalFilters(
@@ -69,8 +87,9 @@ const httpServer = new Promise(async (resolve, reject) => {
     app.use(cookieParser());
     const option = {
       customCss: `
-      .topbar-wrapper img {content:url('/api/things/public/logo.svg'); width:200px; height:auto;}
-      .swagger-ui .topbar { background: linear-gradient(45deg, rgba(0,209,255,1) 42%, rgba(0,217,139,1) 100%); }`,
+      .topbar-wrapper a {content: url('/api/things/public/logo.svg'); max-width: 200px !important; height:auto; margin-bottom: 0 !important; margin-top: 0 !important;}
+      .topbar-wrapper a svg {display: none;}
+      .swagger-ui .topbar {  background: linear-gradient(45deg, rgba(0,209,255,1) 42%, rgba(0,217,139,1) 100%); }`,
       customfavIcon: `/api/things/public/logo.svg`,
       customSiteTitle: 'Vechr API Things Services',
     };
@@ -96,11 +115,21 @@ const httpServer = new Promise(async (resolve, reject) => {
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('/api/things', app, document, option);
 
+    const port = process.env.PORT ?? appConfig.APP_PORT;
+
+    // express-winston logger makes sense BEFORE the router
+    app.use(expressWinston.logger(winstonExpressOptions));
+
     await app
-      .listen(appConstant.APP_PORT)
-      .then(() =>
-        log.info(`Nest app http started at PORT: ${appConstant.APP_PORT}`),
-      );
+      .startAllMicroservices()
+      .then(() => log.info(`Nest app NATS started at :${appConfig.NATS_URL} `));
+
+    await app
+      .listen(port)
+      .then(() => log.info(`Nest app http started at PORT: ${port}`));
+
+    // print config
+    printConfig();
 
     resolve(true);
   } catch (error) {

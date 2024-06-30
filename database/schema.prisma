@@ -4,11 +4,11 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["tracing"]
 }
 
-enum WidgetType{
+enum WidgetType {
   BAR
   BUBBLE
   DOUGHNUT
@@ -22,101 +22,142 @@ enum WidgetType{
 }
 
 model Dashboard {
-  id                          String @id @default(uuid()) @db.VarChar(36)
-  name                        String @unique @db.VarChar(50)
-  description                 String? @db.Text()
-  createdAt                   DateTime @default(now())
-  updatedAt                   DateTime @updatedAt()
-  devices                     DashboardsDevices[]
-  widgets                     Widget[]
+  id          String  @id @default(uuid()) @db.VarChar(36)
+  name        String  @unique @db.VarChar(50)
+  description String? @db.Text()
 
-  @@map("dashboards")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  devices DashboardDevice[]
+  widgets Widget[]
+
+  @@map("Dashboard")
 }
 
 model Widget {
-  id                          String @id @default(uuid()) @db.VarChar(36)
-  Dashboard                   Dashboard @relation(fields: [dashboardId], references: [id])
-  dashboardId                 String @db.VarChar(36)
-  name                        String @db.VarChar(50)
-  description                 String? @db.Text()
-  node                        Json
-  nodeId                      String @db.VarChar(50)
-  widgetData                  Json
-  widgetType                  WidgetType
-  shiftData                   Boolean?
-  topic                       Topic @relation(fields: [topicId], references: [id])
-  topicId                     String @db.VarChar(36)
-  createdAt                   DateTime @default(now())
-  updatedAt                   DateTime @updatedAt()
+  id          String  @id @default(uuid()) @db.VarChar(36)
+  name        String  @unique @db.VarChar(50)
+  description String? @db.Text()
 
-  @@map("widgets")
+  Dashboard   Dashboard  @relation(fields: [dashboardId], references: [id])
+  dashboardId String     @db.VarChar(36)
+  node        Json
+  nodeId      String     @db.VarChar(50)
+  widgetData  Json
+  widgetType  WidgetType
+  shiftData   Boolean?
+  topic       Topic      @relation(fields: [topicId], references: [id])
+  topicId     String     @db.VarChar(36)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@map("Widget")
 }
 
-model DashboardsDevices {
-  device                      Device @relation(fields: [deviceId], references: [id])
-  deviceId                    String @db.VarChar(36)
-  dashboard                   Dashboard @relation(fields: [dashboardId], references: [id])
-  dashboardId                 String @db.VarChar(36)
-  createdAt                   DateTime @default(now())
-  updatedAt                   DateTime @updatedAt()
+model DashboardDevice {
+  device      Device    @relation(fields: [deviceId], references: [id])
+  deviceId    String    @db.VarChar(36)
+  dashboard   Dashboard @relation(fields: [dashboardId], references: [id])
+  dashboardId String    @db.VarChar(36)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt()
 
   @@id([deviceId, dashboardId])
-  @@map("dashboards_devices")
+  @@map("DashboardDevice")
 }
 
 model Device {
-  id                          String @id @default(uuid()) @db.VarChar(36)
-  deviceType                  DeviceType @relation(fields: [deviceTypeId], references: [id])
-  deviceTypeId                String @db.VarChar(36)
-  name                        String @unique @db.VarChar(50)
-  description                 String? @db.Text()
-  isActive                    Boolean
-  createdAt                   DateTime @default(now())
-  updatedAt                   DateTime @updatedAt()
-  dashboards                  DashboardsDevices[]
-  topics                      Topic[]
+  id          String  @id @default(uuid()) @db.VarChar(36)
+  name        String  @unique @db.VarChar(50)
+  description String? @db.Text()
 
-  @@map("devices")
+  deviceType   DeviceType @relation(fields: [deviceTypeId], references: [id])
+  deviceTypeId String     @db.VarChar(36)
+  isActive     Boolean
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  dashboards DashboardDevice[]
+  topics     Topic[]
+
+  @@map("Device")
 }
 
 model DeviceType {
-  id                          String @id @default(uuid()) @db.VarChar(36)
-  name                        String @unique @db.VarChar(50)
-  description                 String? @db.Text()
-  createdAt                   DateTime @default(now())
-  updatedAt                   DateTime @updatedAt()
-  devices                     Device[]
+  id          String  @id @default(uuid()) @db.VarChar(36)
+  name        String  @unique @db.VarChar(50)
+  description String? @db.Text()
 
-  @@map("device_types")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  devices Device[]
+
+  @@map("DeviceType")
 }
 
 model Topic {
-  id                          String @id @default(uuid()) @db.VarChar(36)
-  device                      Device @relation(fields: [deviceId], references: [id])
-  deviceId                    String @db.VarChar(36)
-  name                        String @db.VarChar(50)
-  description                 String? @db.Text()
-  widgetType                  WidgetType?
-  createdAt                   DateTime @default(now())
-  updatedAt                   DateTime @updatedAt()
-  topicEvents                 TopicEvent[]
-  widgets                     Widget[]
+  id          String  @id @default(uuid()) @db.VarChar(36)
+  name        String  @unique @db.VarChar(50)
+  description String? @db.Text()
 
-  @@map("topics")
+  device     Device      @relation(fields: [deviceId], references: [id])
+  deviceId   String      @db.VarChar(36)
+  widgetType WidgetType?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  topicEvents TopicEvent[]
+  widgets     Widget[]
+
+  @@map("Topic")
 }
 
 model TopicEvent {
-  id                          String @id @default(uuid()) @db.VarChar(36)
-  topic                       Topic @relation(fields: [topicId], references: [id])
-  topicId                     String @db.VarChar(36)
-  name                        String @db.VarChar(50)
-  description                 String? @db.Text()
-  eventExpression             String?
-  notificationEmailId         String[] @db.Text()
-  bodyEmail                   String? @db.Text()
-  htmlBodyEmail               String? @db.Text()
-  createdAt                   DateTime @default(now())
-  updatedAt                   DateTime @updatedAt()
+  id              String  @id @default(uuid()) @db.VarChar(36)
+  name            String  @unique @db.VarChar(50)
+  description     String? @db.Text()
+  topic           Topic   @relation(fields: [topicId], references: [id])
+  topicId         String  @db.VarChar(36)
+  eventExpression String?
+  bodyEmail       String? @db.Text()
+  htmlBodyEmail   String? @db.Text()
 
-  @@map("topic_events")
+  notificationEmails NotificationEmailTopicEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@map("TopicEvent")
+}
+
+model NotificationEmailTopicEvent {
+  notificationEmail   NotificationEmail @relation(fields: [notificationEmailId], references: [id])
+  notificationEmailId String            @db.VarChar(36)
+  topicEvent          TopicEvent        @relation(fields: [topicEventId], references: [id])
+  topicEventId        String            @db.VarChar(36)
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt()
+
+  @@id([notificationEmailId, topicEventId])
+  @@map("NotificationEmailTopicEvent")
+}
+
+model NotificationEmail {
+  id          String  @id @default(uuid()) @db.VarChar(36)
+  name        String  @unique @db.VarChar(50)
+  description String? @db.Text()
+  sender      String  @db.Text()
+  recipient   String  @db.Text()
+
+  topicEvents NotificationEmailTopicEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@map("NotificationEmail")
 }

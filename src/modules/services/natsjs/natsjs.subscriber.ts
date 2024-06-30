@@ -5,16 +5,18 @@ import {
 } from '@nestjs/common';
 import {
   ConnectionOptions,
+  KV,
+  KvOptions,
   NatsConnection,
   StringCodec,
   Subscription,
 } from 'nats';
-import { KV, KvOptions } from 'nats/lib/nats-base-client/types';
 import { OtelInstanceCounter, OtelMethodCounter } from 'nestjs-otel';
-import { ThingsBusinessLogic } from '../things.logic';
+import { ThingsUseCase } from './domain/usecase/things.usecase';
 import { NatsjsService } from './natsjs.service';
-import { ISubscriber } from './interfaces/subscriber.interface';
-import appConfig from '@/constants/app.constant';
+import { ISubscriber } from './domain/entities/interfaces/subscriber.interface';
+import appConfig from '@/config/app.config';
+import { ChartUseCase } from './domain/usecase/chart.usecase';
 
 @Injectable()
 @OtelInstanceCounter()
@@ -22,6 +24,10 @@ export class NatsjsSubscriber
   extends NatsjsService
   implements OnApplicationShutdown, OnModuleInit, ISubscriber
 {
+  constructor(private chartUseCase: ChartUseCase) {
+    super();
+  }
+
   private brokerConfig: ConnectionOptions = {
     servers: appConfig.NATS_URL,
     maxReconnectAttempts: 10,
@@ -52,7 +58,7 @@ export class NatsjsSubscriber
   async subscribeThings(subject: string, kv: KV, nats: NatsConnection) {
     this.subscribe(subject, async (sub: Subscription): Promise<void> => {
       for await (const m of sub) {
-        const thingsLogic = new ThingsBusinessLogic(kv, nats);
+        const thingsLogic = new ThingsUseCase(kv, nats, this.chartUseCase);
 
         const subjectParses: string[] = m.subject.split('.');
 

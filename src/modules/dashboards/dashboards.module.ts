@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import AuditService from '../audits/audit.service';
-import { WidgetController } from '../widgets/widgets.controller';
-import { WidgetService } from '../widgets/widgets.service';
-import { DashboardController } from './dashboards.controller';
-import { DashboardService } from './dashboards.service';
-import appConstant from '@/constants/app.constant';
+import appConstant from '@/config/app.config';
+import { DashboardController } from './infrastructure/dashboard.controller';
+import PrismaService from '@/core/base/frameworks/data-services/prisma/prisma.service';
+import { DashboardUseCase } from './domain/usecase/dashboard.usecase';
+import { DashboardRepository } from './data/dashboard.repository';
 
 @Module({
   imports: [
@@ -25,7 +24,8 @@ import appConstant from '@/constants/app.constant';
       },
     ]),
   ],
-  controllers: [DashboardController, WidgetController],
-  providers: [DashboardService, WidgetService, AuditService],
+  controllers: [DashboardController],
+  providers: [PrismaService, DashboardUseCase, DashboardRepository],
+  exports: [DashboardRepository],
 })
 export class DashboardModule {}
