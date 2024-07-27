@@ -39,7 +39,14 @@ export class TopicUseCaseNATS {
   async getTopic(topicId: string): Promise<void> {
     try {
       const result = await this.db.$transaction(async (tx) => {
-        return await this.repository.getById(topicId, tx);
+        return await this.repository.getById(topicId, tx, {
+          topicEvents: {
+            include: {
+              notificationEmails: true,
+            },
+          },
+          widgets: true,
+        });
       });
 
       await this.natsjsSubscriber.kv.put(

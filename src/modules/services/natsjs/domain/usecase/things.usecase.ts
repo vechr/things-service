@@ -1,11 +1,12 @@
 import { KV, NatsConnection, StringCodec } from 'nats';
 import { EventRequesTopicDto, EventSendEmailDto } from '../../../dto';
 import { ChartUseCase } from './chart.usecase';
-import { ITopic, ITopicEvent } from '@/modules/services/natsjs/domain/entities';
 import log from '@/core/base/frameworks/shared/utils/log.util';
+import { TopicEvent } from '@/modules/topic-events/domain/entities/topic-event.entity';
+import { Topic } from '@/modules/topics/domain/entities/topic.entity';
 
 export class ThingsUseCase {
-  public topicData: ITopic | undefined = undefined;
+  public topicData: Topic | undefined = undefined;
 
   constructor(
     private kv: KV,
@@ -38,7 +39,7 @@ export class ThingsUseCase {
     }
   }
 
-  async getTopicKV(topicId: string): Promise<any> {
+  async getTopicKV(topicId: string): Promise<Topic | undefined> {
     const sc = StringCodec();
     // Ambil informasi value dari key
     const e = await this.kv.get(topicId);
@@ -61,7 +62,7 @@ export class ThingsUseCase {
     return undefined;
   }
 
-  public sendEmail(data: string, topicEvent: ITopicEvent[]) {
+  public sendEmail(data: string, topicEvent: TopicEvent[]) {
     const sc = StringCodec();
     topicEvent.map((val) => {
       if (data === val.eventExpression)
@@ -69,7 +70,7 @@ export class ThingsUseCase {
           'notification.email',
           sc.encode(
             new EventSendEmailDto(
-              val.notificationEmailId,
+              val.notificationEmails,
               val.bodyEmail ?? '',
               val.htmlBodyEmail ?? '',
             ).toString(),

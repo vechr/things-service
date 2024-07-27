@@ -1,3 +1,5 @@
+import { NotificationEmail } from '@/modules/notification-emails/domain/entities/notification-email.entity';
+import { Exclude } from 'class-transformer';
 import { TopicEvent } from './topic-event.entity';
 
 export class ListTopicEventSerializer implements TopicEvent {
@@ -10,6 +12,9 @@ export class ListTopicEventSerializer implements TopicEvent {
   id: string;
   createdAt: Date;
   updatedAt: Date;
+
+  @Exclude()
+  notificationEmails: NotificationEmail[];
 }
 
 export class CreateTopicEventSerializer implements TopicEvent {
@@ -22,6 +27,9 @@ export class CreateTopicEventSerializer implements TopicEvent {
   id: string;
   createdAt: Date;
   updatedAt: Date;
+
+  @Exclude()
+  notificationEmails: NotificationEmail[];
 }
 export class UpsertTopicEventSerializer extends CreateTopicEventSerializer {}
 export class UpdateTopicEventSerializer extends CreateTopicEventSerializer {}

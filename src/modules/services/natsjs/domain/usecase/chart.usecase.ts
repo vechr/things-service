@@ -1,36 +1,37 @@
-import { EWidget, IBubble, IMaps, IScatter } from '../entities';
+import { IBubble, IMaps, IScatter } from '../entities';
 import log from '@/core/base/frameworks/shared/utils/log.util';
 import { Injectable } from '@nestjs/common';
+import { $Enums } from '@prisma/client';
 
 @Injectable()
 export class ChartUseCase {
   validation(widgetType: string, data: string): boolean {
     try {
       if (
-        widgetType === EWidget.BAR ||
-        widgetType === EWidget.DOUGHNUT ||
-        widgetType === EWidget.GAUGE ||
-        widgetType === EWidget.LINE ||
-        widgetType === EWidget.PIE ||
-        widgetType === EWidget.POLAR ||
-        widgetType === EWidget.RADAR
+        widgetType === $Enums.WidgetType.BAR ||
+        widgetType === $Enums.WidgetType.DOUGHNUT ||
+        widgetType === $Enums.WidgetType.GAUGE ||
+        widgetType === $Enums.WidgetType.LINE ||
+        widgetType === $Enums.WidgetType.PIE ||
+        widgetType === $Enums.WidgetType.POLAR ||
+        widgetType === $Enums.WidgetType.RADAR
       ) {
         const result = Number(data);
         if (Number.isNaN(result)) {
           log.error("Data wouldn't be store, since type is different");
           return false;
         }
-      } else if (widgetType === EWidget.SCATTER) {
+      } else if (widgetType === $Enums.WidgetType.SCATTER) {
         if (!this.isScatter(JSON.parse(data))) {
           log.error("Data wouldn't be store, since type is not Scatter");
           return false;
         }
-      } else if (widgetType === EWidget.BUBBLE) {
+      } else if (widgetType === $Enums.WidgetType.BUBBLE) {
         if (!this.isBubble(JSON.parse(data))) {
           log.error("Data wouldn't be store, since type is not Bubble");
           return false;
         }
-      } else if (widgetType === EWidget.MAPS) {
+      } else if (widgetType === $Enums.WidgetType.MAPS) {
         if (!this.isMaps(JSON.parse(data))) {
           log.error("Data wouldn't be store, since type is not Maps");
           return false;

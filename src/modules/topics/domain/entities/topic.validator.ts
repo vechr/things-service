@@ -89,7 +89,7 @@ export class CreateTopicValidator
   })
   @IsString()
   @IsOptional()
-  widgetType: $Enums.WidgetType | null;
+  widgetType: $Enums.WidgetType;
 
   @ApiProperty({
     example: '45019372-0879-4f4b-a644-7aafbab23286',
@@ -129,7 +129,7 @@ export class UpdateTopicValidator
   })
   @IsString()
   @IsOptional()
-  widgetType: $Enums.WidgetType | null;
+  widgetType: $Enums.WidgetType;
 
   @ApiProperty({
     example: '45019372-0879-4f4b-a644-7aafbab23286',

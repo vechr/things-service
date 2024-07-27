@@ -1,14 +1,17 @@
 import { TopicEvent } from '@/modules/topic-events/domain/entities/topic-event.entity';
+import { Widget } from '@/modules/widgets/domain/entities/widget.entity';
 import { $Enums } from '@prisma/client';
 import { Exclude } from 'class-transformer';
 import { Topic } from './topic.entity';
 
 export class ListTopicSerializer implements Topic {
   @Exclude()
-  topicEvents: TopicEvent;
+  widgets: Widget[];
+  @Exclude()
+  topicEvents: TopicEvent[];
 
   deviceId: string;
-  widgetType: $Enums.WidgetType | null;
+  widgetType: $Enums.WidgetType;
   name: string;
   description: string | null;
   id: string;
@@ -18,10 +21,12 @@ export class ListTopicSerializer implements Topic {
 
 export class CreateTopicSerializer implements Topic {
   @Exclude()
-  topicEvents: TopicEvent;
+  widgets: Widget[];
+  @Exclude()
+  topicEvents: TopicEvent[];
 
   deviceId: string;
-  widgetType: $Enums.WidgetType | null;
+  widgetType: $Enums.WidgetType;
   name: string;
   description: string | null;
   id: string;
