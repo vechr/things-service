@@ -2,11 +2,13 @@ import { $Enums, Prisma, Topic as TTopic } from '@prisma/client';
 import { IListRequestQuery } from '@/core/base/domain/entities';
 import { BaseEntity } from '@/core/base/domain/entities';
 import { TopicEvent } from '@/modules/topic-events/domain/entities/topic-event.entity';
+import { Widget } from '@/modules/widgets/domain/entities/widget.entity';
 
 export class Topic extends BaseEntity implements TTopic {
   deviceId: string;
-  widgetType: $Enums.WidgetType | null;
-  topicEvents: TopicEvent;
+  widgetType: $Enums.WidgetType;
+  topicEvents: TopicEvent[];
+  widgets: Widget[];
 }
 
 export type OptionalTopic = Partial<Topic>;
@@ -21,7 +23,7 @@ export type TUpdateTopicByIdRequestParams = Pick<Topic, 'id'>;
 export type TDeleteTopicByIdRequestParams = Pick<Topic, 'id'>;
 export type TCreateTopicRequestBody = Omit<
   Topic,
-  'id' | 'createdAt' | 'updatedAt' | 'topicEvents'
+  'id' | 'createdAt' | 'updatedAt' | 'topicEvents' | 'widgets'
 >;
 export type TUpsertTopicRequestBody = TCreateTopicRequestBody;
 export type TUpdateTopicRequestBody = Partial<TCreateTopicRequestBody>;
