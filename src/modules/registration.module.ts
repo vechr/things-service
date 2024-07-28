@@ -3,7 +3,6 @@ import { DashboardModule } from './dashboards/dashboards.module';
 import DeviceTypeModule from './device-types/device-type.module';
 import { DeviceModule } from './devices/device.module';
 import { NotificationEmailModule } from './notification-emails/notification-email.module';
-import { NatsjsModule } from './services/natsjs/natsjs.module';
 import { TopicEventModule } from './topic-events/topic-event.module';
 import { TopicModule } from './topics/topic.module';
 import { WidgetModule } from './widgets/widget.module';
@@ -14,7 +13,6 @@ import { WidgetModule } from './widgets/widget.module';
     DeviceTypeModule,
     DeviceModule,
     NotificationEmailModule,
-    NatsjsModule,
     TopicEventModule,
     TopicModule,
     WidgetModule,
