@@ -6,13 +6,13 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import PrismaService from '@/core/base/frameworks/data-services/prisma/prisma.service';
 import { ClientNats } from '@nestjs/microservices';
-import { NatsjsSubscriber } from '@/modules/services/natsjs/natsjs.subscriber';
 import { DBLoggerRequestValidator } from '../entities/topic.validator';
 import { QueryCreateEvent } from '../entities/topic.entity';
 import { lastValueFrom } from 'rxjs';
 import { StringCodec } from 'nats';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import log from '@/core/base/frameworks/shared/utils/log.util';
+import { NatsService } from '@/core/base/frameworks/data-services/nats/nats.service';
 
 @Injectable()
 export class TopicUseCaseNATS {
@@ -20,7 +20,7 @@ export class TopicUseCaseNATS {
     private readonly db: PrismaService,
     private readonly repository: TopicRepository,
     @Inject('NATS_SERVICE') private readonly dbLoggerClient: ClientNats,
-    private readonly natsjsSubscriber: NatsjsSubscriber,
+    private readonly natsService: NatsService,
   ) {}
 
   async getDataTopic(dto: DBLoggerRequestValidator) {
@@ -49,7 +49,7 @@ export class TopicUseCaseNATS {
         });
       });
 
-      await this.natsjsSubscriber.kv.put(
+      await this.natsService.kv.put(
         result.id,
         StringCodec().encode(JSON.stringify(result)),
       );

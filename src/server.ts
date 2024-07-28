@@ -115,6 +115,9 @@ const httpServer = new Promise(async (resolve, reject) => {
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('/api/things', app, document, option);
 
+    // Ignore Favicon
+    app.use(ignoreFavicon);
+
     const port = process.env.PORT ?? appConfig.APP_PORT;
 
     // express-winston logger makes sense BEFORE the router
@@ -142,3 +145,10 @@ const httpServer = new Promise(async (resolve, reject) => {
     otelSDK.start();
   await Promise.all([httpServer]);
 })();
+
+function ignoreFavicon(req: any, res: any, next: any) {
+  if (req.originalUrl.includes('favicon.ico')) {
+    res.status(204).end();
+  }
+  next();
+}

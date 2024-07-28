@@ -7,6 +7,7 @@ import { TopicUseCase } from './domain/usecase/topic.usecase';
 import { TopicRepository } from './data/topic.repository';
 import { TopicControllerNATS } from './infrastructure/topic-nats.controller';
 import { TopicUseCaseNATS } from './domain/usecase/topic-nats.usecase';
+import { NatsService } from '@/core/base/frameworks/data-services/nats/nats.service';
 
 @Module({
   imports: [
@@ -27,7 +28,13 @@ import { TopicUseCaseNATS } from './domain/usecase/topic-nats.usecase';
     ]),
   ],
   controllers: [TopicController, TopicControllerNATS],
-  providers: [PrismaService, TopicUseCase, TopicUseCaseNATS, TopicRepository],
+  providers: [
+    PrismaService,
+    TopicUseCase,
+    TopicUseCaseNATS,
+    TopicRepository,
+    NatsService,
+  ],
   exports: [TopicRepository],
 })
 export class TopicModule {}
