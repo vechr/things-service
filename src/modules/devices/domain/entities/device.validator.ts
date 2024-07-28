@@ -11,10 +11,7 @@ import { Device, Prisma } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   TCreateDeviceRequestBody,
-  TDeleteDeviceByIdRequestParams,
-  TGetDeviceByIdRequestParams,
   TListDeviceRequestQuery,
-  TUpdateDeviceByIdRequestParams,
   TUpdateDeviceRequestBody,
   TUpsertDeviceRequestBody,
 } from './device.entity';
@@ -27,7 +24,6 @@ import {
 } from '@/core/base/domain/entities';
 import {
   CreateValidator,
-  IDValidator,
   IDsValidator,
   UpdateValidator,
 } from '@/core/base/domain/entities/validator.entity';
@@ -99,18 +95,6 @@ export class CreateDeviceValidator
   @IsNotEmpty()
   deviceTypeId: string;
 }
-
-export class UpdateDeviceParamsValidator
-  extends IDValidator
-  implements TUpdateDeviceByIdRequestParams {}
-
-export class GetDeviceParamsValidator
-  extends IDValidator
-  implements TGetDeviceByIdRequestParams {}
-
-export class DeleteDeviceParamsValidator
-  extends IDValidator
-  implements TDeleteDeviceByIdRequestParams {}
 
 export class DeleteDeviceBatchBodyValidator extends IDsValidator {}
 

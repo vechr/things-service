@@ -10,10 +10,7 @@ import { Topic, Prisma, $Enums } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   TCreateTopicRequestBody,
-  TDeleteTopicByIdRequestParams,
-  TGetTopicByIdRequestParams,
   TListTopicRequestQuery,
-  TUpdateTopicByIdRequestParams,
   TUpdateTopicRequestBody,
   TUpsertTopicRequestBody,
 } from './topic.entity';
@@ -26,7 +23,6 @@ import {
 } from '@/core/base/domain/entities';
 import {
   CreateValidator,
-  IDValidator,
   IDsValidator,
   UpdateValidator,
 } from '@/core/base/domain/entities/validator.entity';
@@ -99,18 +95,6 @@ export class CreateTopicValidator
   @IsNotEmpty()
   deviceId: string;
 }
-
-export class UpdateTopicParamsValidator
-  extends IDValidator
-  implements TUpdateTopicByIdRequestParams {}
-
-export class GetTopicParamsValidator
-  extends IDValidator
-  implements TGetTopicByIdRequestParams {}
-
-export class DeleteTopicParamsValidator
-  extends IDValidator
-  implements TDeleteTopicByIdRequestParams {}
 
 export class DeleteTopicBatchBodyValidator extends IDsValidator {}
 

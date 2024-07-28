@@ -10,10 +10,7 @@ import { NotificationEmail, Prisma } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   TCreateNotificationEmailRequestBody,
-  TDeleteNotificationEmailByIdRequestParams,
-  TGetNotificationEmailByIdRequestParams,
   TListNotificationEmailRequestQuery,
-  TUpdateNotificationEmailByIdRequestParams,
   TUpdateNotificationEmailRequestBody,
   TUpsertNotificationEmailRequestBody,
 } from './notification-email.entity';
@@ -26,7 +23,6 @@ import {
 } from '@/core/base/domain/entities';
 import {
   CreateValidator,
-  IDValidator,
   IDsValidator,
   UpdateValidator,
 } from '@/core/base/domain/entities/validator.entity';
@@ -98,18 +94,6 @@ export class CreateNotificationEmailValidator
   @IsNotEmpty()
   recipient: string;
 }
-
-export class UpdateNotificationEmailParamsValidator
-  extends IDValidator
-  implements TUpdateNotificationEmailByIdRequestParams {}
-
-export class GetNotificationEmailParamsValidator
-  extends IDValidator
-  implements TGetNotificationEmailByIdRequestParams {}
-
-export class DeleteNotificationEmailParamsValidator
-  extends IDValidator
-  implements TDeleteNotificationEmailByIdRequestParams {}
 
 export class DeleteNotificationEmailBatchBodyValidator extends IDsValidator {}
 

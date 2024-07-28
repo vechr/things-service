@@ -19,9 +19,6 @@ export type TListWidgetRequestQuery<P> = IListRequestQuery<
   Widget,
   Prisma.WidgetWhereInput
 >;
-export type TGetWidgetByIdRequestParams = Pick<Widget, 'id'>;
-export type TUpdateWidgetByIdRequestParams = Pick<Widget, 'id'>;
-export type TDeleteWidgetByIdRequestParams = Pick<Widget, 'id'>;
 export type TCreateWidgetRequestBody = Omit<
   Widget,
   'id' | 'createdAt' | 'updatedAt'

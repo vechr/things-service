@@ -19,9 +19,6 @@ export type TListTopicEventRequestQuery<P> = IListRequestQuery<
   TopicEvent,
   Prisma.TopicEventWhereInput
 >;
-export type TGetTopicEventByIdRequestParams = Pick<TopicEvent, 'id'>;
-export type TUpdateTopicEventByIdRequestParams = Pick<TopicEvent, 'id'>;
-export type TDeleteTopicEventByIdRequestParams = Pick<TopicEvent, 'id'>;
 export type TCreateTopicEventRequestBody = Omit<
   TopicEvent,
   'id' | 'createdAt' | 'updatedAt' | 'notificationEmails'

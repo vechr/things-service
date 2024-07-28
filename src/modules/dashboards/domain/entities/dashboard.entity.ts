@@ -30,9 +30,6 @@ export type TListDashboardRequestQuery<P> = IListRequestQuery<
   Dashboard,
   Prisma.DashboardWhereInput
 >;
-export type TGetDashboardByIdRequestParams = Pick<Dashboard, 'id'>;
-export type TUpdateDashboardByIdRequestParams = Pick<Dashboard, 'id'>;
-export type TDeleteDashboardByIdRequestParams = Pick<Dashboard, 'id'>;
 export type TCreateDashboardRequestBody = Omit<
   Dashboard,
   'id' | 'createdAt' | 'updatedAt' | 'devices'

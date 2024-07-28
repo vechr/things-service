@@ -11,10 +11,7 @@ import { TopicEvent, Prisma } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   TCreateTopicEventRequestBody,
-  TDeleteTopicEventByIdRequestParams,
-  TGetTopicEventByIdRequestParams,
   TListTopicEventRequestQuery,
-  TUpdateTopicEventByIdRequestParams,
   TUpdateTopicEventRequestBody,
   TUpsertTopicEventRequestBody,
 } from './topic-event.entity';
@@ -27,7 +24,6 @@ import {
 } from '@/core/base/domain/entities';
 import {
   CreateValidator,
-  IDValidator,
   IDsValidator,
   UpdateValidator,
 } from '@/core/base/domain/entities/validator.entity';
@@ -117,18 +113,6 @@ export class CreateTopicEventValidator
   @IsOptional()
   htmlBodyEmail: string;
 }
-
-export class UpdateTopicEventParamsValidator
-  extends IDValidator
-  implements TUpdateTopicEventByIdRequestParams {}
-
-export class GetTopicEventParamsValidator
-  extends IDValidator
-  implements TGetTopicEventByIdRequestParams {}
-
-export class DeleteTopicEventParamsValidator
-  extends IDValidator
-  implements TDeleteTopicEventByIdRequestParams {}
 
 export class DeleteTopicEventBatchBodyValidator extends IDsValidator {}
 

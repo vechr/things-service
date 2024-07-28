@@ -12,13 +12,10 @@ import {
 import {
   CreateDeviceTypeValidator,
   DeleteDeviceTypeBatchBodyValidator,
-  DeleteDeviceTypeParamsValidator,
   FilterCursorDeviceTypeQueryValidator,
   FilterPaginationDeviceTypeQueryValidator,
-  GetDeviceTypeParamsValidator,
   ListCursorDeviceTypeQueryValidator,
   ListPaginationDeviceTypeQueryValidator,
-  UpdateDeviceTypeParamsValidator,
   UpdateDeviceTypeValidator,
   UpsertDeviceTypeValidator,
 } from '@/modules/device-types/domain/entities/device-type.validator';
@@ -31,11 +28,8 @@ import { OtelInstanceCounter } from 'nestjs-otel';
 export class DeviceTypeController extends ControllerFactory<
   UpsertDeviceTypeValidator,
   CreateDeviceTypeValidator,
-  GetDeviceTypeParamsValidator,
   UpdateDeviceTypeValidator,
-  UpdateDeviceTypeParamsValidator,
-  DeleteDeviceTypeBatchBodyValidator,
-  DeleteDeviceTypeParamsValidator
+  DeleteDeviceTypeBatchBodyValidator
 >(
   'device-type',
   'device-type',
@@ -49,13 +43,10 @@ export class DeviceTypeController extends ControllerFactory<
   CreateDeviceTypeSerializer,
   CreateDeviceTypeValidator,
   GetDeviceTypeSerializer,
-  GetDeviceTypeParamsValidator,
   UpdateDeviceTypeSerializer,
   UpdateDeviceTypeValidator,
-  UpdateDeviceTypeParamsValidator,
   DeleteDeviceTypeSerializer,
   DeleteDeviceTypeBatchBodyValidator,
-  DeleteDeviceTypeParamsValidator,
 ) {
   constructor(public _usecase: DeviceTypeUseCase) {
     super();

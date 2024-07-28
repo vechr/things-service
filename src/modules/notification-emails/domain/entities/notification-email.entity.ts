@@ -20,18 +20,6 @@ export type TListNotificationEmailRequestQuery<P> = IListRequestQuery<
   NotificationEmail,
   Prisma.NotificationEmailWhereInput
 >;
-export type TGetNotificationEmailByIdRequestParams = Pick<
-  NotificationEmail,
-  'id'
->;
-export type TUpdateNotificationEmailByIdRequestParams = Pick<
-  NotificationEmail,
-  'id'
->;
-export type TDeleteNotificationEmailByIdRequestParams = Pick<
-  NotificationEmail,
-  'id'
->;
 export type TCreateNotificationEmailRequestBody = Omit<
   NotificationEmail,
   'id' | 'createdAt' | 'updatedAt'
