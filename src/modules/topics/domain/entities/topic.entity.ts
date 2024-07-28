@@ -18,9 +18,6 @@ export type TListTopicRequestQuery<P> = IListRequestQuery<
   Topic,
   Prisma.TopicWhereInput
 >;
-export type TGetTopicByIdRequestParams = Pick<Topic, 'id'>;
-export type TUpdateTopicByIdRequestParams = Pick<Topic, 'id'>;
-export type TDeleteTopicByIdRequestParams = Pick<Topic, 'id'>;
 export type TCreateTopicRequestBody = Omit<
   Topic,
   'id' | 'createdAt' | 'updatedAt' | 'topicEvents' | 'widgets'

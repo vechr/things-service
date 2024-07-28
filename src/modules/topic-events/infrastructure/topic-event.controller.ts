@@ -12,13 +12,10 @@ import {
 import {
   CreateTopicEventValidator,
   DeleteTopicEventBatchBodyValidator,
-  DeleteTopicEventParamsValidator,
   FilterCursorTopicEventQueryValidator,
   FilterPaginationTopicEventQueryValidator,
-  GetTopicEventParamsValidator,
   ListCursorTopicEventQueryValidator,
   ListPaginationTopicEventQueryValidator,
-  UpdateTopicEventParamsValidator,
   UpdateTopicEventValidator,
   UpsertTopicEventValidator,
 } from '@/modules/topic-events/domain/entities/topic-event.validator';
@@ -31,11 +28,8 @@ import { OtelInstanceCounter } from 'nestjs-otel';
 export class TopicEventController extends ControllerFactory<
   UpsertTopicEventValidator,
   CreateTopicEventValidator,
-  GetTopicEventParamsValidator,
   UpdateTopicEventValidator,
-  UpdateTopicEventParamsValidator,
-  DeleteTopicEventBatchBodyValidator,
-  DeleteTopicEventParamsValidator
+  DeleteTopicEventBatchBodyValidator
 >(
   'topic-event',
   'topic-event',
@@ -49,13 +43,10 @@ export class TopicEventController extends ControllerFactory<
   CreateTopicEventSerializer,
   CreateTopicEventValidator,
   GetTopicEventSerializer,
-  GetTopicEventParamsValidator,
   UpdateTopicEventSerializer,
   UpdateTopicEventValidator,
-  UpdateTopicEventParamsValidator,
   DeleteTopicEventSerializer,
   DeleteTopicEventBatchBodyValidator,
-  DeleteTopicEventParamsValidator,
 ) {
   constructor(public _usecase: TopicEventUseCase) {
     super();

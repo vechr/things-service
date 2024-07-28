@@ -12,14 +12,11 @@ import {
 import {
   CreateWidgetValidator,
   DeleteWidgetBatchBodyValidator,
-  DeleteWidgetParamsValidator,
   FilterCursorWidgetQueryValidator,
   FilterPaginationWidgetQueryValidator,
   GetWidgetByDashboardIdParamsValidator,
-  GetWidgetParamsValidator,
   ListCursorWidgetQueryValidator,
   ListPaginationWidgetQueryValidator,
-  UpdateWidgetParamsValidator,
   UpdateWidgetValidator,
   UpsertWidgetValidator,
 } from '@/modules/widgets/domain/entities/widget.validator';
@@ -35,11 +32,8 @@ import SuccessResponse from '@/core/base/frameworks/shared/responses/success.res
 export class WidgetController extends ControllerFactory<
   UpsertWidgetValidator,
   CreateWidgetValidator,
-  GetWidgetParamsValidator,
   UpdateWidgetValidator,
-  UpdateWidgetParamsValidator,
-  DeleteWidgetBatchBodyValidator,
-  DeleteWidgetParamsValidator
+  DeleteWidgetBatchBodyValidator
 >(
   'widget',
   'widget',
@@ -53,13 +47,10 @@ export class WidgetController extends ControllerFactory<
   CreateWidgetSerializer,
   CreateWidgetValidator,
   GetWidgetSerializer,
-  GetWidgetParamsValidator,
   UpdateWidgetSerializer,
   UpdateWidgetValidator,
-  UpdateWidgetParamsValidator,
   DeleteWidgetSerializer,
   DeleteWidgetBatchBodyValidator,
-  DeleteWidgetParamsValidator,
 ) {
   constructor(public _usecase: WidgetUseCase) {
     super();

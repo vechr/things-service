@@ -13,13 +13,10 @@ import {
   CreateTopicValidator,
   DBLoggerRequestValidator,
   DeleteTopicBatchBodyValidator,
-  DeleteTopicParamsValidator,
   FilterCursorTopicQueryValidator,
   FilterPaginationTopicQueryValidator,
-  GetTopicParamsValidator,
   ListCursorTopicQueryValidator,
   ListPaginationTopicQueryValidator,
-  UpdateTopicParamsValidator,
   UpdateTopicValidator,
   UpsertTopicValidator,
 } from '@/modules/topics/domain/entities/topic.validator';
@@ -36,11 +33,8 @@ import { TopicUseCaseNATS } from '../domain/usecase/topic-nats.usecase';
 export class TopicController extends ControllerFactory<
   UpsertTopicValidator,
   CreateTopicValidator,
-  GetTopicParamsValidator,
   UpdateTopicValidator,
-  UpdateTopicParamsValidator,
-  DeleteTopicBatchBodyValidator,
-  DeleteTopicParamsValidator
+  DeleteTopicBatchBodyValidator
 >(
   'topic',
   'topic',
@@ -54,13 +48,10 @@ export class TopicController extends ControllerFactory<
   CreateTopicSerializer,
   CreateTopicValidator,
   GetTopicSerializer,
-  GetTopicParamsValidator,
   UpdateTopicSerializer,
   UpdateTopicValidator,
-  UpdateTopicParamsValidator,
   DeleteTopicSerializer,
   DeleteTopicBatchBodyValidator,
-  DeleteTopicParamsValidator,
 ) {
   constructor(
     public _usecase: TopicUseCase,

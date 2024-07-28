@@ -18,9 +18,6 @@ export type TListDeviceRequestQuery<P> = IListRequestQuery<
   Device,
   Prisma.DeviceWhereInput
 >;
-export type TGetDeviceByIdRequestParams = Pick<Device, 'id'>;
-export type TUpdateDeviceByIdRequestParams = Pick<Device, 'id'>;
-export type TDeleteDeviceByIdRequestParams = Pick<Device, 'id'>;
 export type TCreateDeviceRequestBody = Omit<
   Device,
   'id' | 'createdAt' | 'updatedAt' | 'deviceType' | 'topics'

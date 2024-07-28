@@ -11,9 +11,6 @@ export type TListDeviceTypeRequestQuery<P> = IListRequestQuery<
   DeviceType,
   Prisma.DeviceTypeWhereInput
 >;
-export type TGetDeviceTypeByIdRequestParams = Pick<DeviceType, 'id'>;
-export type TUpdateDeviceTypeByIdRequestParams = Pick<DeviceType, 'id'>;
-export type TDeleteDeviceTypeByIdRequestParams = Pick<DeviceType, 'id'>;
 export type TCreateDeviceTypeRequestBody = Omit<
   DeviceType,
   'id' | 'createdAt' | 'updatedAt'

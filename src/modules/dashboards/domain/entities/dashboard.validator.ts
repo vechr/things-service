@@ -4,10 +4,7 @@ import { Dashboard, Prisma } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   TCreateDashboardRequestBody,
-  TDeleteDashboardByIdRequestParams,
-  TGetDashboardByIdRequestParams,
   TListDashboardRequestQuery,
-  TUpdateDashboardByIdRequestParams,
   TUpdateDashboardRequestBody,
   TUpsertDashboardRequestBody,
 } from './dashboard.entity';
@@ -20,7 +17,6 @@ import {
 } from '@/core/base/domain/entities';
 import {
   CreateValidator,
-  IDValidator,
   IDsValidator,
   UpdateValidator,
 } from '@/core/base/domain/entities/validator.entity';
@@ -75,18 +71,6 @@ export class FilterPaginationDashboardQueryValidator
 export class CreateDashboardValidator
   extends CreateValidator
   implements TCreateDashboardRequestBody {}
-
-export class UpdateDashboardParamsValidator
-  extends IDValidator
-  implements TUpdateDashboardByIdRequestParams {}
-
-export class GetDashboardParamsValidator
-  extends IDValidator
-  implements TGetDashboardByIdRequestParams {}
-
-export class DeleteDashboardParamsValidator
-  extends IDValidator
-  implements TDeleteDashboardByIdRequestParams {}
 
 export class DeleteDashboardBatchBodyValidator extends IDsValidator {}
 

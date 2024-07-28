@@ -12,13 +12,10 @@ import {
 import {
   CreateNotificationEmailValidator,
   DeleteNotificationEmailBatchBodyValidator,
-  DeleteNotificationEmailParamsValidator,
   FilterCursorNotificationEmailQueryValidator,
   FilterPaginationNotificationEmailQueryValidator,
-  GetNotificationEmailParamsValidator,
   ListCursorNotificationEmailQueryValidator,
   ListPaginationNotificationEmailQueryValidator,
-  UpdateNotificationEmailParamsValidator,
   UpdateNotificationEmailValidator,
   UpsertNotificationEmailValidator,
 } from '@/modules/notification-emails/domain/entities/notification-email.validator';
@@ -31,11 +28,8 @@ import { OtelInstanceCounter } from 'nestjs-otel';
 export class NotificationEmailController extends ControllerFactory<
   UpsertNotificationEmailValidator,
   CreateNotificationEmailValidator,
-  GetNotificationEmailParamsValidator,
   UpdateNotificationEmailValidator,
-  UpdateNotificationEmailParamsValidator,
-  DeleteNotificationEmailBatchBodyValidator,
-  DeleteNotificationEmailParamsValidator
+  DeleteNotificationEmailBatchBodyValidator
 >(
   'notification-email',
   'notification-email',
@@ -49,13 +43,10 @@ export class NotificationEmailController extends ControllerFactory<
   CreateNotificationEmailSerializer,
   CreateNotificationEmailValidator,
   GetNotificationEmailSerializer,
-  GetNotificationEmailParamsValidator,
   UpdateNotificationEmailSerializer,
   UpdateNotificationEmailValidator,
-  UpdateNotificationEmailParamsValidator,
   DeleteNotificationEmailSerializer,
   DeleteNotificationEmailBatchBodyValidator,
-  DeleteNotificationEmailParamsValidator,
 ) {
   constructor(public _usecase: NotificationEmailUseCase) {
     super();

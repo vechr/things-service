@@ -13,10 +13,7 @@ import { Widget, Prisma, $Enums } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   TCreateWidgetRequestBody,
-  TDeleteWidgetByIdRequestParams,
-  TGetWidgetByIdRequestParams,
   TListWidgetRequestQuery,
-  TUpdateWidgetByIdRequestParams,
   TUpdateWidgetRequestBody,
   TUpsertWidgetRequestBody,
 } from './widget.entity';
@@ -29,7 +26,6 @@ import {
 } from '@/core/base/domain/entities';
 import {
   CreateValidator,
-  IDValidator,
   IDsValidator,
   UpdateValidator,
 } from '@/core/base/domain/entities/validator.entity';
@@ -163,18 +159,6 @@ export class CreateWidgetValidator
   @IsNotEmpty()
   topicId: string;
 }
-
-export class UpdateWidgetParamsValidator
-  extends IDValidator
-  implements TUpdateWidgetByIdRequestParams {}
-
-export class GetWidgetParamsValidator
-  extends IDValidator
-  implements TGetWidgetByIdRequestParams {}
-
-export class DeleteWidgetParamsValidator
-  extends IDValidator
-  implements TDeleteWidgetByIdRequestParams {}
 
 export class DeleteWidgetBatchBodyValidator extends IDsValidator {}
 

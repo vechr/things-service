@@ -12,13 +12,10 @@ import {
 import {
   CreateDashboardValidator,
   DeleteDashboardBatchBodyValidator,
-  DeleteDashboardParamsValidator,
   FilterCursorDashboardQueryValidator,
   FilterPaginationDashboardQueryValidator,
-  GetDashboardParamsValidator,
   ListCursorDashboardQueryValidator,
   ListPaginationDashboardQueryValidator,
-  UpdateDashboardParamsValidator,
   UpdateDashboardValidator,
   UpsertDashboardValidator,
 } from '@/modules/dashboards/domain/entities/dashboard.validator';
@@ -34,11 +31,8 @@ import SuccessResponse from '@/core/base/frameworks/shared/responses/success.res
 export class DashboardController extends ControllerFactory<
   UpsertDashboardValidator,
   CreateDashboardValidator,
-  GetDashboardParamsValidator,
   UpdateDashboardValidator,
-  UpdateDashboardParamsValidator,
-  DeleteDashboardBatchBodyValidator,
-  DeleteDashboardParamsValidator
+  DeleteDashboardBatchBodyValidator
 >(
   'dashboard',
   'dashboard',
@@ -52,13 +46,10 @@ export class DashboardController extends ControllerFactory<
   CreateDashboardSerializer,
   CreateDashboardValidator,
   GetDashboardSerializer,
-  GetDashboardParamsValidator,
   UpdateDashboardSerializer,
   UpdateDashboardValidator,
-  UpdateDashboardParamsValidator,
   DeleteDashboardSerializer,
   DeleteDashboardBatchBodyValidator,
-  DeleteDashboardParamsValidator,
 ) {
   constructor(public _usecase: DashboardUseCase) {
     super();
