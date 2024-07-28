@@ -9,7 +9,6 @@ import HttpExceptionFilter from '@filters/http.filter';
 import UnknownExceptionsFilter from '@filters/unknown.filter';
 import * as expressWinston from 'express-winston';
 import otelSDK from './tracing';
-import appConstant from './config/app.config';
 import ContextInterceptor from './core/base/frameworks/shared/interceptors/context.interceptor';
 import {
   log,
@@ -41,12 +40,12 @@ const httpServer = new Promise(async (resolve, reject) => {
     app.connectMicroservice<MicroserviceOptions>({
       transport: Transport.NATS,
       options: {
-        servers: [appConstant.NATS_URL],
+        servers: [appConfig.NATS_URL],
         maxReconnectAttempts: 10,
         tls: {
-          caFile: appConstant.NATS_CA,
-          keyFile: appConstant.NATS_KEY,
-          certFile: appConstant.NATS_CERT,
+          caFile: appConfig.NATS_CA,
+          keyFile: appConfig.NATS_KEY,
+          certFile: appConfig.NATS_CERT,
         },
       },
     });
@@ -70,7 +69,7 @@ const httpServer = new Promise(async (resolve, reject) => {
 
     // Versioning of default URL V1
     app.enableVersioning({
-      defaultVersion: '1',
+      defaultVersion: '1/things',
       type: VersioningType.URI,
     });
 
@@ -141,8 +140,7 @@ const httpServer = new Promise(async (resolve, reject) => {
 });
 
 (async function () {
-  if (appConstant.OTLP_HTTP_URL && appConstant.OTLP_HTTP_URL != '')
-    otelSDK.start();
+  if (appConfig.OTLP_HTTP_URL && appConfig.OTLP_HTTP_URL != '') otelSDK.start();
   await Promise.all([httpServer]);
 })();
 
