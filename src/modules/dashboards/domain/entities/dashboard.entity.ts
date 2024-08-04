@@ -33,6 +33,8 @@ export type TListDashboardRequestQuery<P> = IListRequestQuery<
 export type TCreateDashboardRequestBody = Omit<
   Dashboard,
   'id' | 'createdAt' | 'updatedAt' | 'devices'
->;
+> & {
+  devices: string[];
+};
 export type TUpsertDashboardRequestBody = TCreateDashboardRequestBody;
 export type TUpdateDashboardRequestBody = Partial<TCreateDashboardRequestBody>;

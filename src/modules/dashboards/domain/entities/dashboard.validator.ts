@@ -1,5 +1,5 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsObject, IsOptional, ValidateNested } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsArray, IsObject, IsOptional, ValidateNested } from 'class-validator';
 import { Dashboard, Prisma } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
@@ -70,7 +70,15 @@ export class FilterPaginationDashboardQueryValidator
 
 export class CreateDashboardValidator
   extends CreateValidator
-  implements TCreateDashboardRequestBody {}
+  implements TCreateDashboardRequestBody
+{
+  @ApiProperty({
+    example: ['d8beca16-5296-458a-bc8a-609d217fed08'],
+    description: 'You can attach device into this dashboard!',
+  })
+  @IsArray()
+  devices: string[];
+}
 
 export class DeleteDashboardBatchBodyValidator extends IDsValidator {}
 

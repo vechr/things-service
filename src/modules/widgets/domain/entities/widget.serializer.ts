@@ -1,11 +1,11 @@
-import { $Enums, Prisma } from '@prisma/client';
+import { $Enums } from '@prisma/client';
 import { Widget } from './widget.entity';
 
 export class ListWidgetSerializer implements Widget {
   dashboardId: string;
-  node: Prisma.JsonValue;
+  node: string;
   nodeId: string;
-  widgetData: Prisma.JsonValue;
+  widgetData: string;
   widgetType: $Enums.WidgetType;
   shiftData: boolean | null;
   topicId: string;
@@ -18,9 +18,9 @@ export class ListWidgetSerializer implements Widget {
 
 export class CreateWidgetSerializer implements Widget {
   dashboardId: string;
-  node: Prisma.JsonValue;
+  node: string;
   nodeId: string;
-  widgetData: Prisma.JsonValue;
+  widgetData: string;
   widgetType: $Enums.WidgetType;
   shiftData: boolean | null;
   topicId: string;

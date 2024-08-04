@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
+  IsArray,
   IsJSON,
   IsNotEmpty,
   IsObject,
@@ -79,6 +80,13 @@ export class CreateTopicEventValidator
   extends CreateValidator
   implements TCreateTopicEventRequestBody
 {
+  @ApiProperty({
+    example: ['d8beca16-5296-458a-bc8a-609d217fed08'],
+    description: 'You can attach topicEvent into this notification email here!',
+  })
+  @IsArray()
+  notificationEmails: string[];
+
   @ApiProperty({
     example: '45019372-0879-4f4b-a644-7aafbab23286',
     description: 'Attach your Topic Type to Topic Event in Here!',
