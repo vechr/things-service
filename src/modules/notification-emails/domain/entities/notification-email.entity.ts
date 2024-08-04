@@ -23,7 +23,9 @@ export type TListNotificationEmailRequestQuery<P> = IListRequestQuery<
 export type TCreateNotificationEmailRequestBody = Omit<
   NotificationEmail,
   'id' | 'createdAt' | 'updatedAt'
->;
+> & {
+  topicEvents: string[];
+};
 export type TUpsertNotificationEmailRequestBody =
   TCreateNotificationEmailRequestBody;
 export type TUpdateNotificationEmailRequestBody =

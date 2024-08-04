@@ -18,7 +18,7 @@ export class WidgetRepository extends BaseRepository<
     super(Widget, cacheManager);
 
     this.defaultInclude = {
-      Dashboard: true,
+      dashboard: true,
       topic: true,
     };
   }

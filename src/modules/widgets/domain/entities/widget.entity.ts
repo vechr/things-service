@@ -4,9 +4,9 @@ import { BaseEntity } from '@/core/base/domain/entities';
 
 export class Widget extends BaseEntity implements TWidget {
   dashboardId: string;
-  node: Prisma.JsonValue;
+  node: string;
   nodeId: string;
-  widgetData: Prisma.JsonValue;
+  widgetData: string;
   widgetType: $Enums.WidgetType;
   shiftData: boolean | null;
   topicId: string;

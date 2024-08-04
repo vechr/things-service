@@ -22,7 +22,9 @@ export type TListTopicEventRequestQuery<P> = IListRequestQuery<
 export type TCreateTopicEventRequestBody = Omit<
   TopicEvent,
   'id' | 'createdAt' | 'updatedAt' | 'notificationEmails'
->;
+> & {
+  notificationEmails: string[];
+};
 export type TUpsertTopicEventRequestBody = TCreateTopicEventRequestBody;
 export type TUpdateTopicEventRequestBody =
   Partial<TCreateTopicEventRequestBody>;

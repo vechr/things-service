@@ -63,7 +63,7 @@ model Widget {
   name        String  @unique @db.VarChar(50)
   description String? @db.Text()
 
-  Dashboard   Dashboard  @relation(fields: [dashboardId], references: [id])
+  dashboard   Dashboard  @relation(fields: [dashboardId], references: [id])
   dashboardId String     @db.VarChar(36)
   node        Json
   nodeId      String     @db.VarChar(50)
