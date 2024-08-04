@@ -10,7 +10,7 @@ import {
   EErrorCommonCode,
   UnknownException,
 } from '@/core/base/frameworks/shared/exceptions/common.exception';
-import { OtelMethodCounter, Span } from 'nestjs-otel';
+import { OtelMethodCounter, Span, TraceService } from 'nestjs-otel';
 
 @Injectable()
 export class WidgetUseCase extends BaseUseCase<
@@ -25,21 +25,30 @@ export class WidgetUseCase extends BaseUseCase<
   constructor(
     protected repository: WidgetRepository,
     db: PrismaService,
+    traceService: TraceService,
   ) {
-    super(repository, db);
+    super(repository, db, traceService);
   }
 
   @OtelMethodCounter()
   @Span('usecase get all widget by dashboard id')
   async getAllWidgetByDashboardId(dashboardId: string): Promise<Widget[]> {
+    const span = this.traceService.getSpan();
+
     try {
       return await this.db.$transaction(async (tx) => {
-        return await this.repository.getMany(tx, undefined, undefined, {
+        span?.addEvent('call the repository of getMany');
+
+        const result = await this.repository.getMany(tx, undefined, undefined, {
           dashboardId,
         });
+
+        span?.setStatus({ code: 1, message: 'usecase finish!' });
+        return result;
       });
     } catch (error: any) {
       if (error instanceof PrismaClientKnownRequestError) {
+        span?.setStatus({ code: 2, message: error.message });
         log.error(error.message);
         throw new UnknownException({
           code: EErrorCommonCode.INTERNAL_SERVER_ERROR,

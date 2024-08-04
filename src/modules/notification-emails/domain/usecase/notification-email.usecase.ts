@@ -4,6 +4,7 @@ import { NotificationEmail } from '../entities/notification-email.entity';
 import { Prisma } from '@prisma/client';
 import { NotificationEmailRepository } from '../../data/notification-email.repository';
 import PrismaService from '@/core/base/frameworks/data-services/prisma/prisma.service';
+import { TraceService } from 'nestjs-otel';
 
 @Injectable()
 export class NotificationEmailUseCase extends BaseUseCase<
@@ -25,7 +26,8 @@ export class NotificationEmailUseCase extends BaseUseCase<
   constructor(
     protected repository: NotificationEmailRepository,
     db: PrismaService,
+    traceService: TraceService,
   ) {
-    super(repository, db);
+    super(repository, db, traceService);
   }
 }

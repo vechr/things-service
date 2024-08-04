@@ -4,6 +4,7 @@ import { Topic } from '../entities/topic.entity';
 import { Prisma } from '@prisma/client';
 import { TopicRepository } from '../../data/topic.repository';
 import PrismaService from '@/core/base/frameworks/data-services/prisma/prisma.service';
+import { TraceService } from 'nestjs-otel';
 
 @Injectable()
 export class TopicUseCase extends BaseUseCase<
@@ -18,7 +19,8 @@ export class TopicUseCase extends BaseUseCase<
   constructor(
     protected repository: TopicRepository,
     db: PrismaService,
+    traceService: TraceService,
   ) {
-    super(repository, db);
+    super(repository, db, traceService);
   }
 }

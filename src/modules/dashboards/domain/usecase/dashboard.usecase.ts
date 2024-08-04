@@ -4,7 +4,7 @@ import { Dashboard, DashboardWithMapping } from '../entities/dashboard.entity';
 import { Prisma } from '@prisma/client';
 import { DashboardRepository } from '../../data/dashboard.repository';
 import PrismaService from '@/core/base/frameworks/data-services/prisma/prisma.service';
-import { OtelMethodCounter, Span } from 'nestjs-otel';
+import { OtelMethodCounter, Span, TraceService } from 'nestjs-otel';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import log from '@/core/base/frameworks/shared/utils/log.util';
 import {
@@ -25,15 +25,19 @@ export class DashboardUseCase extends BaseUseCase<
   constructor(
     protected repository: DashboardRepository,
     db: PrismaService,
+    traceService: TraceService,
   ) {
-    super(repository, db);
+    super(repository, db, traceService);
   }
 
   @OtelMethodCounter()
-  @Span('usecase get all dashboard with Details')
+  @Span('usecase get all dashboard with details')
   async getAllDashboardWithDetails(): Promise<DashboardWithMapping[]> {
+    const span = this.traceService.getSpan();
     try {
       return await this.db.$transaction(async (tx) => {
+        span?.addEvent('call the repository of getMany');
+
         const result = await this.repository.getMany(tx, {
           devices: {
             include: {
@@ -51,9 +55,11 @@ export class DashboardUseCase extends BaseUseCase<
           },
         });
 
+        span?.setStatus({ code: 1, message: 'usecase finish!' });
         return this.dashboardListMapping(result);
       });
     } catch (error: any) {
+      span?.setStatus({ code: 2, message: error.message });
       if (error instanceof PrismaClientKnownRequestError) {
         log.error(error.message);
         throw new UnknownException({
