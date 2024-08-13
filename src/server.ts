@@ -51,7 +51,7 @@ const httpServer = new Promise(async (resolve, reject) => {
     });
 
     // Set prefix api globally
-    app.setGlobalPrefix('api', { exclude: ['health', '/'] });
+    app.setGlobalPrefix('api/things');
 
     // Enable CORS for security
     app.enableCors({
@@ -69,7 +69,7 @@ const httpServer = new Promise(async (resolve, reject) => {
 
     // Versioning of default URL V1
     app.enableVersioning({
-      defaultVersion: '1/things',
+      defaultVersion: '1',
       type: VersioningType.URI,
     });
 
@@ -79,7 +79,7 @@ const httpServer = new Promise(async (resolve, reject) => {
     // Serve public images
     app.use(
       '/api/things/public',
-      express.static(join(__dirname, '..', 'public')),
+      express.static(join(__dirname, '../', 'public')),
     );
 
     // Use Cookie for http only
@@ -112,7 +112,7 @@ const httpServer = new Promise(async (resolve, reject) => {
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('/api/things', app, document, option);
+    SwaggerModule.setup('/api/things/docs', app, document, option);
 
     // Ignore Favicon
     app.use(ignoreFavicon);
@@ -145,7 +145,7 @@ const httpServer = new Promise(async (resolve, reject) => {
 })();
 
 function ignoreFavicon(req: any, res: any, next: any) {
-  if (req.originalUrl.includes('favicon.ico')) {
+  if (req.originalUrl.includes('/favicon.ico')) {
     res.status(204).end();
   }
   next();
