@@ -56,12 +56,12 @@ export class WidgetController extends ControllerFactory<
     super();
   }
 
-  @Get()
+  @Get('/:dashboardId')
   @Authentication(true)
   @Authorization('widget:read@auth')
   @ApiParam({
     type: GetWidgetByDashboardIdParamsValidator,
-    name: 'id',
+    name: 'dashboardId',
     example: '1def564a-42d9-4a94-9bf8-c9c6e4d796a6',
     description: 'ID!',
   })
