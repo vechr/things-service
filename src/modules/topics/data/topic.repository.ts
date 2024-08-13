@@ -19,6 +19,7 @@ export class TopicRepository extends BaseRepository<
 
     this.defaultInclude = {
       topicEvents: true,
+      widgets: true,
     };
   }
 }

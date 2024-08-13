@@ -1,10 +1,9 @@
 import { DeviceType } from '@/modules/device-types/domain/entities/device-type.entity';
 import { Topic } from '@/modules/topics/domain/entities/topic.entity';
-import { Exclude } from 'class-transformer';
 import { Device } from './device.entity';
+import { Exclude } from 'class-transformer';
 
 export class ListDeviceSerializer implements Device {
-  @Exclude()
   deviceType: DeviceType;
   @Exclude()
   topics: Topic[];
@@ -19,7 +18,6 @@ export class ListDeviceSerializer implements Device {
 }
 
 export class CreateDeviceSerializer implements Device {
-  @Exclude()
   deviceType: DeviceType;
   @Exclude()
   topics: Topic[];

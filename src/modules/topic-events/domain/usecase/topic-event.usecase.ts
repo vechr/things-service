@@ -81,6 +81,7 @@ export class TopicEventUseCase extends BaseUseCase<
           eventExpression: body.eventExpression,
           htmlBodyEmail: body.htmlBodyEmail,
           notificationEmails: {
+            deleteMany: {},
             create: body.notificationEmails.map((notifEmail) => ({
               notificationEmail: { connect: { id: notifEmail } },
             })),
