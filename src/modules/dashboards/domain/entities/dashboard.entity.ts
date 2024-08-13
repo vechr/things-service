@@ -19,10 +19,6 @@ export class DashboardDevice implements TDashboardDevice {
   device: Device;
 }
 
-export class DashboardWithMapping extends BaseEntity implements TDashboard {
-  devices: Device[];
-}
-
 export type OptionalDashboard = Partial<Dashboard>;
 export type RequiredDashboard = Required<Dashboard>;
 export type TListDashboardRequestQuery<P> = IListRequestQuery<
