@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { BaseUseCase } from '../../../../core/base/domain/usecase/base.usecase';
 import {
   Dashboard,
-  DashboardWithMapping,
   TCreateDashboardRequestBody,
   TUpdateDashboardRequestBody,
   TUpsertDashboardRequestBody,
@@ -21,7 +20,7 @@ import { IContext } from '@/core/base/frameworks/shared/interceptors/context.int
 
 @Injectable()
 export class DashboardUseCase extends BaseUseCase<
-  Dashboard | DashboardWithMapping,
+  Dashboard,
   Prisma.DashboardInclude,
   Prisma.DashboardSelect,
   Prisma.DashboardWhereInput | Prisma.DashboardWhereUniqueInput,
@@ -39,7 +38,7 @@ export class DashboardUseCase extends BaseUseCase<
 
   @OtelMethodCounter()
   @Span('usecase get all dashboard with details')
-  async getAllDashboardWithDetails(): Promise<DashboardWithMapping[]> {
+  async getAllDashboardWithDetails(): Promise<Dashboard[]> {
     const span = this.traceService.getSpan();
     try {
       return await this.db.$transaction(async (tx) => {
@@ -63,7 +62,7 @@ export class DashboardUseCase extends BaseUseCase<
         });
 
         span?.setStatus({ code: 1, message: 'usecase finish!' });
-        return this.dashboardListMapping(result);
+        return result;
       });
     } catch (error: any) {
       span?.setStatus({ code: 2, message: error.message });
@@ -77,15 +76,6 @@ export class DashboardUseCase extends BaseUseCase<
       }
       throw error;
     }
-  }
-
-  private dashboardListMapping(data: Dashboard[]): DashboardWithMapping[] {
-    return data.map((dashboard) => {
-      return {
-        ...dashboard,
-        devices: dashboard.devices.map((device) => device.device),
-      };
-    });
   }
 
   @OtelMethodCounter()
