@@ -1,8 +1,6 @@
-import { Exclude } from 'class-transformer';
 import { Dashboard, DashboardDevice } from './dashboard.entity';
 
 export class ListDashboardSerializer implements Dashboard {
-  @Exclude()
   devices: DashboardDevice[];
 
   name: string;
@@ -13,7 +11,6 @@ export class ListDashboardSerializer implements Dashboard {
 }
 
 export class CreateDashboardSerializer implements Dashboard {
-  @Exclude()
   devices: DashboardDevice[];
 
   name: string;
