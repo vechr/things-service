@@ -6,7 +6,6 @@ import {
   IsObject,
   IsOptional,
   IsString,
-  IsUUID,
   ValidateNested,
 } from 'class-validator';
 import { Widget, Prisma, $Enums } from '@prisma/client';
@@ -247,14 +246,4 @@ export class UpdateWidgetValidator
   @IsString()
   @IsOptional()
   topicId: string;
-}
-
-export abstract class GetWidgetByDashboardIdParamsValidator {
-  @IsUUID()
-  @IsNotEmpty()
-  @ApiProperty({
-    example: '1def564a-42d9-4a94-9bf8-c9c6e4d796a6',
-    description: 'ID!',
-  })
-  dashboardId: string;
 }
