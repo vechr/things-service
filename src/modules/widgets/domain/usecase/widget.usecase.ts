@@ -67,7 +67,7 @@ export class WidgetUseCase extends BaseUseCase<
   }
 
   @OtelMethodCounter()
-  @Span('usecase create widget')
+  @Span('usecase upsert widget')
   override async upsert(
     ctx: IContext,
     body: TUpsertWidgetRequestBody,

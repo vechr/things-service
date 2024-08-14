@@ -43,7 +43,7 @@ export class TopicEventUseCase extends BaseUseCase<
   }
 
   @OtelMethodCounter()
-  @Span('usecase create topic event')
+  @Span('usecase upsert topic event')
   override async upsert(
     ctx: IContext,
     body: TUpsertTopicEventRequestBody,

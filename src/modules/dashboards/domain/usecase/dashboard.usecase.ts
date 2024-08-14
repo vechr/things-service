@@ -79,7 +79,7 @@ export class DashboardUseCase extends BaseUseCase<
   }
 
   @OtelMethodCounter()
-  @Span('usecase create dashboard')
+  @Span('usecase upsert dashboard')
   override async upsert(
     ctx: IContext,
     body: TUpsertDashboardRequestBody,
@@ -101,6 +101,7 @@ export class DashboardUseCase extends BaseUseCase<
           description: body.description,
           name: body.name,
           devices: {
+            deleteMany: {},
             create: body.devices.map((device) => ({
               device: { connect: { id: device } },
             })),

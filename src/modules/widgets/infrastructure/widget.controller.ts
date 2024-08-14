@@ -14,7 +14,6 @@ import {
   DeleteWidgetBatchBodyValidator,
   FilterCursorWidgetQueryValidator,
   FilterPaginationWidgetQueryValidator,
-  GetWidgetByDashboardIdParamsValidator,
   ListCursorWidgetQueryValidator,
   ListPaginationWidgetQueryValidator,
   UpdateWidgetValidator,
@@ -56,20 +55,18 @@ export class WidgetController extends ControllerFactory<
     super();
   }
 
-  @Get('/:dashboardId')
+  @Get('dashboard/:id')
   @Authentication(true)
   @Authorization('widget:read@auth')
   @ApiParam({
-    type: GetWidgetByDashboardIdParamsValidator,
-    name: 'dashboardId',
+    name: 'id',
     example: '1def564a-42d9-4a94-9bf8-c9c6e4d796a6',
     description: 'ID!',
   })
   public async getAllWidgetByDashboardId(
-    @Param('dashboardId')
-    { dashboardId }: GetWidgetByDashboardIdParamsValidator,
+    @Param('id') id: string,
   ): Promise<SuccessResponse> {
-    const result = await this._usecase.getAllWidgetByDashboardId(dashboardId);
+    const result = await this._usecase.getAllWidgetByDashboardId(id);
     return new SuccessResponse('Success get all record!', result);
   }
 }

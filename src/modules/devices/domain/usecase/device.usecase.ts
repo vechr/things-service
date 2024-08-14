@@ -37,7 +37,7 @@ export class DeviceUseCase extends BaseUseCase<
   }
 
   @OtelMethodCounter()
-  @Span('usecase create device')
+  @Span('usecase upsert device')
   override async upsert(
     ctx: IContext,
     body: TUpsertDeviceRequestBody,
